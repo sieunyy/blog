@@ -1,0 +1,21 @@
+---
+title: "Sieun's BLOG"
+image: me.jpg
+about:
+  template: jolla
+  links:
+    - icon: instagram
+      text: Instagram
+      href: https://instagram.com/_s_se86?igshid=YmMyMTA2M2Y=
+    - icon: linkedin
+      text: LinkedIn
+      href: https://linkedin.com
+    - icon: github
+      text: Github
+      href: https://github.com/sieunyy
+
+---
+
+### About this blog
+
+안녕하세요. 데이터마이닝 수업을 위한 블로그 어쩌고
