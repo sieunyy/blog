@@ -10,7 +10,7 @@ jupyter: python3
 # "Numpy 기본"
 > numpy 기본 코드 실습
 
-- toc:true
+- toc: true
 - branch: master
 - badges: true
 - comments: true
