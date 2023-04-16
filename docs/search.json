@@ -4,377 +4,76 @@
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "안녕하세요. 데이터마이닝 수업을 위한 블로그 어쩌고ㅇ"
+    "text": "About this blog\n안녕하세요. 데이터마이닝 수업을 위한 블로그 어쩌고ㅇ"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Data Mining 블로그",
     "section": "",
-    "text": "code\n\n\n\n\n\n\n\n\n\n\n\nMar 21, 2023\n\n\nSieun Shim\n\n\n\n\n\n\nNo matching items"
+    "text": "Increase Loop Speed\n\n\n\n\n\n\n\ncode\n\n\n\n\n\n\n\n\n\n\n\nApr 11, 2023\n\n\nSieun Shim\n\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "posts/numpy/week_1a_numpy.html",
-    "href": "posts/numpy/week_1a_numpy.html",
-    "title": "Numpy 기본",
+    "objectID": "posts/increase_loop_speed/week_1c_increase_loop_speed.html",
+    "href": "posts/increase_loop_speed/week_1c_increase_loop_speed.html",
+    "title": "For loop 속도 개선하기",
     "section": "",
-    "text": "numpy 기본 코드 실습\n\n\ntoc: true\nbranch: master\nbadges: true\ncomments: true\nauthor: Jiho Yeo\ncategories: [jupyter, python]\n\n도구 - 넘파이(NumPy)\n*넘파이(NumPy)는 파이썬의 과학 컴퓨팅을 위한 기본 라이브러리입니다. 넘파이의 핵심은 강력한 N-차원 배열 객체입니다. 또한 선형 대수, 푸리에(Fourier) 변환, 유사 난수 생성과 같은 유용한 함수들도 제공합니다.”\n\n\n\n구글 코랩에서 실행하기\n\n\n\n⠀⠀⠀"
+    "text": "For loop 속도 개선 실습\n\n강의자료 출처 - https://blog.fearcat.in/a?ID=00900-6997c6fb-2680-4531-af1d-73eeccce74ef - https://aldente0630.github.io/data-science/2018/08/05/a-beginners-guide-to-optimizing-pandas-code-for-speed.html\n\nimport pandas as pd\nimport numpy as np\nfrom math import *\n\n\n\n익스피디아 개발자 사이트에서 제공한 뉴욕 주 내 모든 호텔 좌표가 들어있는 데이터셋\n\ndf = pd.read_csv('new_york_hotels.csv', encoding='cp1252')\n\n\ndf.head()\n\n\n\n\n\n\n\n\nean_hotel_id\nname\naddress1\ncity\nstate_province\npostal_code\nlatitude\nlongitude\nstar_rating\nhigh_rate\nlow_rate\n\n\n\n\n0\n269955\nHilton Garden Inn Albany/SUNY Area\n1389 Washington Ave\nAlbany\nNY\n12206\n42.68751\n-73.81643\n3.0\n154.0272\n124.0216\n\n\n1\n113431\nCourtyard by Marriott Albany Thruway\n1455 Washington Avenue\nAlbany\nNY\n12206\n42.68971\n-73.82021\n3.0\n179.0100\n134.0000\n\n\n2\n108151\nRadisson Hotel Albany\n205 Wolf Rd\nAlbany\nNY\n12205\n42.72410\n-73.79822\n3.0\n134.1700\n84.1600\n\n\n3\n254756\nHilton Garden Inn Albany Medical Center\n62 New Scotland Ave\nAlbany\nNY\n12208\n42.65157\n-73.77638\n3.0\n308.2807\n228.4597\n\n\n4\n198232\nCrestHill Suites SUNY University Albany\n1415 Washington Avenue\nAlbany\nNY\n12206\n42.68873\n-73.81854\n3.0\n169.3900\n89.3900\n\n\n\n\n\n\n\n\ndf.shape\n\n(1631, 11)\n\n\n\ndf.describe()\n\n\n\n\n\n\n\n\nean_hotel_id\nlatitude\nlongitude\nstar_rating\nhigh_rate\nlow_rate\n\n\n\n\ncount\n1631.000000\n1631.000000\n1631.000000\n1630.000000\n1631.000000\n1631.000000\n\n\nmean\n302845.515021\n41.851026\n-75.015019\n2.894785\n273.268624\n169.408866\n\n\nstd\n163497.215910\n1.131960\n1.774482\n0.777486\n504.191880\n205.914287\n\n\nmin\n6295.000000\n40.583990\n-79.742010\n1.000000\n0.000000\n0.000000\n\n\n25%\n163765.500000\n40.755540\n-76.142530\n2.500000\n121.400000\n97.318000\n\n\n50%\n252457.000000\n41.558420\n-73.988710\n3.000000\n170.000000\n134.370000\n\n\n75%\n437138.000000\n42.949455\n-73.905340\n3.500000\n279.930000\n195.260000\n\n\nmax\n685047.000000\n44.967850\n-71.933340\n5.000000\n10888.500000\n5990.250000\n\n\n\n\n\n\n\n\n\n\n두 위치 사이의 거리를 계산하는 함수 - https://stricky.tistory.com/284\n\ndef haversine(lat1, lon1, lat2, lon2):\n    miles_constant = 3959\n    lat1, lon1, lat2, lon2 = map(np.deg2rad, [lat1, lon1, lat2, lon2])\n    dlat = lat2 - lat1 \n    dlon = lon2 - lon1 \n    a = np.sin(dlat/2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2)**2\n    c = 2 * np.arcsin(np.sqrt(a)) \n    mi = miles_constant * c\n    return mi\n\n\n\n\n어떤 위치, (40.671, -73.985)에서 df에 존재하는 모든 호텔까지의 거리를 구해봅시다\n\n\n\n\ndef haversine_looping(df):\n    distance_list = [] # 빈 리스트를 생성\n    for i in range(0, len(df)): # 0 생략 가능\n        d = haversine(40.671, -73.985, df.iloc[i]['latitude'], df.iloc[i]['longitude'])\n        distance_list.append(d)\n    return distance_list\n\n%%timeit은 Jupyter Notebook에서 사용되는 매직 명령어 중 하나로, 코드 실행 시간을 측정하는 도구입니다.\n%%timeit 매직 명령어를 사용하면 해당 셀의 코드를 여러 번 실행하여 실행 시간을 평균적으로 계산합니다. 이를 통해 코드의 실행 성능을 쉽게 측정하고 비교할 수 있습니다.\n\n%%timeit\n\n# Haversine 반복 함수 실행하기\ndf['distance'] = haversine_looping(df)\n\n586 ms ± 10.5 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)\n\n\n\ndf['distance'].describe()\n\ncount    1631.000000\nmean      111.318922\nstd       107.476086\nmin         0.163480\n25%         6.305530\n50%        71.070425\n75%       199.395866\nmax       314.936306\nName: distance, dtype: float64\n\n\n\n\n\n반복문을 돌려야 할 때 iterrows() 메서드를 사용하는 건 행을 반복하기 위한 더 좋은 방법이다. iterrows()는 데이터 프레임의 행을 반복하며 행 자체를 포함하는 객체에 덧붙여 각 행의 색인을 반환하는 제너레이터다. iterrows()는 판다스 데이터 프레임과 함께 작동하게끔 최적화되어 있으며 표준 함수 대부분을 실행하는 데 가장 효율적인 방법은 아니지만(나중에 자세히 설명) 단순 반복보다는 상당히 개선되었다. 예제의 경우 iterrows()는 행을 수동으로 반복하는 것보다 거의 똑같은 문제를 약 4배 빠르게 해결한다.\n\n# Haversine applied on rows via iteration\nhaversine_series = []\nfor index, row in df.iloc[0:10].iterrows():\n    print(row['latitude'])\n\n42.68751\n42.68971\n42.7241\n42.65157\n42.68873\n42.72874\n42.68031\n42.65334\n42.72111\n42.67807\n\n\n\n# Haversine applied on rows via iteration\nhaversine_series = []\nfor index, row in df.iloc[0:10].iterrows():\n    print(type(row))\n\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n\n\n\n%%timeit\n# Haversine applied on rows via iteration\nhaversine_series = []\nfor index, row in df.iterrows():\n    haversine_series.append(haversine(40.671, -73.985, row['latitude'], row['longitude']))\ndf['distance'] = haversine_series\n\n165 ms ± 4.16 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)\n\n\nitertuples와 iterrows는 모두 Pandas 데이터프레임의 행을 순회(iterate)하는 메서드입니다. 그러나 itertuples는 iterrows보다 더욱 빠른 속도를 보이므로, 대체로 itertuples를 사용하는 것이 좋습니다.\n이유는 iterrows는 각 행(row)을 Series 객체로 반환하는 반면, itertuples는 각 행을 NamedTuple로 반환합니다. NamedTuple은 각 속성(attribute)에 이름이 지정되어 있기 때문에, Series보다 빠르게 데이터에 접근할 수 있습니다. 따라서 대용량의 데이터프레임을 다룰 때는 itertuples를 사용하는 것이 더욱 효율적입니다.\n\n%%timeit\nhaversine_series = []\nfor idx, lat, lon in df[['latitude','longitude']].itertuples():\n    haversine_series.append(haversine(40.671, -73.985, lat, lon))\n    \ndf['distance'] = haversine_series\n\n40.6 ms ± 514 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)\n\n\n\nimport pandas as pd\n\ndf2 = pd.DataFrame({'A': [1, 2, 3], 'B': ['a', 'b', 'c']})\ndf2\n\n\n\n\n\n\n\n\nA\nB\n\n\n\n\n0\n1\na\n\n\n1\n2\nb\n\n\n2\n3\nc\n\n\n\n\n\n\n\n\nfor index in df2.itertuples():\n    print(index)\n\nPandas(Index=0, A=1, B='a')\nPandas(Index=1, A=2, B='b')\nPandas(Index=2, A=3, B='c')\n\n\n\ndf2 = pd.DataFrame({'A': [1, 2, 3], 'B': ['a', 'b', 'c']})\n\nfor index, a, b in df2.itertuples():\n    print(index, a, b)\n\n0 1 a\n1 2 b\n2 3 c\n\n\n\n\n\niterrows()보다 더 좋은 옵션은 데이터 프레임의 특정 축(행 또는 열을 의미)을 따라 함수를 적용하는 apply() 메서드를 사용하는 것이다. apply()는 본질적으로 행을 반복하지만 Cython에서 이터레이터를 사용하는 것 같이 내부 최적화를 다양하게 활용하므로 iterrows()보다 훨씬 효율적이다.\n익명의 람다 함수를 사용하여 Haversine 함수를 각 행에 적용하며 각 행의 특정 셀을 함수 입력값으로 지정할 수 있다. 람다 함수는 판다스가 행(축 = 1)과 열(축 = 0) 중 어디에 함수를 적용할지 정할 수 있게 축 매개 변수를 마지막에 포함한다.\n\n\n\n%%timeit \n\ndf['distance'] =\\\ndf.apply(lambda row: haversine(40.671, -73.985,\\\n                               row['latitude'], row['longitude']), axis=1) # 0 = 열, 1 = 행\n\n80.7 ms ± 2.2 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)\n\n\n\n\n\n\n\n\n함수 수행의 반복량 줄이는 방법을 이해하기 위해 판다스의 기본 단위, 데이터 프레임과 시리즈가 모두 배열 기반임을 알아두자. 기본 단위의 내부 구조는 개별 값(스칼라라고 함)마다 순차적으로 작동하는 대신 전체 배열 위로 작동하도록 설계된 내장 판다스 함수를 위해 변환된다. 벡터화는 전체 배열 위로 작업을 실행하는 프로세스다.\n판다스는 수학 연산에서 집계 및 문자열 함수(사용 가능한 함수의 광범위한 목록은 판다스 문서에서 확인해라)에 이르기까지 다양한 벡터화 함수를 포함하고 있다. 내장 함수는 판다스 시리즈와 데이터 프레임에서 작동하게끔 최적화되어있다. 결과적으로 벡터화 판다스 함수를 사용하는 건 비슷한 목적을 위해 손수 반복시키는 방법보다 거의 항상 바람직하다.\n지금까지는 Haversine 함수에 스칼라를 전달했다. 그러나 Haversine 함수 내에서 사용하는 모든 함수를 배열 위로 작동시킬 수 있다. 이렇게 하면 거리 함수를 매우 간단하게 벡터화할 수 있다. 스칼라 값으로 각 위도, 경도를 전달하는 대신 전체 시리즈(열)를 전달한다. 이를 통해 판다스는 벡터화 함수에 적용 가능한 모든 최적화 옵션을 활용할 수 있고 특히 전체 배열에 대한 모든 계산을 동시에 수행하게 된다.\n\n%%timeit\n# Vectorized implementation of Haversine applied on Pandas series\ndf['distance'] = haversine(40.671, -73.985,\\\n                                   df['latitude'], df['longitude'])\n\n4.66 ms ± 2.53 ms per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n함수 벡터화를 통해 apply() 메서드 대비 50배 이상 개선시켰고 iterrows() 대비 100배 이상 개선시켰다. 입력 유형 변경하는 것 외에 아무것도 하지 않아도 됐다!\n\n\n\n\n이 지점에서 그만두어도 괜찮다. 판다스 시리즈를 사용해 벡터화하면 상시 계산을 위한 최적화 요구 사항의 거의 대부분을 만족시킬 수 있다. 그러나 속도가 최우선이라면 넘파이 파이썬 라이브러리 형식에 도움을 요청해볼 수 있다.\n넘파이 라이브러리는 “과학 계산을 위한 파이썬 기본 패키지”를 표방하며 내부가 최적화된, 사전 컴파일된 C 코드로 작업을 수행한다. 판다스와 마찬가지로 넘파이는 배열 객체(ndarrays라고 함) 상에서 작동한다. 그러나 색인, 데이터 유형 확인 등과 같이 판다스 시리즈 작업으로 인한 오버헤드가 많이 발생하지 않는다. 결과적으로 넘파이 배열에 대한 작업은 판다스 시리즈에 대한 작업보다 훨씬 빠르다.\n판다스 시리즈가 제공하는 추가 기능이 중요하지 않을 때 넘파이 배열을 판다스 시리즈 대신 사용할 수 있다. 예를 들어 Haversine 함수의 벡터화 구현은 실제로 위도 또는 경도 시리즈의 색인을 사용하지 않으므로 사용할 수 있는 색인이 없어도 함수가 중단되지 않는다. 이에 비해 색인으로 값을 참조해야 하는 데이터 프레임의 조인 같은 작업을 수행한다면 판다스 개체를 계속 사용하는 편이 낫다.\n위도와 경도 배열을 시리즈의 values 메서드를 단순 사용해서 판다스 시리즈에서 넘파이 배열로 변환한다. 시리즈의 벡터화와 마찬가지로 넘파이 배열을 함수에 직접 전달하면 판다스가 전체 벡터에 함수를 적용시킨다.\n\n\n\n# Vectorized implementation of Haversine applied on NumPy arrays\n%timeit df['distance'] = haversine(40.671, -73.985,\\\n                         df['latitude'].values, df['longitude'].values)\n\n321 µs ± 19.2 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)\n\n\n\n%%timeit\n# Convert pandas arrays to NumPy ndarrays\nnp_lat = df['latitude'].values\nnp_lon = df['longitude'].values\n\n10.5 µs ± 233 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)\n\n\n\n\n\n\n판다스 코드 최적화에 관해 몇 가지 기본적인 결론을 내릴 수 있다.\n1 . 반복을 피해라. 사용 사례 대부분의 경우 반복은 느리고 불필요하다.\n2 . 반복해야 하는 경우 반복 함수가 아닌 itertuples()를 사용해라.\n3 . 보통은 벡터화가 스칼라 연산보다 낫다. 대부분의 판다스 작업은 벡터화시킬 수 있다.\n4 . 넘파이 배열에서의 벡터 연산은 판다스 시리즈에서 수행하는 것보다 효율적이다.\n\n\n아래의 조건을 만족하는 호텔의 List를 출력해 봅시다.\n\n현재 나는 (“latitude”, “longitude”) = (40.671, -73.985) 위치에 있고, 숙박할 호텔을 찾고 있습니다.\n직선거리 기준으로 200마일 안쪽에 있었으면 좋겠습니다.\nstar_rating이 4 이상인 호텔을 찾고 있습니다.\n\n해당 조건을 만족하는 호텔들을 출력해 봅시다.\n\ndf['distance'] = haversine(40.671, -73.985,\\\n                                   df['latitude'], df['longitude'])\ndf[(df['distance'] &lt;= 200) & (df['star_rating'] &gt;= 4)][['name', 'distance', 'star_rating']]\n\n\n\n\n\n\n\n\nname\ndistance\nstar_rating\n\n\n\n\n114\nTopping Rose House\n90.001264\n4.5\n\n\n129\nSheraton Brooklyn New York Hotel\n1.423805\n4.0\n\n\n134\nMcCarren Hotel & Pool\n3.786288\n4.0\n\n\n142\nThe Box House Hotel\n4.885345\n4.0\n\n\n154\nNew York Marriott at the Brooklyn Bridge\n1.577023\n4.0\n\n\n...\n...\n...\n...\n\n\n1592\nViana Hotel & Spa, BW Premier Collection\n23.431169\n4.0\n\n\n1600\nThe Ritz-Carlton New York, Westchester\n27.466891\n5.0\n\n\n1601\nFurnished Quarters Bank Street Commons\n27.174550\n4.0\n\n\n1602\nGlobal Luxury Apartments in White Plains\n27.241501\n4.0\n\n\n1603\nGlobal Luxury Suites at White Plains\n27.604500\n4.0\n\n\n\n\n245 rows × 3 columns"
   },
   {
-    "objectID": "posts/numpy/week_1a_numpy.html#np.zeros",
-    "href": "posts/numpy/week_1a_numpy.html#np.zeros",
-    "title": "Numpy 기본",
-    "section": "np.zeros",
-    "text": "np.zeros\nzeros 함수는 0으로 채워진 배열을 만듭니다:\n\nnp.zeros(5)\n\narray([0., 0., 0., 0., 0.])\n\n\n2D 배열(즉, 행렬)을 만들려면 원하는 행과 열의 크기를 튜플로 전달합니다. 예를 들어 다음은 \\(3 \\times 4\\) 크기의 행렬입니다:\n\nnp.zeros((3,4))\n\narray([[0., 0., 0., 0.],\n       [0., 0., 0., 0.],\n       [0., 0., 0., 0.]])"
+    "objectID": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#haversine-definition",
+    "href": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#haversine-definition",
+    "title": "For loop 속도 개선하기",
+    "section": "",
+    "text": "두 위치 사이의 거리를 계산하는 함수 - https://stricky.tistory.com/284\n\ndef haversine(lat1, lon1, lat2, lon2):\n    miles_constant = 3959\n    lat1, lon1, lat2, lon2 = map(np.deg2rad, [lat1, lon1, lat2, lon2])\n    dlat = lat2 - lat1 \n    dlon = lon2 - lon1 \n    a = np.sin(dlat/2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2)**2\n    c = 2 * np.arcsin(np.sqrt(a)) \n    mi = miles_constant * c\n    return mi"
   },
   {
-    "objectID": "posts/numpy/week_1a_numpy.html#용어",
-    "href": "posts/numpy/week_1a_numpy.html#용어",
-    "title": "Numpy 기본",
-    "section": "용어",
-    "text": "용어\n\n넘파이에서 각 차원을 축(axis)이라고 합니다.\n축의 개수를 랭크(rank)라고 합니다.\n\n예를 들어, 위의 \\(3 \\times 4\\) 행렬은 랭크 2인 배열입니다(즉 2차원입니다).\n첫 번째 축의 길이는 3이고 두 번째 축의 길이는 4입니다.\n\n배열의 축 길이를 배열의 크기(shape)라고 합니다.\n\n예를 들어, 위 행렬의 크기는 (3, 4)입니다.\n랭크는 크기의 길이와 같습니다.\n\n배열의 사이즈(size)는 전체 원소의 개수입니다. 축의 길이를 모두 곱해서 구할 수 있습니다(가령, \\(3 \\times 4=12\\)).\n\n\na = np.zeros((3,4))\na\n\narray([[0., 0., 0., 0.],\n       [0., 0., 0., 0.],\n       [0., 0., 0., 0.]])\n\n\n\na.shape\n\n(3, 4)\n\n\n\na.ndim  # len(a.shape)와 같습니다\n\n2\n\n\n\na.size\n\n12"
+    "objectID": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#task",
+    "href": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#task",
+    "title": "For loop 속도 개선하기",
+    "section": "",
+    "text": "어떤 위치, (40.671, -73.985)에서 df에 존재하는 모든 호텔까지의 거리를 구해봅시다"
   },
   {
-    "objectID": "posts/numpy/week_1a_numpy.html#n-차원-배열",
-    "href": "posts/numpy/week_1a_numpy.html#n-차원-배열",
-    "title": "Numpy 기본",
-    "section": "N-차원 배열",
-    "text": "N-차원 배열\n임의의 랭크 수를 가진 N-차원 배열을 만들 수 있습니다. 예를 들어, 다음은 크기가 (2,3,4)인 3D 배열(랭크=3)입니다:\n\nnp.zeros((2,2,5))\n\narray([[[0., 0., 0., 0., 0.],\n        [0., 0., 0., 0., 0.]],\n\n       [[0., 0., 0., 0., 0.],\n        [0., 0., 0., 0., 0.]]])"
+    "objectID": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#looping-haversine",
+    "href": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#looping-haversine",
+    "title": "For loop 속도 개선하기",
+    "section": "",
+    "text": "def haversine_looping(df):\n    distance_list = [] # 빈 리스트를 생성\n    for i in range(0, len(df)): # 0 생략 가능\n        d = haversine(40.671, -73.985, df.iloc[i]['latitude'], df.iloc[i]['longitude'])\n        distance_list.append(d)\n    return distance_list\n\n%%timeit은 Jupyter Notebook에서 사용되는 매직 명령어 중 하나로, 코드 실행 시간을 측정하는 도구입니다.\n%%timeit 매직 명령어를 사용하면 해당 셀의 코드를 여러 번 실행하여 실행 시간을 평균적으로 계산합니다. 이를 통해 코드의 실행 성능을 쉽게 측정하고 비교할 수 있습니다.\n\n%%timeit\n\n# Haversine 반복 함수 실행하기\ndf['distance'] = haversine_looping(df)\n\n586 ms ± 10.5 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)\n\n\n\ndf['distance'].describe()\n\ncount    1631.000000\nmean      111.318922\nstd       107.476086\nmin         0.163480\n25%         6.305530\n50%        71.070425\n75%       199.395866\nmax       314.936306\nName: distance, dtype: float64"
   },
   {
-    "objectID": "posts/numpy/week_1a_numpy.html#배열-타입",
-    "href": "posts/numpy/week_1a_numpy.html#배열-타입",
-    "title": "Numpy 기본",
-    "section": "배열 타입",
-    "text": "배열 타입\n넘파이 배열의 타입은 ndarray입니다:\n\ntype(np.zeros((3,4)))\n\nnumpy.ndarray"
+    "objectID": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#iterrows-haversine",
+    "href": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#iterrows-haversine",
+    "title": "For loop 속도 개선하기",
+    "section": "",
+    "text": "반복문을 돌려야 할 때 iterrows() 메서드를 사용하는 건 행을 반복하기 위한 더 좋은 방법이다. iterrows()는 데이터 프레임의 행을 반복하며 행 자체를 포함하는 객체에 덧붙여 각 행의 색인을 반환하는 제너레이터다. iterrows()는 판다스 데이터 프레임과 함께 작동하게끔 최적화되어 있으며 표준 함수 대부분을 실행하는 데 가장 효율적인 방법은 아니지만(나중에 자세히 설명) 단순 반복보다는 상당히 개선되었다. 예제의 경우 iterrows()는 행을 수동으로 반복하는 것보다 거의 똑같은 문제를 약 4배 빠르게 해결한다.\n\n# Haversine applied on rows via iteration\nhaversine_series = []\nfor index, row in df.iloc[0:10].iterrows():\n    print(row['latitude'])\n\n42.68751\n42.68971\n42.7241\n42.65157\n42.68873\n42.72874\n42.68031\n42.65334\n42.72111\n42.67807\n\n\n\n# Haversine applied on rows via iteration\nhaversine_series = []\nfor index, row in df.iloc[0:10].iterrows():\n    print(type(row))\n\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n&lt;class 'pandas.core.series.Series'&gt;\n\n\n\n%%timeit\n# Haversine applied on rows via iteration\nhaversine_series = []\nfor index, row in df.iterrows():\n    haversine_series.append(haversine(40.671, -73.985, row['latitude'], row['longitude']))\ndf['distance'] = haversine_series\n\n165 ms ± 4.16 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)\n\n\nitertuples와 iterrows는 모두 Pandas 데이터프레임의 행을 순회(iterate)하는 메서드입니다. 그러나 itertuples는 iterrows보다 더욱 빠른 속도를 보이므로, 대체로 itertuples를 사용하는 것이 좋습니다.\n이유는 iterrows는 각 행(row)을 Series 객체로 반환하는 반면, itertuples는 각 행을 NamedTuple로 반환합니다. NamedTuple은 각 속성(attribute)에 이름이 지정되어 있기 때문에, Series보다 빠르게 데이터에 접근할 수 있습니다. 따라서 대용량의 데이터프레임을 다룰 때는 itertuples를 사용하는 것이 더욱 효율적입니다.\n\n%%timeit\nhaversine_series = []\nfor idx, lat, lon in df[['latitude','longitude']].itertuples():\n    haversine_series.append(haversine(40.671, -73.985, lat, lon))\n    \ndf['distance'] = haversine_series\n\n40.6 ms ± 514 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)\n\n\n\nimport pandas as pd\n\ndf2 = pd.DataFrame({'A': [1, 2, 3], 'B': ['a', 'b', 'c']})\ndf2\n\n\n\n\n\n\n\n\nA\nB\n\n\n\n\n0\n1\na\n\n\n1\n2\nb\n\n\n2\n3\nc\n\n\n\n\n\n\n\n\nfor index in df2.itertuples():\n    print(index)\n\nPandas(Index=0, A=1, B='a')\nPandas(Index=1, A=2, B='b')\nPandas(Index=2, A=3, B='c')\n\n\n\ndf2 = pd.DataFrame({'A': [1, 2, 3], 'B': ['a', 'b', 'c']})\n\nfor index, a, b in df2.itertuples():\n    print(index, a, b)\n\n0 1 a\n1 2 b\n2 3 c"
   },
   {
-    "objectID": "posts/numpy/week_1a_numpy.html#np.ones",
-    "href": "posts/numpy/week_1a_numpy.html#np.ones",
-    "title": "Numpy 기본",
-    "section": "np.ones",
-    "text": "np.ones\nndarray를 만들 수 있는 넘파이 함수가 많습니다.\n다음은 1로 채워진 \\(3 \\times 4\\) 크기의 행렬입니다:\n\nnp.ones((3,4))\n\narray([[1., 1., 1., 1.],\n       [1., 1., 1., 1.],\n       [1., 1., 1., 1.]])"
+    "objectID": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#apply-haversine-on-rows",
+    "href": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#apply-haversine-on-rows",
+    "title": "For loop 속도 개선하기",
+    "section": "",
+    "text": "iterrows()보다 더 좋은 옵션은 데이터 프레임의 특정 축(행 또는 열을 의미)을 따라 함수를 적용하는 apply() 메서드를 사용하는 것이다. apply()는 본질적으로 행을 반복하지만 Cython에서 이터레이터를 사용하는 것 같이 내부 최적화를 다양하게 활용하므로 iterrows()보다 훨씬 효율적이다.\n익명의 람다 함수를 사용하여 Haversine 함수를 각 행에 적용하며 각 행의 특정 셀을 함수 입력값으로 지정할 수 있다. 람다 함수는 판다스가 행(축 = 1)과 열(축 = 0) 중 어디에 함수를 적용할지 정할 수 있게 축 매개 변수를 마지막에 포함한다.\n\n\n\n%%timeit \n\ndf['distance'] =\\\ndf.apply(lambda row: haversine(40.671, -73.985,\\\n                               row['latitude'], row['longitude']), axis=1) # 0 = 열, 1 = 행\n\n80.7 ms ± 2.2 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)"
   },
   {
-    "objectID": "posts/numpy/week_1a_numpy.html#np.full",
-    "href": "posts/numpy/week_1a_numpy.html#np.full",
-    "title": "Numpy 기본",
-    "section": "np.full",
-    "text": "np.full\n주어진 값으로 지정된 크기의 배열을 초기화합니다. 다음은 π로 채워진 \\(3 \\times 4\\) 크기의 행렬입니다.\n\nnp.full((3,4), np.pi)\n\narray([[3.14159265, 3.14159265, 3.14159265, 3.14159265],\n       [3.14159265, 3.14159265, 3.14159265, 3.14159265],\n       [3.14159265, 3.14159265, 3.14159265, 3.14159265]])"
+    "objectID": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#vectorized-implementation-of-haversine-applied-on-pandas-series",
+    "href": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#vectorized-implementation-of-haversine-applied-on-pandas-series",
+    "title": "For loop 속도 개선하기",
+    "section": "",
+    "text": "함수 수행의 반복량 줄이는 방법을 이해하기 위해 판다스의 기본 단위, 데이터 프레임과 시리즈가 모두 배열 기반임을 알아두자. 기본 단위의 내부 구조는 개별 값(스칼라라고 함)마다 순차적으로 작동하는 대신 전체 배열 위로 작동하도록 설계된 내장 판다스 함수를 위해 변환된다. 벡터화는 전체 배열 위로 작업을 실행하는 프로세스다.\n판다스는 수학 연산에서 집계 및 문자열 함수(사용 가능한 함수의 광범위한 목록은 판다스 문서에서 확인해라)에 이르기까지 다양한 벡터화 함수를 포함하고 있다. 내장 함수는 판다스 시리즈와 데이터 프레임에서 작동하게끔 최적화되어있다. 결과적으로 벡터화 판다스 함수를 사용하는 건 비슷한 목적을 위해 손수 반복시키는 방법보다 거의 항상 바람직하다.\n지금까지는 Haversine 함수에 스칼라를 전달했다. 그러나 Haversine 함수 내에서 사용하는 모든 함수를 배열 위로 작동시킬 수 있다. 이렇게 하면 거리 함수를 매우 간단하게 벡터화할 수 있다. 스칼라 값으로 각 위도, 경도를 전달하는 대신 전체 시리즈(열)를 전달한다. 이를 통해 판다스는 벡터화 함수에 적용 가능한 모든 최적화 옵션을 활용할 수 있고 특히 전체 배열에 대한 모든 계산을 동시에 수행하게 된다.\n\n%%timeit\n# Vectorized implementation of Haversine applied on Pandas series\ndf['distance'] = haversine(40.671, -73.985,\\\n                                   df['latitude'], df['longitude'])\n\n4.66 ms ± 2.53 ms per loop (mean ± std. dev. of 7 runs, 100 loops each)\n\n\n함수 벡터화를 통해 apply() 메서드 대비 50배 이상 개선시켰고 iterrows() 대비 100배 이상 개선시켰다. 입력 유형 변경하는 것 외에 아무것도 하지 않아도 됐다!"
   },
   {
-    "objectID": "posts/numpy/week_1a_numpy.html#np.empty",
-    "href": "posts/numpy/week_1a_numpy.html#np.empty",
-    "title": "Numpy 기본",
-    "section": "np.empty",
-    "text": "np.empty\n초기화되지 않은 \\(2 \\times 3\\) 크기의 배열을 만듭니다(배열의 내용은 예측이 불가능하며 메모리 상황에 따라 달라집니다):\n\nnp.empty((2,3))\n\narray([[4.88059032e-313, 9.97338022e-313, 2.97079411e-313],\n       [8.06358401e-313, 4.88059032e-313, 9.97338022e-313]])"
+    "objectID": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#vectorized-implementation-of-haversine-applied-on-numpy-arrays",
+    "href": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#vectorized-implementation-of-haversine-applied-on-numpy-arrays",
+    "title": "For loop 속도 개선하기",
+    "section": "",
+    "text": "이 지점에서 그만두어도 괜찮다. 판다스 시리즈를 사용해 벡터화하면 상시 계산을 위한 최적화 요구 사항의 거의 대부분을 만족시킬 수 있다. 그러나 속도가 최우선이라면 넘파이 파이썬 라이브러리 형식에 도움을 요청해볼 수 있다.\n넘파이 라이브러리는 “과학 계산을 위한 파이썬 기본 패키지”를 표방하며 내부가 최적화된, 사전 컴파일된 C 코드로 작업을 수행한다. 판다스와 마찬가지로 넘파이는 배열 객체(ndarrays라고 함) 상에서 작동한다. 그러나 색인, 데이터 유형 확인 등과 같이 판다스 시리즈 작업으로 인한 오버헤드가 많이 발생하지 않는다. 결과적으로 넘파이 배열에 대한 작업은 판다스 시리즈에 대한 작업보다 훨씬 빠르다.\n판다스 시리즈가 제공하는 추가 기능이 중요하지 않을 때 넘파이 배열을 판다스 시리즈 대신 사용할 수 있다. 예를 들어 Haversine 함수의 벡터화 구현은 실제로 위도 또는 경도 시리즈의 색인을 사용하지 않으므로 사용할 수 있는 색인이 없어도 함수가 중단되지 않는다. 이에 비해 색인으로 값을 참조해야 하는 데이터 프레임의 조인 같은 작업을 수행한다면 판다스 개체를 계속 사용하는 편이 낫다.\n위도와 경도 배열을 시리즈의 values 메서드를 단순 사용해서 판다스 시리즈에서 넘파이 배열로 변환한다. 시리즈의 벡터화와 마찬가지로 넘파이 배열을 함수에 직접 전달하면 판다스가 전체 벡터에 함수를 적용시킨다.\n\n\n\n# Vectorized implementation of Haversine applied on NumPy arrays\n%timeit df['distance'] = haversine(40.671, -73.985,\\\n                         df['latitude'].values, df['longitude'].values)\n\n321 µs ± 19.2 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)\n\n\n\n%%timeit\n# Convert pandas arrays to NumPy ndarrays\nnp_lat = df['latitude'].values\nnp_lon = df['longitude'].values\n\n10.5 µs ± 233 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)"
   },
   {
-    "objectID": "posts/numpy/week_1a_numpy.html#np.array",
-    "href": "posts/numpy/week_1a_numpy.html#np.array",
-    "title": "Numpy 기본",
-    "section": "np.array",
-    "text": "np.array\narray 함수는 파이썬 리스트를 사용하여 ndarray를 초기화합니다:\n\nnp.array([[1,2,3,4], [10, 20, 30, 40]])\n\narray([[ 1,  2,  3,  4],\n       [10, 20, 30, 40]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#np.arange",
-    "href": "posts/numpy/week_1a_numpy.html#np.arange",
-    "title": "Numpy 기본",
-    "section": "np.arange",
-    "text": "np.arange\n파이썬의 기본 range 함수와 비슷한 넘파이 arange 함수를 사용하여 ndarray를 만들 수 있습니다:\n\nnp.arange(1, 5)\n\narray([1, 2, 3, 4])\n\n\n부동 소수도 가능합니다:\n\nnp.arange(1.0, 5.0)\n\narray([1., 2., 3., 4.])\n\n\n파이썬의 기본 range 함수처럼 건너 뛰는 정도를 지정할 수 있습니다:\n\nnp.arange(1, 5, 0.5)\n\narray([1. , 1.5, 2. , 2.5, 3. , 3.5, 4. , 4.5])\n\n\n부동 소수를 사용하면 원소의 개수가 일정하지 않을 수 있습니다. 예를 들면 다음과 같습니다:\n\nprint(np.arange(0, 5/3, 1/3)) # 부동 소수 오차 때문에, 최댓값은 4/3 또는 5/3이 됩니다.\nprint(np.arange(0, 5/3, 0.333333333))\nprint(np.arange(0, 5/3, 0.333333334))\n\n[0.         0.33333333 0.66666667 1.         1.33333333 1.66666667]\n[0.         0.33333333 0.66666667 1.         1.33333333 1.66666667]\n[0.         0.33333333 0.66666667 1.         1.33333334]\n\n\nfor loops를 사용하지 않고 전체 array에 대한 연산 수행이 가능합니다.\n평균적으로 Numpy-based 알고리즘은 10~100배 정도 속도가 더 빠르고 적은 메모리를 사용합니다.\n\nmy_arr = np.arange(1000000)\nmy_list = list(range(1000000))\n\n%time for _ in range(10): my_arr2 = my_arr * 2\n%time for _ in range(10): my_list2 = [x * 2 for x in my_list]\n\nWall time: 24.9 ms\n\n\nWall time: 1.14 s\n\n\nFor loop를 돌릴 때의 속도 비교\n\nsize = 10\nfor x in range(size): x ** 2\n\n\nimport sys\n\nsize = 10\n\n%timeit for x in range(size): x ** 2\n# out: 10 loops, best of 3: 136 ms per loop\n\n# avoid this\n%timeit for x in np.arange(size): x ** 2\n# out: 1 loops, best of 3: 1.16 s per loop\n\n# use this\n%timeit np.arange(size) ** 2\n# out: 100 loops, best of 3: 19.5 ms per loop\n\n2.78 µs ± 87.9 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)\n\n\n4.47 µs ± 379 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)\n\n\n1.61 µs ± 76.8 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#np.linspace",
-    "href": "posts/numpy/week_1a_numpy.html#np.linspace",
-    "title": "Numpy 기본",
-    "section": "np.linspace",
-    "text": "np.linspace\n이런 이유로 부동 소수를 사용할 땐 arange 대신에 linspace 함수를 사용하는 것이 좋습니다. linspace 함수는 지정된 개수만큼 두 값 사이를 나눈 배열을 반환합니다(arange와는 다르게 최댓값이 포함됩니다):\n\nprint(np.linspace(0, 5/3, 6))\n\n[0.         0.33333333 0.66666667 1.         1.33333333 1.66666667]"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#np.rand와-np.randn",
-    "href": "posts/numpy/week_1a_numpy.html#np.rand와-np.randn",
-    "title": "Numpy 기본",
-    "section": "np.rand와 np.randn",
-    "text": "np.rand와 np.randn\n넘파이의 random 모듈에는 ndarray를 랜덤한 값으로 초기화할 수 있는 함수들이 많이 있습니다. 예를 들어, 다음은 (균등 분포인) 0과 1사이의 랜덤한 부동 소수로 \\(3 \\times 4\\) 행렬을 초기화합니다:\n\nnp.random.rand(3,4)\n\narray([[0.31580087, 0.3674373 , 0.44557408, 0.27285644],\n       [0.38542622, 0.8994842 , 0.45249789, 0.88030247],\n       [0.60916529, 0.27122363, 0.71719999, 0.48241589]])\n\n\n다음은 평균이 0이고 분산이 1인 일변량 정규 분포(가우시안 분포)에서 샘플링한 랜덤한 부동 소수를 담은 \\(3 \\times 4\\) 행렬입니다:\n\nnp.random.randn(3,4)\n\narray([[-0.80631561, -0.60770202, -1.33255424, -1.2435121 ],\n       [ 0.21338378,  0.45244635,  0.57316782, -0.96345552],\n       [ 0.70486332,  1.97475794,  0.65852077,  0.16608856]])\n\n\n이 분포의 모양을 알려면 맷플롯립을 사용해 그려보는 것이 좋습니다(더 자세한 것은 맷플롯립 튜토리얼을 참고하세요):\n\n%matplotlib inline\nimport matplotlib.pyplot as plt\n\n\nplt.hist(np.random.rand(100000), density=True, bins=100, histtype=\"step\", color=\"blue\", label=\"rand\")\nplt.hist(np.random.randn(100000), density=True, bins=100, histtype=\"step\", color=\"red\", label=\"randn\")\nplt.axis([-2.5, 2.5, 0, 1.1])\nplt.legend(loc = \"upper left\")\nplt.title(\"Random distributions\")\nplt.xlabel(\"Value\")\nplt.ylabel(\"Density\")\nplt.show()"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#np.fromfunction",
-    "href": "posts/numpy/week_1a_numpy.html#np.fromfunction",
-    "title": "Numpy 기본",
-    "section": "np.fromfunction",
-    "text": "np.fromfunction\n함수를 사용하여 ndarray를 초기화할 수도 있습니다:\n\ndef my_function(z, y, x):\n    return x + 10 * y + 100 * z\n\nnp.fromfunction(my_function, (3, 2, 10))\n\narray([[[  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.,   9.],\n        [ 10.,  11.,  12.,  13.,  14.,  15.,  16.,  17.,  18.,  19.]],\n\n       [[100., 101., 102., 103., 104., 105., 106., 107., 108., 109.],\n        [110., 111., 112., 113., 114., 115., 116., 117., 118., 119.]],\n\n       [[200., 201., 202., 203., 204., 205., 206., 207., 208., 209.],\n        [210., 211., 212., 213., 214., 215., 216., 217., 218., 219.]]])\n\n\n넘파이는 먼저 크기가 (3, 2, 10)인 세 개의 ndarray(차원마다 하나씩)를 만듭니다. 각 배열은 축을 따라 좌표 값과 같은 값을 가집니다. 예를 들어, z 축에 있는 배열의 모든 원소는 z-축의 값과 같습니다:\n[[[ 0.  0.  0.  0.  0.  0.  0.  0.  0.  0.]\n  [ 0.  0.  0.  0.  0.  0.  0.  0.  0.  0.]]\n\n [[ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.]\n  [ 1.  1.  1.  1.  1.  1.  1.  1.  1.  1.]]\n\n [[ 2.  2.  2.  2.  2.  2.  2.  2.  2.  2.]\n  [ 2.  2.  2.  2.  2.  2.  2.  2.  2.  2.]]]\n위의 식 x + 10 * y + 100 * z에서 x, y, z는 사실 ndarray입니다(배열의 산술 연산에 대해서는 아래에서 설명합니다). 중요한 점은 함수 my_function이 원소마다 호출되는 것이 아니고 딱 한 번 호출된다는 점입니다. 그래서 매우 효율적으로 초기화할 수 있습니다."
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#dtype",
-    "href": "posts/numpy/week_1a_numpy.html#dtype",
-    "title": "Numpy 기본",
-    "section": "dtype",
-    "text": "dtype\n넘파이의 ndarray는 모든 원소가 동일한 타입(보통 숫자)을 가지기 때문에 효율적입니다. dtype 속성으로 쉽게 데이터 타입을 확인할 수 있습니다:\n\nc = np.arange(1, 5)\nprint(c.dtype, c)\n\nint32 [1 2 3 4]\n\n\n\nc = np.arange(1.0, 5.0)\nprint(c.dtype, c)\n\nfloat64 [1. 2. 3. 4.]\n\n\n넘파이가 데이터 타입을 결정하도록 내버려 두는 대신 dtype 매개변수를 사용해서 배열을 만들 때 명시적으로 지정할 수 있습니다:\n\nd = np.arange(1, 5, dtype=np.complex64)\nprint(d.dtype, d)\n\ncomplex64 [1.+0.j 2.+0.j 3.+0.j 4.+0.j]\n\n\n가능한 데이터 타입은 int8, int16, int32, int64, uint8|16|32|64, float16|32|64, complex64|128가 있습니다. 전체 리스트는 온라인 문서를 참고하세요."
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#itemsize",
-    "href": "posts/numpy/week_1a_numpy.html#itemsize",
-    "title": "Numpy 기본",
-    "section": "itemsize",
-    "text": "itemsize\nitemsize 속성은 각 아이템의 크기(바이트)를 반환합니다:\n\ne = np.arange(1, 5, dtype=np.complex64)\ne.itemsize\n\n8"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#data-버퍼",
-    "href": "posts/numpy/week_1a_numpy.html#data-버퍼",
-    "title": "Numpy 기본",
-    "section": "data 버퍼",
-    "text": "data 버퍼\n배열의 데이터는 1차원 바이트 버퍼로 메모리에 저장됩니다. data 속성을 사용해 참조할 수 있습니다(사용할 일은 거의 없겠지만요).\n\nf = np.array([[1,2],[1000, 2000]], dtype=np.int32)\nf.data\n\n<memory at 0x000001E68A06B110>\n\n\n파이썬 2에서는 f.data가 버퍼이고 파이썬 3에서는 memoryview입니다.\n\nif (hasattr(f.data, \"tobytes\")):\n    data_bytes = f.data.tobytes() # python 3\nelse:\n    data_bytes = memoryview(f.data).tobytes() # python 2\n\ndata_bytes\n\nb'\\x01\\x00\\x00\\x00\\x02\\x00\\x00\\x00\\xe8\\x03\\x00\\x00\\xd0\\x07\\x00\\x00'\n\n\n여러 개의 ndarray가 데이터 버퍼를 공유할 수 있습니다. 하나를 수정하면 다른 것도 바뀝니다. 잠시 후에 예를 살펴 보겠습니다."
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#자신을-변경",
-    "href": "posts/numpy/week_1a_numpy.html#자신을-변경",
-    "title": "Numpy 기본",
-    "section": "자신을 변경",
-    "text": "자신을 변경\nndarray의 shape 속성을 지정하면 간단히 크기를 바꿀 수 있습니다. 배열의 원소 개수는 동일하게 유지됩니다.\n\ng = np.arange(24)\nprint(g)\nprint(\"랭크:\", g.ndim)\n\n[ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23]\n랭크: 1\n\n\n\ng.shape = (6, 4)\nprint(g)\nprint(\"랭크:\", g.ndim)\n\n[[ 0  1  2  3]\n [ 4  5  6  7]\n [ 8  9 10 11]\n [12 13 14 15]\n [16 17 18 19]\n [20 21 22 23]]\n\n\n\n랭크: 2\n\n\n\ng.shape = (2, 3, 4)\nprint(g)\nprint(\"랭크:\", g.ndim)\n\n[[[ 0  1  2  3]\n  [ 4  5  6  7]\n  [ 8  9 10 11]]\n\n [[12 13 14 15]\n  [16 17 18 19]\n  [20 21 22 23]]]\n랭크: 3"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#reshape",
-    "href": "posts/numpy/week_1a_numpy.html#reshape",
-    "title": "Numpy 기본",
-    "section": "reshape",
-    "text": "reshape\nreshape 함수는 동일한 데이터를 가리키는 새로운 ndarray 객체를 반환합니다. 한 배열을 수정하면 다른 것도 함께 바뀝니다.\n\ng2 = g.reshape(4,6)\nprint(g2)\nprint(\"랭크:\", g2.ndim)\n\n[[ 0  1  2  3  4  5]\n [ 6  7  8  9 10 11]\n [12 13 14 15 16 17]\n [18 19 20 21 22 23]]\n랭크: 2\n\n\n\ng[0,0,0] = 10\ng2\n\narray([[10,  1,  2,  3,  4,  5],\n       [ 6,  7,  8,  9, 10, 11],\n       [12, 13, 14, 15, 16, 17],\n       [18, 19, 20, 21, 22, 23]])\n\n\n행 1, 열 2의 원소를 999로 설정합니다(인덱싱 방식은 아래를 참고하세요).\n\ng2[1, 2] = 999\ng2\n\narray([[ 10,   1,   2,   3,   4,   5],\n       [  6,   7, 999,   9,  10,  11],\n       [ 12,  13,  14,  15,  16,  17],\n       [ 18,  19,  20,  21,  22,  23]])\n\n\n이에 상응하는 g의 원소도 수정됩니다.\n\ng\n\narray([[[ 10,   1,   2,   3],\n        [  4,   5,   6,   7],\n        [999,   9,  10,  11]],\n\n       [[ 12,  13,  14,  15],\n        [ 16,  17,  18,  19],\n        [ 20,  21,  22,  23]]])\n\n\n완전히 다른 공간에 값만 같게 복사를 하고 싶다면 copy를 사용.\n이렇게 할 경우 두 객체는 독립적인 객체로 존재함\n\ng2 = g.copy()\ng2\n\narray([[[ 10,   1,   2,   3],\n        [  4,   5,   6,   7],\n        [999,   9,  10,  11]],\n\n       [[ 12,  13,  14,  15],\n        [ 16,  17,  18,  19],\n        [ 20,  21,  22,  23]]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#ravel",
-    "href": "posts/numpy/week_1a_numpy.html#ravel",
-    "title": "Numpy 기본",
-    "section": "ravel",
-    "text": "ravel\n마지막으로 ravel 함수는 동일한 데이터를 가리키는 새로운 1차원 ndarray를 반환합니다:\n\ng.ravel()\n\narray([ 10,   1,   2,   3,   4,   5,   6,   7, 999,   9,  10,  11,  12,\n        13,  14,  15,  16,  17,  18,  19,  20,  21,  22,  23])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#규칙-1",
-    "href": "posts/numpy/week_1a_numpy.html#규칙-1",
-    "title": "Numpy 기본",
-    "section": "규칙 1",
-    "text": "규칙 1\n배열의 랭크가 동일하지 않으면 랭크가 맞을 때까지 랭크가 작은 배열 앞에 1을 추가합니다.\n\nh = np.arange(5).reshape(1, 1, 5)\nh\n\narray([[[0, 1, 2, 3, 4]]])\n\n\n여기에 (1,1,5) 크기의 3D 배열에 (5,) 크기의 1D 배열을 더해 보죠. 브로드캐스팅의 규칙 1이 적용됩니다!\n\nh + [10, 20, 30, 40, 50]  # 다음과 동일합니다: h + [[[10, 20, 30, 40, 50]]]\n\narray([[[10, 21, 32, 43, 54]]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#규칙-2",
-    "href": "posts/numpy/week_1a_numpy.html#규칙-2",
-    "title": "Numpy 기본",
-    "section": "규칙 2",
-    "text": "규칙 2\n특정 차원이 1인 배열은 그 차원에서 크기가 가장 큰 배열의 크기에 맞춰 동작합니다. 배열의 원소가 차원을 따라 반복됩니다.\n\nk = np.arange(6).reshape(2, 3)\nk\n\narray([[0, 1, 2],\n       [3, 4, 5]])\n\n\n(2,3) 크기의 2D ndarray에 (2,1) 크기의 2D 배열을 더해 보죠. 넘파이는 브로드캐스팅 규칙 2를 적용합니다:\n\nk + [[100], [200]]  # 다음과 같습니다: k + [[100, 100, 100], [200, 200, 200]]\n\narray([[100, 101, 102],\n       [203, 204, 205]])\n\n\n규칙 1과 2를 합치면 다음과 같이 동작합니다:\n(2,3) 크기의 ndarray에 (3,) 크기의 ndarray 더하기\n\nk\n\narray([[0, 1, 2],\n       [3, 4, 5]])\n\n\n\nk + [100, 200, 300]  # 규칙 1 적용: [[100, 200, 300]], 규칙 2 적용: [[100, 200, 300], [100, 200, 300]]\n\narray([[100, 201, 302],\n       [103, 204, 305]])\n\n\n\ntest = np.array([100, 200, 300])\ntest.shape\ntest\n\narray([100, 200, 300])\n\n\n\n# step 1\ntest = test.reshape(1,3)\ntest\n\narray([[100, 200, 300]])\n\n\n\n# step 2\nnp.vstack((test,test))\n\narray([[100, 200, 300],\n       [100, 200, 300]])\n\n\n\n# step 3\nnp.concatenate((test,test), axis=0)\n\narray([[100, 200, 300],\n       [100, 200, 300]])\n\n\n또 매우 간단히 다음처럼 해도 됩니다:\n\nk + 1000  # 다음과 같습니다: k + [[1000, 1000, 1000], [1000, 1000, 1000]]\n\narray([[1000, 1001, 1002],\n       [1003, 1004, 1005]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#규칙-3",
-    "href": "posts/numpy/week_1a_numpy.html#규칙-3",
-    "title": "Numpy 기본",
-    "section": "규칙 3",
-    "text": "규칙 3\n규칙 1 & 2을 적용했을 때 모든 배열의 크기가 맞아야 합니다.\n\nk\n\narray([[0, 1, 2],\n       [3, 4, 5]])\n\n\n\ntry:\n    k + [33, 44]\nexcept ValueError as e:\n    print(e)\n\noperands could not be broadcast together with shapes (2,3) (2,) \n\n\n브로드캐스팅 규칙은 산술 연산 뿐만 아니라 넘파이 연산에서 많이 사용됩니다. 아래에서 더 보도록 하죠. 브로드캐스팅에 관한 더 자세한 정보는 온라인 문서를 참고하세요.\n\na = np.array([[0.0],[10.0],[20.0],[30.0]])\na\n\narray([[ 0.],\n       [10.],\n       [20.],\n       [30.]])\n\n\n\na = np.array([0.0, 10.0, 20.0, 30.0])\nb = np.array([1.0, 2.0, 3.0])\na[:, np.newaxis] + b\n\narray([[ 1.,  2.,  3.],\n       [11., 12., 13.],\n       [21., 22., 23.],\n       [31., 32., 33.]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#업캐스팅",
-    "href": "posts/numpy/week_1a_numpy.html#업캐스팅",
-    "title": "Numpy 기본",
-    "section": "업캐스팅",
-    "text": "업캐스팅\ndtype이 다른 배열을 합칠 때 넘파이는 (실제 값에 상관없이) 모든 값을 다룰 수 있는 타입으로 업캐스팅합니다.\n\nk1 = np.arange(0, 5, dtype=np.uint8)\nprint(k1.dtype, k1)\n\nuint8 [0 1 2 3 4]\n\n\n\nk2 = k1 + np.array([5, 6, 7, 8, 9], dtype=np.int8)\nprint(k2.dtype, k2)\n\nint16 [ 5  7  9 11 13]\n\n\n모든 int8과 uint8 값(-128에서 255까지)을 표현하기 위해 int16이 필요합니다. 이 코드에서는 uint8이면 충분하지만 업캐스팅되었습니다.\n\nk3 = k1 + 1.5\nprint(k3.dtype, k3)\n\nfloat64 [1.5 2.5 3.5 4.5 5.5]"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#ndarray-메서드",
-    "href": "posts/numpy/week_1a_numpy.html#ndarray-메서드",
-    "title": "Numpy 기본",
-    "section": "ndarray 메서드",
-    "text": "ndarray 메서드\n일부 함수는 ndarray 메서드로 제공됩니다. 예를 들면:\n\na = np.array([[-2.5, 3.1, 7], [10, 11, 12]])\nprint(a)\nprint(\"평균 =\", a.mean()) # 축에 따라서 평균 구하고 싶으면 axis=0 1 2\n\n[[-2.5  3.1  7. ]\n [10.  11.  12. ]]\n평균 = 6.766666666666667\n\n\n이 명령은 크기에 상관없이 ndarray에 있는 모든 원소의 평균을 계산합니다.\n다음은 유용한 ndarray 메서드입니다:\n\nfor func in (a.min, a.max, a.sum, a.prod, a.std, a.var):\n    print(func.__name__, \"=\", func())\n\nmin = -2.5\nmax = 12.0\nsum = 40.6\nprod = -71610.0\nstd = 5.084835843520964\nvar = 25.855555555555554\n\n\n이 함수들은 선택적으로 매개변수 axis를 사용합니다. 지정된 축을 따라 원소에 연산을 적용하는데 사용합니다. 예를 들면:\n\nc = np.arange(24).reshape(2,3,4)\nc\n\narray([[[ 0,  1,  2,  3],\n        [ 4,  5,  6,  7],\n        [ 8,  9, 10, 11]],\n\n       [[12, 13, 14, 15],\n        [16, 17, 18, 19],\n        [20, 21, 22, 23]]])\n\n\n\nc.sum(axis=0)  # 첫 번째 축을 따라 더함, 결과는 3x4 배열\n\narray([[12, 14, 16, 18],\n       [20, 22, 24, 26],\n       [28, 30, 32, 34]])\n\n\n\nc.sum(axis=1)  # 두 번째 축을 따라 더함, 결과는 2x4 배열\n\narray([[12, 15, 18, 21],\n       [48, 51, 54, 57]])\n\n\n\nc.sum(axis=2) # 세 번째 축을 따라 더함, 결과는 2x3 배열\n\narray([[ 6, 22, 38],\n       [54, 70, 86]])\n\n\n여러 축에 대해서 더할 수도 있습니다:\n\nc\n\narray([[[ 0,  1,  2,  3],\n        [ 4,  5,  6,  7],\n        [ 8,  9, 10, 11]],\n\n       [[12, 13, 14, 15],\n        [16, 17, 18, 19],\n        [20, 21, 22, 23]]])\n\n\n\nc.sum(axis=(0,2))  # 첫 번째 축과 세 번째 축을 따라 더함, 결과는 (3,) 배열\n\narray([ 60,  92, 124])\n\n\n\n0+1+2+3 + 12+13+14+15, 4+5+6+7 + 16+17+18+19, 8+9+10+11 + 20+21+22+23\n\n(60, 92, 124)"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#일반-함수",
-    "href": "posts/numpy/week_1a_numpy.html#일반-함수",
-    "title": "Numpy 기본",
-    "section": "일반 함수",
-    "text": "일반 함수\n넘파이는 일반 함수(universal function) 또는 ufunc라고 부르는 원소별 함수를 제공합니다. 예를 들면 square 함수는 원본 ndarray를 복사하여 각 원소를 제곱한 새로운 ndarray 객체를 반환합니다:\n\na = np.array([[-2.5, 3.1, 7], [10, 11, 12]])\nnp.square(a)\n\narray([[  6.25,   9.61,  49.  ],\n       [100.  , 121.  , 144.  ]])\n\n\n다음은 유용한 단항 일반 함수들입니다:\n\nprint(\"원본 ndarray\")\nprint(a)\nfor func in (np.abs, np.sqrt, np.exp, np.log, np.sign, np.ceil, np.modf, np.isnan, np.cos):\n    print(\"\\n\", func.__name__)\n    print(func(a))\n\n원본 ndarray\n[[-2.5  3.1  7. ]\n [10.  11.  12. ]]\n\n absolute\n[[ 2.5  3.1  7. ]\n [10.  11.  12. ]]\n\n sqrt\n[[       nan 1.76068169 2.64575131]\n [3.16227766 3.31662479 3.46410162]]\n\n exp\n[[8.20849986e-02 2.21979513e+01 1.09663316e+03]\n [2.20264658e+04 5.98741417e+04 1.62754791e+05]]\n\n log\n[[       nan 1.13140211 1.94591015]\n [2.30258509 2.39789527 2.48490665]]\n\n sign\n[[-1.  1.  1.]\n [ 1.  1.  1.]]\n\n ceil\n[[-2.  4.  7.]\n [10. 11. 12.]]\n\n modf\n(array([[-0.5,  0.1,  0. ],\n       [ 0. ,  0. ,  0. ]]), array([[-2.,  3.,  7.],\n       [10., 11., 12.]]))\n\n isnan\n[[False False False]\n [False False False]]\n\n cos\n[[-0.80114362 -0.99913515  0.75390225]\n [-0.83907153  0.0044257   0.84385396]]\n\n\nC:\\Users\\Public\\Documents\\ESTsoft\\CreatorTemp\\ipykernel_14512\\4103705789.py:5: RuntimeWarning:\n\ninvalid value encountered in sqrt\n\nC:\\Users\\Public\\Documents\\ESTsoft\\CreatorTemp\\ipykernel_14512\\4103705789.py:5: RuntimeWarning:\n\ninvalid value encountered in log"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#이항-일반-함수",
-    "href": "posts/numpy/week_1a_numpy.html#이항-일반-함수",
-    "title": "Numpy 기본",
-    "section": "이항 일반 함수",
-    "text": "이항 일반 함수\n두 개의 ndarray에 원소별로 적용되는 이항 함수도 많습니다. 두 배열이 동일한 크기가 아니면 브로드캐스팅 규칙이 적용됩니다:\n\na = np.array([1, -2, 3, 4])\nb = np.array([2, 8, -1, 7])\nnp.add(a, b)  # a + b 와 동일\n\narray([ 3,  6,  2, 11])\n\n\n\nnp.greater(a, b)  # a > b 와 동일\n\narray([False, False,  True, False])\n\n\n\nnp.maximum(a, b)\n\narray([2, 8, 3, 7])\n\n\n\nnp.copysign(a, b)\n\narray([ 1.,  2., -3.,  4.])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#차원-배열",
-    "href": "posts/numpy/week_1a_numpy.html#차원-배열",
-    "title": "Numpy 기본",
-    "section": "1차원 배열",
-    "text": "1차원 배열\n1차원 넘파이 배열은 보통의 파이썬 배열과 비슷하게 사용할 수 있습니다:\n\na = np.array([1, 5, 3, 19, 13, 7, 3])\na[3]\n\n19\n\n\n\na[2:5]\n\narray([ 3, 19, 13])\n\n\n\na[2:-1]\n\narray([ 3, 19, 13,  7])\n\n\n\na[:2]\n\narray([1, 5])\n\n\n\na[2::2]\n\narray([ 3, 13,  3])\n\n\n\na[::-1]\n\narray([ 3,  7, 13, 19,  3,  5,  1])\n\n\n물론 원소를 수정할 수 있죠:\n\na[3]=999\na\n\narray([  1,   5,   3, 999,  13,   7,   3])\n\n\n슬라이싱을 사용해 ndarray를 수정할 수 있습니다:\n\na[2:5] = [997, 998, 999]\na\n\narray([  1,   5, 997, 998, 999,   7,   3])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#보통의-파이썬-배열과-차이점",
-    "href": "posts/numpy/week_1a_numpy.html#보통의-파이썬-배열과-차이점",
-    "title": "Numpy 기본",
-    "section": "보통의 파이썬 배열과 차이점",
-    "text": "보통의 파이썬 배열과 차이점\n보통의 파이썬 배열과 대조적으로 ndarray 슬라이싱에 하나의 값을 할당하면 슬라이싱 전체에 복사됩니다. 위에서 언급한 브로드캐스팅 덕택입니다.\n\na = np.array([1, 5, 3, 19, 13, 7, 3])\na\n\narray([ 1,  5,  3, 19, 13,  7,  3])\n\n\n\na[2:5] = -1\na\n\narray([ 1,  5, -1, -1, -1,  7,  3])\n\n\nList는 브로드캐스팅으로 할당이 안됨\n\nb = [1, 5, 3, 19, 13, 7, 3]\n#b[2:5] = -1\n\n또한 이런 식으로 ndarray 크기를 늘리거나 줄일 수 없습니다:\n\ntry:\n    a[2:5] = [1,2,3,4,5,6]  # 너무 길어요\nexcept ValueError as e:\n    print(e)\n\ncould not broadcast input array from shape (6,) into shape (3,)\n\n\n원소를 삭제할 수도 없습니다:\n\ntry:\n    del a[2:5]\nexcept ValueError as e:\n    print(e)\n\ncannot delete array elements\n\n\nList에서는 삭제가 가능\n\nb = [1, 5, 3, 19, 13, 7, 3]\ndel b[2:5]\nb\n\n[1, 5, 7, 3]\n\n\n중요한 점은 ndarray의 슬라이싱은 같은 데이터 버퍼를 바라보는 뷰(view)입니다. 슬라이싱된 객체를 수정하면 실제 원본 ndarray가 수정됩니다!\n\na_slice = a[2:6]\na_slice[1] = 1000\na  # 원본 배열이 수정됩니다!\n\narray([   1,    5,   -1, 1000,   -1,    7,    3])\n\n\n\na[3] = 2000\na_slice  # 비슷하게 원본 배열을 수정하면 슬라이싱 객체에도 반영됩니다!\n\narray([  -1, 2000,   -1,    7])\n\n\n데이터를 복사하려면 copy 메서드를 사용해야 합니다:\n\nanother_slice = a[2:6].copy()\nanother_slice[1] = 3000\na  # 원본 배열이 수정되지 않습니다.\n\narray([   1,    5,   -1, 2000,   -1,    7,    3])\n\n\n\na[3] = 4000\nanother_slice  # 마찬가지로 원본 배열을 수정해도 복사된 배열은 바뀌지 않습니다.\n\narray([  -1, 3000,   -1,    7])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#다차원-배열",
-    "href": "posts/numpy/week_1a_numpy.html#다차원-배열",
-    "title": "Numpy 기본",
-    "section": "다차원 배열",
-    "text": "다차원 배열\n다차원 배열은 비슷한 방식으로 각 축을 따라 인덱싱 또는 슬라이싱해서 사용합니다. 콤마로 구분합니다:\n\nb = np.arange(48).reshape(4, 12)\nb\n\narray([[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11],\n       [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],\n       [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35],\n       [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]])\n\n\n\nb[1, 2]  # 행 1, 열 2\n\n14\n\n\n\nb[1, :]  # 행 1, 모든 열\n\narray([12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23])\n\n\n\nb[:, 1]  # 모든 행, 열 1\n\narray([ 1, 13, 25, 37])\n\n\n주의: 다음 두 표현에는 미묘한 차이가 있습니다:\n\nb[1, :]\n\narray([12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23])\n\n\n\nb[1, :].shape\n\n(12,)\n\n\n\nb[1:2, :]\n\narray([[12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]])\n\n\n\nb[1:2, :].shape\n\n(1, 12)\n\n\n첫 번째 표현식은 (12,) 크기인 1D 배열로 행이 하나입니다. 두 번째는 (1, 12) 크기인 2D 배열로 같은 행을 반환합니다."
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#팬시-인덱싱fancy-indexing",
-    "href": "posts/numpy/week_1a_numpy.html#팬시-인덱싱fancy-indexing",
-    "title": "Numpy 기본",
-    "section": "팬시 인덱싱(Fancy indexing)",
-    "text": "팬시 인덱싱(Fancy indexing)\n관심 대상의 인덱스 리스트를 지정할 수도 있습니다. 이를 팬시 인덱싱이라고 부릅니다.\n\nb\n\narray([[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11],\n       [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],\n       [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35],\n       [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]])\n\n\n\nb[(0,2), 2:5]  # 행 0과 2, 열 2에서 4(5-1)까지\n\narray([[ 2,  3,  4],\n       [26, 27, 28]])\n\n\n\nb[:, (-1, 2, -1)]  # 모든 행, 열 -1 (마지막), 2와 -1 (다시 반대 방향으로)\n\narray([[11,  2, 11],\n       [23, 14, 23],\n       [35, 26, 35],\n       [47, 38, 47]])\n\n\n\nb[(2,3), 0:2] # b[2:,0:2]\n\narray([[24, 25],\n       [36, 37]])\n\n\n여러 개의 인덱스 리스트를 지정하면 인덱스에 맞는 값이 포함된 1D ndarray를 반환됩니다.\n\nb\n\narray([[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11],\n       [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],\n       [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35],\n       [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]])\n\n\n\nb[(-1, 2, -1, 2), (5, 9, 1, 9)]  # returns a 1D array with b[-1, 5], b[2, 9], b[-1, 1] and b[2, 9] (again)\n\narray([41, 33, 37, 33])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#고차원",
-    "href": "posts/numpy/week_1a_numpy.html#고차원",
-    "title": "Numpy 기본",
-    "section": "고차원",
-    "text": "고차원\n고차원에서도 동일한 방식이 적용됩니다. 몇 가지 예를 살펴 보겠습니다:\n\nc = b.reshape(4,2,6)\nc\n\narray([[[ 0,  1,  2,  3,  4,  5],\n        [ 6,  7,  8,  9, 10, 11]],\n\n       [[12, 13, 14, 15, 16, 17],\n        [18, 19, 20, 21, 22, 23]],\n\n       [[24, 25, 26, 27, 28, 29],\n        [30, 31, 32, 33, 34, 35]],\n\n       [[36, 37, 38, 39, 40, 41],\n        [42, 43, 44, 45, 46, 47]]])\n\n\n\nc[2, 1, 4]  # 행렬 2, 행 1, 열 4\n\n34\n\n\n\nc[2, :, 3]  # 행렬 2, 모든 행, 열 3\n\narray([27, 33])\n\n\n어떤 축에 대한 인덱스를 지정하지 않으면 이 축의 모든 원소가 반환됩니다:\n\nc[2, 1]  # 행렬 2, 행 1, 모든 열이 반환됩니다. c[2, 1, :]와 동일합니다.\n\narray([30, 31, 32, 33, 34, 35])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#생략-부호-...",
-    "href": "posts/numpy/week_1a_numpy.html#생략-부호-...",
-    "title": "Numpy 기본",
-    "section": "생략 부호 (...)",
-    "text": "생략 부호 (...)\n생략 부호(...)를 쓰면 모든 지정하지 않은 축의 원소를 포함합니다.\n\nc[2, ...]  #  행렬 2, 모든 행, 모든 열. c[2, :, :]와 동일\n\narray([[24, 25, 26, 27, 28, 29],\n       [30, 31, 32, 33, 34, 35]])\n\n\n\nc[2, 1, ...]  # 행렬 2, 행 1, 모든 열. c[2, 1, :]와 동일\n\narray([30, 31, 32, 33, 34, 35])\n\n\n\nc[2, ..., 3]  # 행렬 2, 모든 행, 열 3. c[2, :, 3]와 동일\n\narray([27, 33])\n\n\n\nc[..., 3]  # 모든 행렬, 모든 행, 열 3. c[:, :, 3]와 동일\n\narray([[ 3,  9],\n       [15, 21],\n       [27, 33],\n       [39, 45]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#불리언-인덱싱",
-    "href": "posts/numpy/week_1a_numpy.html#불리언-인덱싱",
-    "title": "Numpy 기본",
-    "section": "불리언 인덱싱",
-    "text": "불리언 인덱싱\n불리언 값을 가진 ndarray를 사용해 축의 인덱스를 지정할 수 있습니다.\n\nb = np.arange(48).reshape(4, 12)\nb\n\narray([[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11],\n       [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],\n       [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35],\n       [36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]])\n\n\n\nrows_on = np.array([True, False, True, False])\nb[rows_on, :]  # 행 0과 2, 모든 열. b[(0, 2), :]와 동일\n\narray([[ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11],\n       [24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35]])\n\n\n\ncols_on = np.array([False, True, False] * 4)\nb[:, cols_on]  # 모든 행, 열 1, 4, 7, 10\n\narray([[ 1,  4,  7, 10],\n       [13, 16, 19, 22],\n       [25, 28, 31, 34],\n       [37, 40, 43, 46]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#np.ix_",
-    "href": "posts/numpy/week_1a_numpy.html#np.ix_",
-    "title": "Numpy 기본",
-    "section": "np.ix_",
-    "text": "np.ix_\n여러 축에 걸쳐서는 불리언 인덱싱을 사용할 수 없고 ix_ 함수를 사용합니다:\n\nb[np.ix_((0,2),(1,4,7,10))]\n\narray([[ 1,  4,  7, 10],\n       [25, 28, 31, 34]])\n\n\n\nb[np.ix_(rows_on, cols_on)]\n\narray([[ 1,  4,  7, 10],\n       [25, 28, 31, 34]])\n\n\n\nnp.ix_(rows_on, cols_on)\n\n(array([[0],\n        [2]], dtype=int64),\n array([[ 1,  4,  7, 10]], dtype=int64))\n\n\nndarray와 같은 크기의 불리언 배열을 사용하면 해당 위치가 True인 모든 원소를 담은 1D 배열이 반환됩니다. 일반적으로 조건 연산자와 함께 사용합니다:\n\nb.shape\n\n(4, 12)\n\n\n\nb[b % 3 == 1] # 나머지\n\narray([ 1,  4,  7, 10, 13, 16, 19, 22, 25, 28, 31, 34, 37, 40, 43, 46])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#vstack",
-    "href": "posts/numpy/week_1a_numpy.html#vstack",
-    "title": "Numpy 기본",
-    "section": "vstack",
-    "text": "vstack\nvstack 함수를 사용하여 수직으로 쌓아보죠:\n\nq4 = np.vstack((q1, q2, q3))\nq4\n\narray([[1., 1., 1., 1.],\n       [1., 1., 1., 1.],\n       [1., 1., 1., 1.],\n       [2., 2., 2., 2.],\n       [2., 2., 2., 2.],\n       [2., 2., 2., 2.],\n       [2., 2., 2., 2.],\n       [3., 3., 3., 3.],\n       [3., 3., 3., 3.],\n       [3., 3., 3., 3.]])\n\n\n\nq4.shape\n\n(10, 4)\n\n\nq1, q2, q3가 모두 같은 크기이므로 가능합니다(수직으로 쌓기 때문에 수직 축은 크기가 달라도 됩니다)."
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#hstack",
-    "href": "posts/numpy/week_1a_numpy.html#hstack",
-    "title": "Numpy 기본",
-    "section": "hstack",
-    "text": "hstack\nhstack을 사용해 수평으로도 쌓을 수 있습니다:\n\nq5 = np.hstack((q1, q3))\nq5\n\narray([[1., 1., 1., 1., 3., 3., 3., 3.],\n       [1., 1., 1., 1., 3., 3., 3., 3.],\n       [1., 1., 1., 1., 3., 3., 3., 3.]])\n\n\n\nq5.shape\n\n(3, 8)\n\n\nq1과 q3가 모두 3개의 행을 가지고 있기 때문에 가능합니다. q2는 4개의 행을 가지고 있기 때문에 q1, q3와 수평으로 쌓을 수 없습니다:\n\ntry:\n    q5 = np.hstack((q1, q2, q3))\nexcept ValueError as e:\n    print(e)\n\nall the input array dimensions for the concatenation axis must match exactly, but along dimension 0, the array at index 0 has size 3 and the array at index 1 has size 4"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#concatenate",
-    "href": "posts/numpy/week_1a_numpy.html#concatenate",
-    "title": "Numpy 기본",
-    "section": "concatenate",
-    "text": "concatenate\nconcatenate 함수는 지정한 축으로도 배열을 쌓습니다.\n\nq7 = np.concatenate((q1, q2, q3), axis=0)  # vstack과 동일\nq7\n\narray([[1., 1., 1., 1.],\n       [1., 1., 1., 1.],\n       [1., 1., 1., 1.],\n       [2., 2., 2., 2.],\n       [2., 2., 2., 2.],\n       [2., 2., 2., 2.],\n       [2., 2., 2., 2.],\n       [3., 3., 3., 3.],\n       [3., 3., 3., 3.],\n       [3., 3., 3., 3.]])\n\n\n\nq7.shape\n\n(10, 4)\n\n\n예상했겠지만 hstack은 axis=1으로 concatenate를 호출하는 것과 같습니다.\n\nq5 = np.hstack((q1, q3))\nq5\n\narray([[1., 1., 1., 1., 3., 3., 3., 3.],\n       [1., 1., 1., 1., 3., 3., 3., 3.],\n       [1., 1., 1., 1., 3., 3., 3., 3.]])\n\n\n\nnp.concatenate((q1,q3), axis=1)\n\narray([[1., 1., 1., 1., 3., 3., 3., 3.],\n       [1., 1., 1., 1., 3., 3., 3., 3.],\n       [1., 1., 1., 1., 3., 3., 3., 3.]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#stack",
-    "href": "posts/numpy/week_1a_numpy.html#stack",
-    "title": "Numpy 기본",
-    "section": "stack",
-    "text": "stack\nstack 함수는 새로운 축을 따라 배열을 쌓습니다. 모든 배열은 같은 크기를 가져야 합니다.\n\nq1.shape, q3.shape\n\n((3, 4), (3, 4))\n\n\n\nq8 = np.stack((q1, q3))\nq8\n\narray([[[1., 1., 1., 1.],\n        [1., 1., 1., 1.],\n        [1., 1., 1., 1.]],\n\n       [[3., 3., 3., 3.],\n        [3., 3., 3., 3.],\n        [3., 3., 3., 3.]]])\n\n\n\nq8.shape\n\n(2, 3, 4)"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#행렬-전치",
-    "href": "posts/numpy/week_1a_numpy.html#행렬-전치",
-    "title": "Numpy 기본",
-    "section": "행렬 전치",
-    "text": "행렬 전치\nT 속성은 랭크가 2보다 크거나 같을 때 transpose()를 호출하는 것과 같습니다:\n\nm1 = np.arange(10).reshape(2,5)\nm1\n\narray([[0, 1, 2, 3, 4],\n       [5, 6, 7, 8, 9]])\n\n\n\nm1.T\n\narray([[0, 5],\n       [1, 6],\n       [2, 7],\n       [3, 8],\n       [4, 9]])\n\n\nT 속성은 랭크가 0이거나 1인 배열에는 아무런 영향을 미치지 않습니다:\n\nm2 = np.arange(5)\nm2\n\narray([0, 1, 2, 3, 4])\n\n\n\nm2.T\n\narray([0, 1, 2, 3, 4])\n\n\n먼저 1D 배열을 하나의 행이 있는 행렬(2D)로 바꾼다음 전치를 수행할 수 있습니다:\n\nm2r = m2.reshape(1,5)\nm2r\n\narray([[0, 1, 2, 3, 4]])\n\n\n\nm2r.T\n\narray([[0],\n       [1],\n       [2],\n       [3],\n       [4]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#행렬-곱셈",
-    "href": "posts/numpy/week_1a_numpy.html#행렬-곱셈",
-    "title": "Numpy 기본",
-    "section": "행렬 곱셈",
-    "text": "행렬 곱셈\n두 개의 행렬을 만들어 dot 메서드로 행렬 곱셈을 실행해 보죠.\n\nn1 = np.arange(10).reshape(2, 5)\nn1\n\narray([[0, 1, 2, 3, 4],\n       [5, 6, 7, 8, 9]])\n\n\n\nn2 = np.arange(15).reshape(5,3)\nn2\n\narray([[ 0,  1,  2],\n       [ 3,  4,  5],\n       [ 6,  7,  8],\n       [ 9, 10, 11],\n       [12, 13, 14]])\n\n\n\nn1.dot(n2)\n\narray([[ 90, 100, 110],\n       [240, 275, 310]])\n\n\n주의: 앞서 언급한 것처럼 n1*n2는 행렬 곱셈이 아니라 원소별 곱셈(또는 아다마르 곱이라 부릅니다)입니다."
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#역행렬과-유사-역행렬",
-    "href": "posts/numpy/week_1a_numpy.html#역행렬과-유사-역행렬",
-    "title": "Numpy 기본",
-    "section": "역행렬과 유사 역행렬",
-    "text": "역행렬과 유사 역행렬\nnumpy.linalg 모듈 안에 많은 선형 대수 함수들이 있습니다. 특히 inv 함수는 정방 행렬의 역행렬을 계산합니다:\n\nimport numpy.linalg as linalg\n\nm3 = np.array([[1,2,3],[5,7,11],[21,29,31]])\nm3\n\narray([[ 1,  2,  3],\n       [ 5,  7, 11],\n       [21, 29, 31]])\n\n\n\nlinalg.inv(m3)\n\narray([[-2.31818182,  0.56818182,  0.02272727],\n       [ 1.72727273, -0.72727273,  0.09090909],\n       [-0.04545455,  0.29545455, -0.06818182]])\n\n\npinv 함수를 사용하여 유사 역행렬을 계산할 수도 있습니다:\n\nlinalg.pinv(m3)\n\narray([[-2.31818182,  0.56818182,  0.02272727],\n       [ 1.72727273, -0.72727273,  0.09090909],\n       [-0.04545455,  0.29545455, -0.06818182]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#단위-행렬",
-    "href": "posts/numpy/week_1a_numpy.html#단위-행렬",
-    "title": "Numpy 기본",
-    "section": "단위 행렬",
-    "text": "단위 행렬\n행렬과 그 행렬의 역행렬을 곱하면 단위 행렬이 됩니다(작은 소숫점 오차가 있습니다):\n\nm3.dot(linalg.inv(m3))\n\narray([[ 1.00000000e+00, -5.55111512e-17,  0.00000000e+00],\n       [-2.98372438e-16,  1.00000000e+00, -5.55111512e-17],\n       [ 5.78009862e-15,  1.27675648e-15,  1.00000000e+00]])\n\n\neye 함수는 NxN 크기의 단위 행렬을 만듭니다:\n\nnp.eye(3)\n\narray([[1., 0., 0.],\n       [0., 1., 0.],\n       [0., 0., 1.]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#qr-분해",
-    "href": "posts/numpy/week_1a_numpy.html#qr-분해",
-    "title": "Numpy 기본",
-    "section": "QR 분해",
-    "text": "QR 분해\nqr 함수는 행렬을 QR 분해합니다:\n\nq, r = linalg.qr(m3)\nq\n\narray([[-0.04627448,  0.98786672,  0.14824986],\n       [-0.23137241,  0.13377362, -0.96362411],\n       [-0.97176411, -0.07889213,  0.22237479]])\n\n\n\nr\n\narray([[-21.61018278, -29.89331494, -32.80860727],\n       [  0.        ,   0.62427688,   1.9894538 ],\n       [  0.        ,   0.        ,  -3.26149699]])\n\n\n\nq.dot(r)  # q.r는 m3와 같습니다\n\narray([[ 1.,  2.,  3.],\n       [ 5.,  7., 11.],\n       [21., 29., 31.]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#행렬식",
-    "href": "posts/numpy/week_1a_numpy.html#행렬식",
-    "title": "Numpy 기본",
-    "section": "행렬식",
-    "text": "행렬식\ndet 함수는 행렬식을 계산합니다:\n\nlinalg.det(m3)  # 행렬식 계산\n\n43.99999999999999"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#고윳값과-고유벡터",
-    "href": "posts/numpy/week_1a_numpy.html#고윳값과-고유벡터",
-    "title": "Numpy 기본",
-    "section": "고윳값과 고유벡터",
-    "text": "고윳값과 고유벡터\neig 함수는 정방 행렬의 고윳값과 고유벡터를 계산합니다:\n\neigenvalues, eigenvectors = linalg.eig(m3)\neigenvalues # λ\n\narray([42.26600592, -0.35798416, -2.90802176])\n\n\n\neigenvectors # v\n\narray([[-0.08381182, -0.76283526, -0.18913107],\n       [-0.3075286 ,  0.64133975, -0.6853186 ],\n       [-0.94784057, -0.08225377,  0.70325518]])\n\n\n\nm3.dot(eigenvectors) - eigenvalues * eigenvectors  # m3.v - λ*v = 0\n\narray([[6.66133815e-15, 1.11022302e-16, 4.44089210e-16],\n       [7.10542736e-15, 2.88657986e-15, 3.10862447e-15],\n       [3.55271368e-14, 6.81746326e-15, 4.88498131e-15]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#특잇값-분해",
-    "href": "posts/numpy/week_1a_numpy.html#특잇값-분해",
-    "title": "Numpy 기본",
-    "section": "특잇값 분해",
-    "text": "특잇값 분해\nsvd 함수는 행렬을 입력으로 받아 그 행렬의 특잇값 분해를 반환합니다:\n\nm4 = np.array([[1,0,0,0,2], [0,0,3,0,0], [0,0,0,0,0], [0,2,0,0,0]])\nm4\n\narray([[1, 0, 0, 0, 2],\n       [0, 0, 3, 0, 0],\n       [0, 0, 0, 0, 0],\n       [0, 2, 0, 0, 0]])\n\n\n\nU, S_diag, V = linalg.svd(m4)\nU\n\narray([[ 0.,  1.,  0.,  0.],\n       [ 1.,  0.,  0.,  0.],\n       [ 0.,  0.,  0., -1.],\n       [ 0.,  0.,  1.,  0.]])\n\n\n\nS_diag\n\narray([3.        , 2.23606798, 2.        , 0.        ])\n\n\nsvd 함수는 Σ의 대각 원소 값만 반환합니다. 전체 Σ 행렬은 다음과 같이 만듭니다:\n\nS = np.zeros((4, 5))\nS[np.diag_indices(4)] = S_diag\nS  # Σ\n\narray([[3.        , 0.        , 0.        , 0.        , 0.        ],\n       [0.        , 2.23606798, 0.        , 0.        , 0.        ],\n       [0.        , 0.        , 2.        , 0.        , 0.        ],\n       [0.        , 0.        , 0.        , 0.        , 0.        ]])\n\n\n\nV\n\narray([[-0.        ,  0.        ,  1.        ,  0.        ,  0.        ],\n       [ 0.4472136 ,  0.        ,  0.        ,  0.        ,  0.89442719],\n       [-0.        ,  1.        ,  0.        ,  0.        ,  0.        ],\n       [ 0.        ,  0.        ,  0.        ,  1.        ,  0.        ],\n       [-0.89442719,  0.        ,  0.        ,  0.        ,  0.4472136 ]])\n\n\n\nU.dot(S).dot(V) # U.Σ.V == m4\n\narray([[1., 0., 0., 0., 2.],\n       [0., 0., 3., 0., 0.],\n       [0., 0., 0., 0., 0.],\n       [0., 2., 0., 0., 0.]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#대각원소와-대각합",
-    "href": "posts/numpy/week_1a_numpy.html#대각원소와-대각합",
-    "title": "Numpy 기본",
-    "section": "대각원소와 대각합",
-    "text": "대각원소와 대각합\n\nnp.diag(m3)  # m3의 대각 원소입니다(왼쪽 위에서 오른쪽 아래)\n\narray([ 1,  7, 31])\n\n\n\nnp.trace(m3)  # np.diag(m3).sum()와 같습니다\n\n39"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#선형-방정식-풀기",
-    "href": "posts/numpy/week_1a_numpy.html#선형-방정식-풀기",
-    "title": "Numpy 기본",
-    "section": "선형 방정식 풀기",
-    "text": "선형 방정식 풀기\nsolve 함수는 다음과 같은 선형 방정식을 풉니다:\n\n\\(2x + 6y = 6\\)\n\\(5x + 3y = -9\\)\n\n\ncoeffs  = np.array([[2, 6], [5, 3]])\ndepvars = np.array([6, -9])\nsolution = linalg.solve(coeffs, depvars)\nsolution\n\narray([-3.,  2.])\n\n\nsolution을 확인해 보죠:\n\ncoeffs.dot(solution), depvars  # 네 같네요\n\n(array([ 6., -9.]), array([ 6, -9]))\n\n\n좋습니다! 다른 방식으로도 solution을 확인해 보죠:\n\nnp.allclose(coeffs.dot(solution), depvars)\n\nTrue"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#바이너리-.npy-포맷",
-    "href": "posts/numpy/week_1a_numpy.html#바이너리-.npy-포맷",
-    "title": "Numpy 기본",
-    "section": "바이너리 .npy 포맷",
-    "text": "바이너리 .npy 포맷\n랜덤 배열을 만들고 저장해 보죠.\n\na = np.random.rand(2,3)\na\n\narray([[0.40391149, 0.66723225, 0.45185553],\n       [0.51024434, 0.80825331, 0.31814966]])\n\n\n\nnp.save(\"my_array\", a)\n\n끝입니다! 파일 이름의 확장자를 지정하지 않았기 때문에 넘파이는 자동으로 .npy를 붙입니다. 파일 내용을 확인해 보겠습니다:\n\nwith open(\"my_array.npy\", \"rb\") as f:\n    content = f.read()\n\ncontent\n\nb\"\\x93NUMPY\\x01\\x00v\\x00{'descr': '<f8', 'fortran_order': False, 'shape': (2, 3), }                                                          \\n\\xf43\\xf3\\x8e\\xaf\\xd9\\xd9?\\x8c\\x13ep\\xf7Y\\xe5?\\xf6\\xf4Py3\\xeb\\xdc?\\xfay\\xf9\\xf1\\xebS\\xe0?KWP\\t6\\xdd\\xe9?\\xf62fh\\x90\\\\\\xd4?\"\n\n\n이 파일을 넘파이 배열로 로드하려면 load 함수를 사용합니다:\n\na_loaded = np.load(\"my_array.npy\")\na_loaded\n\narray([[0.40391149, 0.66723225, 0.45185553],\n       [0.51024434, 0.80825331, 0.31814966]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#텍스트-포맷",
-    "href": "posts/numpy/week_1a_numpy.html#텍스트-포맷",
-    "title": "Numpy 기본",
-    "section": "텍스트 포맷",
-    "text": "텍스트 포맷\n배열을 텍스트 포맷으로 저장해 보죠:\n\nnp.savetxt(\"my_array.csv\", a)\n\n파일 내용을 확인해 보겠습니다:\n\nwith open(\"my_array.csv\", \"rt\") as f:\n    print(f.read())\n\n4.039114852901655173e-01 6.672322459422601604e-01 4.518555340508351170e-01\n5.102443433823389274e-01 8.082533056174069364e-01 3.181496638797364218e-01\n\n\n\n이 파일은 탭으로 구분된 CSV 파일입니다. 다른 구분자를 지정할 수도 있습니다:\n\nnp.savetxt(\"my_array.csv\", a, delimiter=\",\")\n\n이 파일을 로드하려면 loadtxt 함수를 사용합니다:\n\na_loaded = np.loadtxt(\"my_array.csv\", delimiter=\",\")\na_loaded\n\narray([[0.40391149, 0.66723225, 0.45185553],\n       [0.51024434, 0.80825331, 0.31814966]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#압축된-.npz-포맷",
-    "href": "posts/numpy/week_1a_numpy.html#압축된-.npz-포맷",
-    "title": "Numpy 기본",
-    "section": "압축된 .npz 포맷",
-    "text": "압축된 .npz 포맷\n여러 개의 배열을 압축된 한 파일로 저장하는 것도 가능합니다:\n\nb = np.arange(24, dtype=np.uint8).reshape(2, 3, 4)\nb\n\narray([[[ 0,  1,  2,  3],\n        [ 4,  5,  6,  7],\n        [ 8,  9, 10, 11]],\n\n       [[12, 13, 14, 15],\n        [16, 17, 18, 19],\n        [20, 21, 22, 23]]], dtype=uint8)\n\n\n\nnp.savez(\"my_arrays\", my_a=a, my_b=b)\n\n파일 내용을 확인해 보죠. .npz 파일 확장자가 자동으로 추가되었습니다.\n\nwith open(\"my_arrays.npz\", \"rb\") as f:\n    content = f.read()\n\nrepr(content)[:180] + \"[...]\"\n\n'b\"PK\\\\x03\\\\x04\\\\x14\\\\x00\\\\x00\\\\x00\\\\x00\\\\x00\\\\x00\\\\x00!\\\\x00\\\\x9eE\\\\xc1\\\\xcc\\\\xb0\\\\x00\\\\x00\\\\x00\\\\xb0\\\\x00\\\\x00\\\\x00\\\\x08\\\\x00\\\\x14\\\\x00my_a.npy\\\\x01\\\\x00\\\\x10\\\\x00\\\\xb0\\\\x00\\\\x00\\\\x00\\\\x00\\\\x00\\\\x00\\\\x00\\\\xb0\\\\x00\\\\x00\\\\x[...]'\n\n\n다음과 같이 이 파일을 로드할 수 있습니다:\n\nmy_arrays = np.load(\"my_arrays.npz\")\nmy_arrays\n\n<numpy.lib.npyio.NpzFile at 0x1e68f763610>\n\n\n게으른 로딩을 수행하는 딕셔너리와 유사한 객체입니다:\n\nmy_arrays.keys()\n\nKeysView(<numpy.lib.npyio.NpzFile object at 0x000001E68F763610>)\n\n\n\nmy_arrays[\"my_a\"]\n\narray([[0.40391149, 0.66723225, 0.45185553],\n       [0.51024434, 0.80825331, 0.31814966]])"
-  },
-  {
-    "objectID": "posts/numpy/week_1a_numpy.html#quiz.",
-    "href": "posts/numpy/week_1a_numpy.html#quiz.",
-    "title": "Numpy 기본",
-    "section": "Quiz.",
-    "text": "Quiz.\n아래의 array를 사용해서 다음 퀴즈를 풀어봅시다.\n\nimport numpy as np\n\n# array_2d = np.arange(5,50,5).reshape(3,3)\narray_2d = np.array([[5, 10, 15],\n                     [20, 25, 30],\n                     [35, 40, 45]])\narray_2d\n\narray([[ 5, 10, 15],\n       [20, 25, 30],\n       [35, 40, 45]])\n\n\n\n2차원 배열 ’array_2d’에서 첫 번째 행(row)의 모든 요소를 선택해 보세요.\n> 힌트: 인덱싱을 사용하여 첫 번째 행을 선택할 수 있습니다.\n\n\narray_2d[0,:]\n\narray([ 5, 10, 15])\n\n\n\n2차원 배열 ’array_2d’에서 두 번째 열(column)의 모든 요소를 선택해 보세요.\n> 힌트: 인덱싱과 슬라이싱을 사용하여 두 번째 열을 선택할 수 있습니다.\n\n\narray_2d[:,1]\n\narray([10, 25, 40])\n\n\n\n2차원 배열 ’array_2d’에서 다음 요소들을 선택해 보세요: 25, 30, 40, 45\n> 힌트: 팬시 인덱싱(fancy indexing)을 사용하여 여러 요소를 한 번에 선택할 수 있습니다.\n\n\narray_2d[(1,2),1:3]\n\narray([[25, 30],\n       [40, 45]])"
+    "objectID": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#summary",
+    "href": "posts/increase_loop_speed/week_1c_increase_loop_speed.html#summary",
+    "title": "For loop 속도 개선하기",
+    "section": "",
+    "text": "판다스 코드 최적화에 관해 몇 가지 기본적인 결론을 내릴 수 있다.\n1 . 반복을 피해라. 사용 사례 대부분의 경우 반복은 느리고 불필요하다.\n2 . 반복해야 하는 경우 반복 함수가 아닌 itertuples()를 사용해라.\n3 . 보통은 벡터화가 스칼라 연산보다 낫다. 대부분의 판다스 작업은 벡터화시킬 수 있다.\n4 . 넘파이 배열에서의 벡터 연산은 판다스 시리즈에서 수행하는 것보다 효율적이다.\n\n\n아래의 조건을 만족하는 호텔의 List를 출력해 봅시다.\n\n현재 나는 (“latitude”, “longitude”) = (40.671, -73.985) 위치에 있고, 숙박할 호텔을 찾고 있습니다.\n직선거리 기준으로 200마일 안쪽에 있었으면 좋겠습니다.\nstar_rating이 4 이상인 호텔을 찾고 있습니다.\n\n해당 조건을 만족하는 호텔들을 출력해 봅시다.\n\ndf['distance'] = haversine(40.671, -73.985,\\\n                                   df['latitude'], df['longitude'])\ndf[(df['distance'] &lt;= 200) & (df['star_rating'] &gt;= 4)][['name', 'distance', 'star_rating']]\n\n\n\n\n\n\n\n\nname\ndistance\nstar_rating\n\n\n\n\n114\nTopping Rose House\n90.001264\n4.5\n\n\n129\nSheraton Brooklyn New York Hotel\n1.423805\n4.0\n\n\n134\nMcCarren Hotel & Pool\n3.786288\n4.0\n\n\n142\nThe Box House Hotel\n4.885345\n4.0\n\n\n154\nNew York Marriott at the Brooklyn Bridge\n1.577023\n4.0\n\n\n...\n...\n...\n...\n\n\n1592\nViana Hotel & Spa, BW Premier Collection\n23.431169\n4.0\n\n\n1600\nThe Ritz-Carlton New York, Westchester\n27.466891\n5.0\n\n\n1601\nFurnished Quarters Bank Street Commons\n27.174550\n4.0\n\n\n1602\nGlobal Luxury Apartments in White Plains\n27.241501\n4.0\n\n\n1603\nGlobal Luxury Suites at White Plains\n27.604500\n4.0\n\n\n\n\n245 rows × 3 columns"
   }
 ]
