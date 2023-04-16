@@ -7,7 +7,7 @@ image: "loop.png"
 jupyter: python3
 ---
 
-# "Foor loop 속도 개선하기"
+# "For loop 속도 개선하기"
 > For loop 속도 개선 실습
 
 
