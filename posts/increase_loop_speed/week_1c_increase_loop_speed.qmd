@@ -1,0 +1,271 @@
+---
+title: "For loop 속도 개선하기"
+author: "Sieun Shim"
+date: "2023-04-11"
+categories: [code]
+image: "loop.png"
+jupyter: python3
+---
+
+# "Foor loop 속도 개선하기"
+> For loop 속도 개선 실습
+
+
+강의자료 출처
+- https://blog.fearcat.in/a?ID=00900-6997c6fb-2680-4531-af1d-73eeccce74ef
+- https://aldente0630.github.io/data-science/2018/08/05/a-beginners-guide-to-optimizing-pandas-code-for-speed.html
+
+
+```{python}
+#| deletable: true
+#| editable: true
+import pandas as pd
+import numpy as np
+from math import *
+```
+
+### Read in the data
+
+익스피디아 개발자 사이트에서 제공한 뉴욕 주 내 모든 호텔 좌표가 들어있는 데이터셋
+
+```{python}
+#| collapsed: false
+#| deletable: true
+#| editable: true
+#| jupyter: {outputs_hidden: false}
+df = pd.read_csv('new_york_hotels.csv', encoding='cp1252')
+```
+
+```{python}
+#| collapsed: false
+#| deletable: true
+#| editable: true
+#| jupyter: {outputs_hidden: false}
+#| scrolled: true
+df.head()
+```
+
+```{python}
+df.shape
+```
+
+```{python}
+df.describe()
+```
+
+## Haversine definition
+
+두 위치 사이의 거리를 계산하는 함수
+- https://stricky.tistory.com/284
+
+```{python}
+#| deletable: true
+#| editable: true
+def haversine(lat1, lon1, lat2, lon2):
+    miles_constant = 3959
+    lat1, lon1, lat2, lon2 = map(np.deg2rad, [lat1, lon1, lat2, lon2])
+    dlat = lat2 - lat1 
+    dlon = lon2 - lon1 
+    a = np.sin(dlat/2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2)**2
+    c = 2 * np.arcsin(np.sqrt(a)) 
+    mi = miles_constant * c
+    return mi
+```
+
+## Task 
+
+어떤 위치, (40.671, -73.985)에서 `df`에 존재하는 모든 호텔까지의 거리를 구해봅시다
+
+## Looping Haversine
+
+```{python}
+def haversine_looping(df):
+    distance_list = [] # 빈 리스트를 생성
+    for i in range(0, len(df)): # 0 생략 가능
+        d = haversine(40.671, -73.985, df.iloc[i]['latitude'], df.iloc[i]['longitude'])
+        distance_list.append(d)
+    return distance_list
+```
+
+%%timeit은 Jupyter Notebook에서 사용되는 매직 명령어 중 하나로, 코드 실행 시간을 측정하는 도구입니다.
+
+%%timeit 매직 명령어를 사용하면 해당 셀의 코드를 여러 번 실행하여 실행 시간을 평균적으로 계산합니다. 이를 통해 코드의 실행 성능을 쉽게 측정하고 비교할 수 있습니다.
+
+```{python}
+%%timeit
+
+# Haversine 반복 함수 실행하기
+df['distance'] = haversine_looping(df)
+```
+
+```{python}
+df['distance'].describe()
+```
+
+## Iterrows Haversine
+
+반복문을 돌려야 할 때 iterrows() 메서드를 사용하는 건 행을 반복하기 위한 더 좋은 방법이다. iterrows()는 데이터 프레임의 행을 반복하며 행 자체를 포함하는 객체에 덧붙여 각 행의 색인을 반환하는 제너레이터다. iterrows()는 판다스 데이터 프레임과 함께 작동하게끔 최적화되어 있으며 표준 함수 대부분을 실행하는 데 가장 효율적인 방법은 아니지만(나중에 자세히 설명) 단순 반복보다는 상당히 개선되었다. 예제의 경우 iterrows()는 행을 수동으로 반복하는 것보다 거의 똑같은 문제를 약 4배 빠르게 해결한다.
+
+```{python}
+# Haversine applied on rows via iteration
+haversine_series = []
+for index, row in df.iloc[0:10].iterrows():
+    print(row['latitude'])
+```
+
+```{python}
+# Haversine applied on rows via iteration
+haversine_series = []
+for index, row in df.iloc[0:10].iterrows():
+    print(type(row))
+```
+
+```{python}
+#| collapsed: false
+#| deletable: true
+#| editable: true
+#| jupyter: {outputs_hidden: false}
+%%timeit
+# Haversine applied on rows via iteration
+haversine_series = []
+for index, row in df.iterrows():
+    haversine_series.append(haversine(40.671, -73.985, row['latitude'], row['longitude']))
+df['distance'] = haversine_series
+```
+
+itertuples와 iterrows는 모두 Pandas 데이터프레임의 행을 순회(iterate)하는 메서드입니다. 그러나 itertuples는 iterrows보다 더욱 빠른 속도를 보이므로, 대체로 itertuples를 사용하는 것이 좋습니다.
+
+이유는 iterrows는 각 행(row)을 Series 객체로 반환하는 반면, itertuples는 각 행을 NamedTuple로 반환합니다. NamedTuple은 각 속성(attribute)에 이름이 지정되어 있기 때문에, Series보다 빠르게 데이터에 접근할 수 있습니다. 따라서 대용량의 데이터프레임을 다룰 때는 itertuples를 사용하는 것이 더욱 효율적입니다.
+
+```{python}
+%%timeit
+haversine_series = []
+for idx, lat, lon in df[['latitude','longitude']].itertuples():
+    haversine_series.append(haversine(40.671, -73.985, lat, lon))
+    
+df['distance'] = haversine_series
+```
+
+```{python}
+import pandas as pd
+
+df2 = pd.DataFrame({'A': [1, 2, 3], 'B': ['a', 'b', 'c']})
+df2
+```
+
+```{python}
+for index in df2.itertuples():
+    print(index)
+```
+
+```{python}
+df2 = pd.DataFrame({'A': [1, 2, 3], 'B': ['a', 'b', 'c']})
+
+for index, a, b in df2.itertuples():
+    print(index, a, b)
+```
+
+## Apply Haversine on rows
+
+`iterrows()`보다 더 좋은 옵션은 데이터 프레임의 특정 축(행 또는 열을 의미)을 따라 함수를 적용하는 `apply()` 메서드를 사용하는 것이다. `apply()`는 본질적으로 행을 반복하지만 Cython에서 이터레이터를 사용하는 것 같이 내부 최적화를 다양하게 활용하므로 `iterrows()`보다 훨씬 효율적이다.
+
+익명의 람다 함수를 사용하여 Haversine 함수를 각 행에 적용하며 각 행의 특정 셀을 함수 입력값으로 지정할 수 있다. 람다 함수는 판다스가 행(축 = 1)과 열(축 = 0) 중 어디에 함수를 적용할지 정할 수 있게 축 매개 변수를 마지막에 포함한다.
+
+### Timing "apply"
+
+```{python}
+#| collapsed: false
+#| deletable: true
+#| editable: true
+#| jupyter: {outputs_hidden: false}
+#| scrolled: true
+%%timeit 
+
+df['distance'] =\
+df.apply(lambda row: haversine(40.671, -73.985,\
+                               row['latitude'], row['longitude']), axis=1) # 0 = 열, 1 = 행
+```
+
+## Vectorized implementation of Haversine applied on Pandas series
+
+#### Timing vectorized implementation
+
+함수 수행의 반복량 줄이는 방법을 이해하기 위해 판다스의 기본 단위, 데이터 프레임과 시리즈가 모두 배열 기반임을 알아두자. 기본 단위의 내부 구조는 개별 값(스칼라라고 함)마다 순차적으로 작동하는 대신 전체 배열 위로 작동하도록 설계된 내장 판다스 함수를 위해 변환된다. 벡터화는 전체 배열 위로 작업을 실행하는 프로세스다.
+
+판다스는 수학 연산에서 집계 및 문자열 함수(사용 가능한 함수의 광범위한 목록은 판다스 문서에서 확인해라)에 이르기까지 다양한 벡터화 함수를 포함하고 있다. 내장 함수는 판다스 시리즈와 데이터 프레임에서 작동하게끔 최적화되어있다. 결과적으로 벡터화 판다스 함수를 사용하는 건 비슷한 목적을 위해 손수 반복시키는 방법보다 거의 항상 바람직하다.
+
+지금까지는 Haversine 함수에 스칼라를 전달했다. 그러나 Haversine 함수 내에서 사용하는 모든 함수를 배열 위로 작동시킬 수 있다. 이렇게 하면 거리 함수를 매우 간단하게 벡터화할 수 있다. 스칼라 값으로 각 위도, 경도를 전달하는 대신 전체 시리즈(열)를 전달한다. 이를 통해 판다스는 벡터화 함수에 적용 가능한 모든 최적화 옵션을 활용할 수 있고 특히 전체 배열에 대한 모든 계산을 동시에 수행하게 된다.
+
+```{python}
+#| collapsed: false
+#| deletable: true
+#| editable: true
+#| jupyter: {outputs_hidden: false}
+%%timeit
+# Vectorized implementation of Haversine applied on Pandas series
+df['distance'] = haversine(40.671, -73.985,\
+                                   df['latitude'], df['longitude'])
+```
+
+함수 벡터화를 통해 apply() 메서드 대비 50배 이상 개선시켰고 iterrows() 대비 100배 이상 개선시켰다. 입력 유형 변경하는 것 외에 아무것도 하지 않아도 됐다!
+
+## Vectorized implementation of Haversine applied on NumPy arrays
+
+이 지점에서 그만두어도 괜찮다. 판다스 시리즈를 사용해 벡터화하면 상시 계산을 위한 최적화 요구 사항의 거의 대부분을 만족시킬 수 있다. 그러나 속도가 최우선이라면 넘파이 파이썬 라이브러리 형식에 도움을 요청해볼 수 있다.
+
+넘파이 라이브러리는 “과학 계산을 위한 파이썬 기본 패키지”를 표방하며 내부가 최적화된, 사전 컴파일된 C 코드로 작업을 수행한다. 판다스와 마찬가지로 넘파이는 배열 객체(ndarrays라고 함) 상에서 작동한다. 그러나 색인, 데이터 유형 확인 등과 같이 판다스 시리즈 작업으로 인한 오버헤드가 많이 발생하지 않는다. 결과적으로 넘파이 배열에 대한 작업은 판다스 시리즈에 대한 작업보다 훨씬 빠르다.
+
+판다스 시리즈가 제공하는 추가 기능이 중요하지 않을 때 넘파이 배열을 판다스 시리즈 대신 사용할 수 있다. 예를 들어 Haversine 함수의 벡터화 구현은 실제로 위도 또는 경도 시리즈의 색인을 사용하지 않으므로 사용할 수 있는 색인이 없어도 함수가 중단되지 않는다. 이에 비해 색인으로 값을 참조해야 하는 데이터 프레임의 조인 같은 작업을 수행한다면 판다스 개체를 계속 사용하는 편이 낫다.
+
+위도와 경도 배열을 시리즈의 values 메서드를 단순 사용해서 판다스 시리즈에서 넘파이 배열로 변환한다. 시리즈의 벡터화와 마찬가지로 넘파이 배열을 함수에 직접 전달하면 판다스가 전체 벡터에 함수를 적용시킨다.
+
+#### Timing vectorized implementation
+
+```{python}
+#| collapsed: false
+#| deletable: true
+#| editable: true
+#| jupyter: {outputs_hidden: false}
+# Vectorized implementation of Haversine applied on NumPy arrays
+%timeit df['distance'] = haversine(40.671, -73.985,\
+                         df['latitude'].values, df['longitude'].values)
+```
+
+```{python}
+#| collapsed: false
+#| deletable: true
+#| editable: true
+#| jupyter: {outputs_hidden: false}
+%%timeit
+# Convert pandas arrays to NumPy ndarrays
+np_lat = df['latitude'].values
+np_lon = df['longitude'].values
+```
+
+## Summary
+
+판다스 코드 최적화에 관해 몇 가지 기본적인 결론을 내릴 수 있다.
+
+1 . 반복을 피해라. 사용 사례 대부분의 경우 반복은 느리고 불필요하다.  
+2 . 반복해야 하는 경우 반복 함수가 아닌 itertuples()를 사용해라.  
+3 . 보통은 벡터화가 스칼라 연산보다 낫다. 대부분의 판다스 작업은 벡터화시킬 수 있다.  
+4 . 넘파이 배열에서의 벡터 연산은 판다스 시리즈에서 수행하는 것보다 효율적이다.  
+
+### 실습
+
+아래의 조건을 만족하는 호텔의 List를 출력해 봅시다.
+
+
+1.  현재 나는 ("latitude", "longitude") = (40.671, -73.985) 위치에 있고, 숙박할 호텔을 찾고 있습니다.
+2. 직선거리 기준으로 200마일 안쪽에 있었으면 좋겠습니다.
+3.  star_rating이 4 이상인 호텔을 찾고 있습니다. 
+
+해당 조건을 만족하는 호텔들을 출력해 봅시다.
+
+```{python}
+df['distance'] = haversine(40.671, -73.985,\
+                                   df['latitude'], df['longitude'])
+df[(df['distance'] <= 200) & (df['star_rating'] >= 4)][['name', 'distance', 'star_rating']]
+```
+
+
