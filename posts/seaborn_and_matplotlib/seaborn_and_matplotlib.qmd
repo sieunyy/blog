@@ -3,7 +3,7 @@ title: "Seaborn and Matplotlib"
 author: "Sieun Shim"
 date: "2023-04-25"
 categories: [code]
-image: "sb_plt.jpg"
+image: "seaborn.jpg"
 jupyter: python3
 ---
 
