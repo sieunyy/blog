@@ -101,7 +101,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -174,7 +174,102 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#numpy-기본" id="toc-numpy-기본" class="nav-link active" data-scroll-target="#numpy-기본">“Numpy 기본”</a></li>
+  <li><a href="#배열-생성" id="toc-배열-생성" class="nav-link" data-scroll-target="#배열-생성">배열 생성</a>
+  <ul class="collapse">
+  <li><a href="#np.zeros" id="toc-np.zeros" class="nav-link" data-scroll-target="#np.zeros"><code>np.zeros</code></a></li>
+  <li><a href="#용어" id="toc-용어" class="nav-link" data-scroll-target="#용어">용어</a></li>
+  <li><a href="#n-차원-배열" id="toc-n-차원-배열" class="nav-link" data-scroll-target="#n-차원-배열">N-차원 배열</a></li>
+  <li><a href="#배열-타입" id="toc-배열-타입" class="nav-link" data-scroll-target="#배열-타입">배열 타입</a></li>
+  <li><a href="#np.ones" id="toc-np.ones" class="nav-link" data-scroll-target="#np.ones"><code>np.ones</code></a></li>
+  <li><a href="#np.full" id="toc-np.full" class="nav-link" data-scroll-target="#np.full"><code>np.full</code></a></li>
+  <li><a href="#np.empty" id="toc-np.empty" class="nav-link" data-scroll-target="#np.empty"><code>np.empty</code></a></li>
+  <li><a href="#np.array" id="toc-np.array" class="nav-link" data-scroll-target="#np.array">np.array</a></li>
+  <li><a href="#np.arange" id="toc-np.arange" class="nav-link" data-scroll-target="#np.arange"><code>np.arange</code></a></li>
+  <li><a href="#np.linspace" id="toc-np.linspace" class="nav-link" data-scroll-target="#np.linspace"><code>np.linspace</code></a></li>
+  <li><a href="#np.rand와-np.randn" id="toc-np.rand와-np.randn" class="nav-link" data-scroll-target="#np.rand와-np.randn"><code>np.rand</code>와 <code>np.randn</code></a></li>
+  <li><a href="#np.fromfunction" id="toc-np.fromfunction" class="nav-link" data-scroll-target="#np.fromfunction">np.fromfunction</a></li>
+  </ul></li>
+  <li><a href="#배열-데이터" id="toc-배열-데이터" class="nav-link" data-scroll-target="#배열-데이터">배열 데이터</a>
+  <ul class="collapse">
+  <li><a href="#dtype" id="toc-dtype" class="nav-link" data-scroll-target="#dtype"><code>dtype</code></a></li>
+  <li><a href="#itemsize" id="toc-itemsize" class="nav-link" data-scroll-target="#itemsize"><code>itemsize</code></a></li>
+  <li><a href="#data-버퍼" id="toc-data-버퍼" class="nav-link" data-scroll-target="#data-버퍼"><code>data</code> 버퍼</a></li>
+  </ul></li>
+  <li><a href="#배열-크기-변경" id="toc-배열-크기-변경" class="nav-link" data-scroll-target="#배열-크기-변경">배열 크기 변경</a>
+  <ul class="collapse">
+  <li><a href="#자신을-변경" id="toc-자신을-변경" class="nav-link" data-scroll-target="#자신을-변경">자신을 변경</a></li>
+  <li><a href="#reshape" id="toc-reshape" class="nav-link" data-scroll-target="#reshape"><code>reshape</code></a></li>
+  <li><a href="#ravel" id="toc-ravel" class="nav-link" data-scroll-target="#ravel"><code>ravel</code></a></li>
+  </ul></li>
+  <li><a href="#산술-연산" id="toc-산술-연산" class="nav-link" data-scroll-target="#산술-연산">산술 연산</a></li>
+  <li><a href="#브로드캐스팅" id="toc-브로드캐스팅" class="nav-link" data-scroll-target="#브로드캐스팅">브로드캐스팅</a>
+  <ul class="collapse">
+  <li><a href="#규칙-1" id="toc-규칙-1" class="nav-link" data-scroll-target="#규칙-1">규칙 1</a></li>
+  <li><a href="#규칙-2" id="toc-규칙-2" class="nav-link" data-scroll-target="#규칙-2">규칙 2</a></li>
+  <li><a href="#규칙-3" id="toc-규칙-3" class="nav-link" data-scroll-target="#규칙-3">규칙 3</a></li>
+  <li><a href="#업캐스팅" id="toc-업캐스팅" class="nav-link" data-scroll-target="#업캐스팅">업캐스팅</a></li>
+  </ul></li>
+  <li><a href="#조건-연산자" id="toc-조건-연산자" class="nav-link" data-scroll-target="#조건-연산자">조건 연산자</a></li>
+  <li><a href="#수학-함수와-통계-함수" id="toc-수학-함수와-통계-함수" class="nav-link" data-scroll-target="#수학-함수와-통계-함수">수학 함수와 통계 함수</a>
+  <ul class="collapse">
+  <li><a href="#ndarray-메서드" id="toc-ndarray-메서드" class="nav-link" data-scroll-target="#ndarray-메서드"><code>ndarray</code> 메서드</a></li>
+  <li><a href="#일반-함수" id="toc-일반-함수" class="nav-link" data-scroll-target="#일반-함수">일반 함수</a></li>
+  <li><a href="#이항-일반-함수" id="toc-이항-일반-함수" class="nav-link" data-scroll-target="#이항-일반-함수">이항 일반 함수</a></li>
+  </ul></li>
+  <li><a href="#배열-인덱싱" id="toc-배열-인덱싱" class="nav-link" data-scroll-target="#배열-인덱싱">배열 인덱싱 ★</a>
+  <ul class="collapse">
+  <li><a href="#차원-배열" id="toc-차원-배열" class="nav-link" data-scroll-target="#차원-배열">1차원 배열</a></li>
+  <li><a href="#보통의-파이썬-배열과-차이점" id="toc-보통의-파이썬-배열과-차이점" class="nav-link" data-scroll-target="#보통의-파이썬-배열과-차이점">보통의 파이썬 배열과 차이점</a></li>
+  <li><a href="#다차원-배열" id="toc-다차원-배열" class="nav-link" data-scroll-target="#다차원-배열">다차원 배열</a></li>
+  <li><a href="#팬시-인덱싱fancy-indexing" id="toc-팬시-인덱싱fancy-indexing" class="nav-link" data-scroll-target="#팬시-인덱싱fancy-indexing">팬시 인덱싱(Fancy indexing)</a></li>
+  <li><a href="#고차원" id="toc-고차원" class="nav-link" data-scroll-target="#고차원">고차원</a></li>
+  <li><a href="#생략-부호-..." id="toc-생략-부호-..." class="nav-link" data-scroll-target="#생략-부호-...">생략 부호 (<code>...</code>)</a></li>
+  <li><a href="#불리언-인덱싱" id="toc-불리언-인덱싱" class="nav-link" data-scroll-target="#불리언-인덱싱">불리언 인덱싱</a></li>
+  <li><a href="#np.ix_" id="toc-np.ix_" class="nav-link" data-scroll-target="#np.ix_"><code>np.ix_</code></a></li>
+  </ul></li>
+  <li><a href="#반복" id="toc-반복" class="nav-link" data-scroll-target="#반복">반복</a></li>
+  <li><a href="#배열-쌓기" id="toc-배열-쌓기" class="nav-link" data-scroll-target="#배열-쌓기">배열 쌓기</a>
+  <ul class="collapse">
+  <li><a href="#vstack" id="toc-vstack" class="nav-link" data-scroll-target="#vstack"><code>vstack</code></a></li>
+  <li><a href="#hstack" id="toc-hstack" class="nav-link" data-scroll-target="#hstack"><code>hstack</code></a></li>
+  <li><a href="#concatenate" id="toc-concatenate" class="nav-link" data-scroll-target="#concatenate"><code>concatenate</code></a></li>
+  <li><a href="#stack" id="toc-stack" class="nav-link" data-scroll-target="#stack"><code>stack</code></a></li>
+  </ul></li>
+  <li><a href="#배열-분할" id="toc-배열-분할" class="nav-link" data-scroll-target="#배열-분할">배열 분할</a></li>
+  <li><a href="#배열-전치" id="toc-배열-전치" class="nav-link" data-scroll-target="#배열-전치">배열 전치</a></li>
+  <li><a href="#선형-대수학" id="toc-선형-대수학" class="nav-link" data-scroll-target="#선형-대수학">선형 대수학</a>
+  <ul class="collapse">
+  <li><a href="#행렬-전치" id="toc-행렬-전치" class="nav-link" data-scroll-target="#행렬-전치">행렬 전치</a></li>
+  <li><a href="#행렬-곱셈" id="toc-행렬-곱셈" class="nav-link" data-scroll-target="#행렬-곱셈">행렬 곱셈</a></li>
+  <li><a href="#역행렬과-유사-역행렬" id="toc-역행렬과-유사-역행렬" class="nav-link" data-scroll-target="#역행렬과-유사-역행렬">역행렬과 유사 역행렬</a></li>
+  <li><a href="#단위-행렬" id="toc-단위-행렬" class="nav-link" data-scroll-target="#단위-행렬">단위 행렬</a></li>
+  <li><a href="#qr-분해" id="toc-qr-분해" class="nav-link" data-scroll-target="#qr-분해">QR 분해</a></li>
+  <li><a href="#행렬식" id="toc-행렬식" class="nav-link" data-scroll-target="#행렬식">행렬식</a></li>
+  <li><a href="#고윳값과-고유벡터" id="toc-고윳값과-고유벡터" class="nav-link" data-scroll-target="#고윳값과-고유벡터">고윳값과 고유벡터</a></li>
+  <li><a href="#특잇값-분해" id="toc-특잇값-분해" class="nav-link" data-scroll-target="#특잇값-분해">특잇값 분해</a></li>
+  <li><a href="#대각원소와-대각합" id="toc-대각원소와-대각합" class="nav-link" data-scroll-target="#대각원소와-대각합">대각원소와 대각합</a></li>
+  <li><a href="#선형-방정식-풀기" id="toc-선형-방정식-풀기" class="nav-link" data-scroll-target="#선형-방정식-풀기">선형 방정식 풀기</a></li>
+  </ul></li>
+  <li><a href="#벡터화" id="toc-벡터화" class="nav-link" data-scroll-target="#벡터화">벡터화</a></li>
+  <li><a href="#저장과-로딩" id="toc-저장과-로딩" class="nav-link" data-scroll-target="#저장과-로딩">저장과 로딩</a>
+  <ul class="collapse">
+  <li><a href="#바이너리-.npy-포맷" id="toc-바이너리-.npy-포맷" class="nav-link" data-scroll-target="#바이너리-.npy-포맷">바이너리 <code>.npy</code> 포맷</a></li>
+  <li><a href="#텍스트-포맷" id="toc-텍스트-포맷" class="nav-link" data-scroll-target="#텍스트-포맷">텍스트 포맷</a></li>
+  <li><a href="#압축된-.npz-포맷" id="toc-압축된-.npz-포맷" class="nav-link" data-scroll-target="#압축된-.npz-포맷">압축된 <code>.npz</code> 포맷</a></li>
+  </ul></li>
+  <li><a href="#그-다음은" id="toc-그-다음은" class="nav-link" data-scroll-target="#그-다음은">그 다음은?</a>
+  <ul class="collapse">
+  <li><a href="#quiz." id="toc-quiz." class="nav-link" data-scroll-target="#quiz.">Quiz.</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -388,8 +483,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>time <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>): my_arr2 <span class="op">=</span> my_arr <span class="op">*</span> <span class="dv">2</span></span>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>time <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>): my_list2 <span class="op">=</span> [x <span class="op">*</span> <span class="dv">2</span> <span class="cf">for</span> x <span class="kw">in</span> my_list]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Wall time: 16 ms
-Wall time: 970 ms</code></pre>
+<pre><code>Wall time: 26.9 ms
+Wall time: 930 ms</code></pre>
 </div>
 </div>
 <p>For loop를 돌릴 때의 속도 비교</p>
@@ -413,9 +508,9 @@ Wall time: 970 ms</code></pre>
 <span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit np.arange(size) <span class="op">**</span> <span class="dv">2</span></span>
 <span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="co"># out: 100 loops, best of 3: 19.5 ms per loop</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>4.21 µs ± 1.18 µs per loop (mean ± std. dev. of 7 runs, 100000 loops each)
-4.59 µs ± 569 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
-1.73 µs ± 296 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)</code></pre>
+<pre><code>2.64 µs ± 94.7 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+2.89 µs ± 138 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)
+1.67 µs ± 67.7 ns per loop (mean ± std. dev. of 7 runs, 1000000 loops each)</code></pre>
 </div>
 </div>
 </section>
@@ -436,18 +531,18 @@ Wall time: 970 ms</code></pre>
 <div class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>np.random.rand(<span class="dv">3</span>,<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="22">
-<pre><code>array([[0.59648554, 0.58290501, 0.84130264, 0.45259298],
-       [0.82708341, 0.51900702, 0.45773184, 0.83341956],
-       [0.07442315, 0.80516233, 0.22302811, 0.26523388]])</code></pre>
+<pre><code>array([[0.63349128, 0.77717243, 0.10009739, 0.03188153],
+       [0.0918524 , 0.76575233, 0.43427768, 0.94000705],
+       [0.36137165, 0.18162919, 0.83395484, 0.79271537]])</code></pre>
 </div>
 </div>
 <p>다음은 평균이 0이고 분산이 1인 일변량 <a href="https://ko.wikipedia.org/wiki/%EC%A0%95%EA%B7%9C_%EB%B6%84%ED%8F%AC">정규 분포</a>(가우시안 분포)에서 샘플링한 랜덤한 부동 소수를 담은 <span class="math inline">\(3 \times 4\)</span> 행렬입니다:</p>
 <div class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>np.random.randn(<span class="dv">3</span>,<span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="23">
-<pre><code>array([[ 0.10497192,  0.37669616,  0.40015252,  0.08852395],
-       [-0.20301118, -0.75475183,  0.26421941, -1.98120621],
-       [ 0.20060364, -0.83451878,  1.9704466 , -0.71891824]])</code></pre>
+<pre><code>array([[-0.70097415, -0.98702437, -0.01849017,  0.35823448],
+       [ 0.34500825, -1.29751445,  0.75065157,  1.23198251],
+       [-0.9868482 ,  3.32206027, -0.80559055, -0.55580027]])</code></pre>
 </div>
 </div>
 <p>이 분포의 모양을 알려면 맷플롯립을 사용해 그려보는 것이 좋습니다(더 자세한 것은 <a href="tools_matplotlib.ipynb">맷플롯립 튜토리얼</a>을 참고하세요):</p>
@@ -547,7 +642,7 @@ Wall time: 970 ms</code></pre>
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> np.array([[<span class="dv">1</span>,<span class="dv">2</span>],[<span class="dv">1000</span>, <span class="dv">2000</span>]], dtype<span class="op">=</span>np.int32)</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>f.data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="31">
-<pre><code>&lt;memory at 0x0000021E16363790&gt;</code></pre>
+<pre><code>&lt;memory at 0x0000028D25839790&gt;</code></pre>
 </div>
 </div>
 <p>파이썬 2에서는 <code>f.data</code>가 버퍼이고 파이썬 3에서는 memoryview입니다.</p>
@@ -1062,11 +1157,11 @@ var = 25.855555555555554</code></pre>
  [-0.83907153  0.0044257   0.84385396]]</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>C:\Users\Public\Documents\ESTsoft\CreatorTemp\ipykernel_7540\4103705789.py:5: RuntimeWarning:
+<pre><code>C:\Users\Public\Documents\ESTsoft\CreatorTemp\ipykernel_13596\4103705789.py:5: RuntimeWarning:
 
 invalid value encountered in sqrt
 
-C:\Users\Public\Documents\ESTsoft\CreatorTemp\ipykernel_7540\4103705789.py:5: RuntimeWarning:
+C:\Users\Public\Documents\ESTsoft\CreatorTemp\ipykernel_13596\4103705789.py:5: RuntimeWarning:
 
 invalid value encountered in log
 </code></pre>
@@ -1662,7 +1757,7 @@ invalid value encountered in log
 <span id="cb274-3"><a href="#cb274-3" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">ValueError</span> <span class="im">as</span> e:</span>
 <span id="cb274-4"><a href="#cb274-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(e)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>all the input array dimensions for the concatenation axis must match exactly, but along dimension 0, the array at index 0 has size 3 and the array at index 1 has size 4</code></pre>
+<pre><code>all the input array dimensions except for the concatenation axis must match exactly, but along dimension 0, the array at index 0 has size 3 and the array at index 1 has size 4</code></pre>
 </div>
 </div>
 </section>
@@ -2031,9 +2126,9 @@ invalid value encountered in log
 <div class="cell" data-execution_count="173">
 <div class="sourceCode cell-code" id="cb342"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb342-1"><a href="#cb342-1" aria-hidden="true" tabindex="-1"></a>m3.dot(linalg.inv(m3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="173">
-<pre><code>array([[ 1.00000000e+00, -5.55111512e-17,  0.00000000e+00],
-       [-2.98372438e-16,  1.00000000e+00, -5.55111512e-17],
-       [ 5.78009862e-15,  1.27675648e-15,  1.00000000e+00]])</code></pre>
+<pre><code>array([[ 1.00000000e+00, -1.66533454e-16,  0.00000000e+00],
+       [ 6.31439345e-16,  1.00000000e+00, -1.38777878e-16],
+       [ 5.21110932e-15, -2.38697950e-15,  1.00000000e+00]])</code></pre>
 </div>
 </div>
 <p><code>eye</code> 함수는 NxN 크기의 단위 행렬을 만듭니다:</p>
@@ -2081,7 +2176,7 @@ invalid value encountered in log
 <div class="cell" data-execution_count="178">
 <div class="sourceCode cell-code" id="cb352"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb352-1"><a href="#cb352-1" aria-hidden="true" tabindex="-1"></a>linalg.det(m3)  <span class="co"># 행렬식 계산</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="178">
-<pre><code>43.99999999999999</code></pre>
+<pre><code>43.99999999999997</code></pre>
 </div>
 </div>
 </section>
@@ -2106,9 +2201,9 @@ invalid value encountered in log
 <div class="cell" data-execution_count="181">
 <div class="sourceCode cell-code" id="cb358"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb358-1"><a href="#cb358-1" aria-hidden="true" tabindex="-1"></a>m3.dot(eigenvectors) <span class="op">-</span> eigenvalues <span class="op">*</span> eigenvectors  <span class="co"># m3.v - λ*v = 0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="181">
-<pre><code>array([[6.66133815e-15, 1.11022302e-16, 4.44089210e-16],
-       [7.10542736e-15, 2.88657986e-15, 3.10862447e-15],
-       [3.55271368e-14, 6.81746326e-15, 4.88498131e-15]])</code></pre>
+<pre><code>array([[ 6.21724894e-15,  1.66533454e-15, -3.10862447e-15],
+       [ 3.55271368e-15,  5.30131494e-15, -5.32907052e-15],
+       [ 3.55271368e-14,  5.38458167e-15, -9.76996262e-15]])</code></pre>
 </div>
 </div>
 </section>
@@ -2131,8 +2226,8 @@ invalid value encountered in log
 <div class="cell-output cell-output-display" data-execution_count="183">
 <pre><code>array([[ 0.,  1.,  0.,  0.],
        [ 1.,  0.,  0.,  0.],
-       [ 0.,  0.,  0., -1.],
-       [ 0.,  0.,  1.,  0.]])</code></pre>
+       [ 0.,  0.,  0.,  1.],
+       [ 0.,  0., -1.,  0.]])</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="184">
@@ -2156,9 +2251,9 @@ invalid value encountered in log
 <div class="cell" data-execution_count="186">
 <div class="sourceCode cell-code" id="cb368"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb368-1"><a href="#cb368-1" aria-hidden="true" tabindex="-1"></a>V</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="186">
-<pre><code>array([[-0.        ,  0.        ,  1.        ,  0.        ,  0.        ],
+<pre><code>array([[-0.        ,  0.        ,  1.        , -0.        ,  0.        ],
        [ 0.4472136 ,  0.        ,  0.        ,  0.        ,  0.89442719],
-       [-0.        ,  1.        ,  0.        ,  0.        ,  0.        ],
+       [ 0.        , -1.        ,  0.        ,  0.        ,  0.        ],
        [ 0.        ,  0.        ,  0.        ,  1.        ,  0.        ],
        [-0.89442719,  0.        ,  0.        ,  0.        ,  0.4472136 ]])</code></pre>
 </div>
@@ -2286,8 +2381,8 @@ invalid value encountered in log
 <div class="sourceCode cell-code" id="cb389"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb389-1"><a href="#cb389-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.random.rand(<span class="dv">2</span>,<span class="dv">3</span>)</span>
 <span id="cb389-2"><a href="#cb389-2" aria-hidden="true" tabindex="-1"></a>a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="198">
-<pre><code>array([[0.36195603, 0.14212041, 0.13103469],
-       [0.05288246, 0.16497015, 0.99538047]])</code></pre>
+<pre><code>array([[0.6582337 , 0.24539013, 0.74569645],
+       [0.28844438, 0.60651066, 0.15930072]])</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="199">
@@ -2300,7 +2395,7 @@ invalid value encountered in log
 <span id="cb392-3"><a href="#cb392-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb392-4"><a href="#cb392-4" aria-hidden="true" tabindex="-1"></a>content</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="200">
-<pre><code>b'\x93NUMPY\x01\x00v\x00{\'descr\': \'&lt;f8\', \'fortran_order\': False, \'shape\': (2, 3), }                                                          \np.\x9b\x9cI*\xd7?\xc0a\x8ap\x001\xc2?\xbc7\xef\xaf\xbe\xc5\xc0?\xe0\xb8\x1f\xc7h\x13\xab?\x10\xe0F\xe9\xbd\x1d\xc5?\xb0:h"(\xda\xef?'</code></pre>
+<pre><code>b"\x93NUMPY\x01\x00v\x00{'descr': '&lt;f8', 'fortran_order': False, 'shape': (2, 3), }                                                          \n&amp;63!@\x10\xe5?\x98D\x13\x99\xf1h\xcf?W\xe3\xac\xcd\xbe\xdc\xe7?2\xb0\xafg\xdfu\xd2?@@\xa1\x0b\x89h\xe3?\x10\xa7\xeaJ\xf7c\xc4?"</code></pre>
 </div>
 </div>
 <p>이 파일을 넘파이 배열로 로드하려면 <code>load</code> 함수를 사용합니다:</p>
@@ -2308,8 +2403,8 @@ invalid value encountered in log
 <div class="sourceCode cell-code" id="cb394"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb394-1"><a href="#cb394-1" aria-hidden="true" tabindex="-1"></a>a_loaded <span class="op">=</span> np.load(<span class="st">"my_array.npy"</span>)</span>
 <span id="cb394-2"><a href="#cb394-2" aria-hidden="true" tabindex="-1"></a>a_loaded</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="201">
-<pre><code>array([[0.36195603, 0.14212041, 0.13103469],
-       [0.05288246, 0.16497015, 0.99538047]])</code></pre>
+<pre><code>array([[0.6582337 , 0.24539013, 0.74569645],
+       [0.28844438, 0.60651066, 0.15930072]])</code></pre>
 </div>
 </div>
 </section>
@@ -2324,8 +2419,8 @@ invalid value encountered in log
 <div class="sourceCode cell-code" id="cb397"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb397-1"><a href="#cb397-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"my_array.csv"</span>, <span class="st">"rt"</span>) <span class="im">as</span> f:</span>
 <span id="cb397-2"><a href="#cb397-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(f.read())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>3.619560269696426857e-01 1.421204137339042717e-01 1.310346945814994113e-01
-5.288245611869668572e-02 1.649701489493513584e-01 9.953804656996307898e-01
+<pre><code>6.582337044180277541e-01 2.453901288450068829e-01 7.456964509102402827e-01
+2.884443771897650111e-01 6.065106608530257404e-01 1.593007198146598746e-01
 </code></pre>
 </div>
 </div>
@@ -2338,8 +2433,8 @@ invalid value encountered in log
 <div class="sourceCode cell-code" id="cb400"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb400-1"><a href="#cb400-1" aria-hidden="true" tabindex="-1"></a>a_loaded <span class="op">=</span> np.loadtxt(<span class="st">"my_array.csv"</span>, delimiter<span class="op">=</span><span class="st">","</span>)</span>
 <span id="cb400-2"><a href="#cb400-2" aria-hidden="true" tabindex="-1"></a>a_loaded</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="205">
-<pre><code>array([[0.36195603, 0.14212041, 0.13103469],
-       [0.05288246, 0.16497015, 0.99538047]])</code></pre>
+<pre><code>array([[0.6582337 , 0.24539013, 0.74569645],
+       [0.28844438, 0.60651066, 0.15930072]])</code></pre>
 </div>
 </div>
 </section>
@@ -2369,7 +2464,7 @@ invalid value encountered in log
 <span id="cb405-3"><a href="#cb405-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb405-4"><a href="#cb405-4" aria-hidden="true" tabindex="-1"></a><span class="bu">repr</span>(content)[:<span class="dv">180</span>] <span class="op">+</span> <span class="st">"[...]"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="208">
-<pre><code>"b'PK\\x03\\x04\\x14\\x00\\x00\\x00\\x00\\x00\\x00\\x00!\\x00\\x01\\xf5\\xc8\\xc8\\xb0\\x00\\x00\\x00\\xb0\\x00\\x00\\x00\\x08\\x00\\x14\\x00my_a.npy\\x01\\x00\\x10\\x00\\xb0\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\xb0\\x00\\x0[...]"</code></pre>
+<pre><code>'b"PK\\x03\\x04\\x14\\x00\\x00\\x00\\x00\\x00\\x00\\x00!\\x00l\\x94\\xe23\\xb0\\x00\\x00\\x00\\xb0\\x00\\x00\\x00\\x08\\x00\\x14\\x00my_a.npy\\x01\\x00\\x10\\x00\\xb0\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\xb0\\x00\\x00\\x00\\[...]'</code></pre>
 </div>
 </div>
 <p>다음과 같이 이 파일을 로드할 수 있습니다:</p>
@@ -2377,21 +2472,21 @@ invalid value encountered in log
 <div class="sourceCode cell-code" id="cb407"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb407-1"><a href="#cb407-1" aria-hidden="true" tabindex="-1"></a>my_arrays <span class="op">=</span> np.load(<span class="st">"my_arrays.npz"</span>)</span>
 <span id="cb407-2"><a href="#cb407-2" aria-hidden="true" tabindex="-1"></a>my_arrays</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="209">
-<pre><code>&lt;numpy.lib.npyio.NpzFile at 0x21e15404190&gt;</code></pre>
+<pre><code>&lt;numpy.lib.npyio.NpzFile at 0x28d22d2beb0&gt;</code></pre>
 </div>
 </div>
 <p>게으른 로딩을 수행하는 딕셔너리와 유사한 객체입니다:</p>
 <div class="cell" data-execution_count="210">
 <div class="sourceCode cell-code" id="cb409"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb409-1"><a href="#cb409-1" aria-hidden="true" tabindex="-1"></a>my_arrays.keys()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="210">
-<pre><code>KeysView(&lt;numpy.lib.npyio.NpzFile object at 0x0000021E15404190&gt;)</code></pre>
+<pre><code>KeysView(&lt;numpy.lib.npyio.NpzFile object at 0x0000028D22D2BEB0&gt;)</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="211">
 <div class="sourceCode cell-code" id="cb411"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb411-1"><a href="#cb411-1" aria-hidden="true" tabindex="-1"></a>my_arrays[<span class="st">"my_a"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="211">
-<pre><code>array([[0.36195603, 0.14212041, 0.13103469],
-       [0.05288246, 0.16497015, 0.99538047]])</code></pre>
+<pre><code>array([[0.6582337 , 0.24539013, 0.74569645],
+       [0.28844438, 0.60651066, 0.15930072]])</code></pre>
 </div>
 </div>
 </section>
