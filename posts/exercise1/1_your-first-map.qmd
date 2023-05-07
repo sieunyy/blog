@@ -10,6 +10,7 @@ jupyter: python3
 
 > Kaggle Geospatial Analysis Exercise1
 
+# Introduction
 
 In this micro-course, you'll learn about different methods to wrangle and visualize **geospatial data**, or data with a geographic location.
 

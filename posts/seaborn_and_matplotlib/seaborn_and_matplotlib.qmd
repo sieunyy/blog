@@ -13,9 +13,9 @@ jupyter: python3
 코드 출처 - 이제현님 블로그
 - https://jehyunlee.github.io/2020/09/30/Python-DS-34-seaborn_matplotlib/
 
+### 1.1 Load Data
 - 예제로 사용할 펭귄 데이터를 불러옵니다.
 - seaborn에 내장되어 있습니다.
-
 
 ```{python}
 import pandas as pd
