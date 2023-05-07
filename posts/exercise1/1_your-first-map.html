@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.326">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Sieun Shim">
+<meta name="dcterms.date" content="2023-04-27">
+
+<title>blog - Exercise1: Your First Map</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">blog</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://instagram.com/_s_se86?" rel="" target=""><i class="bi bi-instagram" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Exercise1: Your First Map</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">code</div>
+                <div class="quarto-category">geopandas</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Sieun Shim </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">April 27, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<blockquote class="blockquote">
+<p>Kaggle Geospatial Analysis Exercise1</p>
+</blockquote>
+<p>In this micro-course, you’ll learn about different methods to wrangle and visualize <strong>geospatial data</strong>, or data with a geographic location.</p>
+<center>
+<img src="https://storage.googleapis.com/kaggle-media/learn/images/v6ZUGgI.png"><br>
+</center>
+<p>Along the way, you’ll offer solutions to several real-world problems like: - Where should a global non-profit expand its reach in remote areas of the Philippines? - How do purple martins, a threatened bird species, travel between North and South America? Are the birds travelling to conservation areas? - Which areas of Japan could potentially benefit from extra earthquake reinforcement? - Which Starbucks stores in California are strong candidates for the next <a href="https://www.forbes.com/sites/garystern/2019/01/22/starbucks-reserve-roastery-its-spacious-and-trendy-but-why-is-starbucks-slowing-down-expansion/#6cb80d4a1bc6">Starbucks Reserve Roastery</a> location? - Does New York City have sufficient hospitals to respond to motor vehicle collisions? Which areas of the city have gaps in coverage?</p>
+<p>You’ll also visualize crime in the city of Boston, examine health facilities in Ghana, explore top universities in Europe, and track releases of toxic chemicals in the United States.</p>
+<p>In this first tutorial, we’ll quickly cover the pre-requisites that you’ll need to complete this micro-course. And, if you’d like to review more deeply, we recommend the <strong><a href="https://www.kaggle.com/learn/pandas">Pandas micro-course</a></strong>.</p>
+<p>We’ll also get started with visualizing our first geospatial dataset!</p>
+<section id="reading-data" class="level1">
+<h1>Reading data</h1>
+<p>The first step is to read in some geospatial data! To do this, we’ll use the <a href="http://geopandas.org/">GeoPandas</a> library.</p>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-04-20T20:47:48.829994Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-04-20T20:47:48.829516Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-04-20T20:47:49.413053Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-04-20T20:47:49.411484Z&quot;}" data-papermill="{&quot;duration&quot;:0.591461,&quot;end_time&quot;:&quot;2023-04-20T20:47:49.415595&quot;,&quot;exception&quot;:false,&quot;start_time&quot;:&quot;2023-04-20T20:47:48.824134&quot;,&quot;status&quot;:&quot;completed&quot;}" data-tags="[]" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>There are many, many different geospatial file formats, such as <a href="https://en.wikipedia.org/wiki/Shapefile">shapefile</a>, <a href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a>, <a href="https://en.wikipedia.org/wiki/Keyhole_Markup_Language">KML</a>, and <a href="https://en.wikipedia.org/wiki/GeoPackage">GPKG</a>. We won’t discuss their differences in this micro-course, but it’s important to mention that: - shapefile is the most common file type that you’ll encounter, and - all of these file types can be quickly loaded with the <code>gpd.read_file()</code> function.</p>
+<p>The next code cell loads a shapefile containing information about forests, wilderness areas, and other lands under the care of the <a href="https://www.dec.ny.gov/index.html">Department of Environmental Conservation</a> in the state of New York.</p>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-04-20T20:47:49.437447Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-04-20T20:47:49.437015Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-04-20T20:47:50.279297Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-04-20T20:47:50.278516Z&quot;}" data-papermill="{&quot;duration&quot;:0.850647,&quot;end_time&quot;:&quot;2023-04-20T20:47:50.281133&quot;,&quot;exception&quot;:false,&quot;start_time&quot;:&quot;2023-04-20T20:47:49.430486&quot;,&quot;status&quot;:&quot;completed&quot;}" data-tags="[]" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in the data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>full_data <span class="op">=</span> gpd.read_file(<span class="st">"../../../spatial_analysis/data/DEC_lands/DEC_lands/DEC_lands.shp"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># View the first five rows of the data</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>full_data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">OBJECTID</th>
+<th data-quarto-table-cell-role="th">CATEGORY</th>
+<th data-quarto-table-cell-role="th">UNIT</th>
+<th data-quarto-table-cell-role="th">FACILITY</th>
+<th data-quarto-table-cell-role="th">CLASS</th>
+<th data-quarto-table-cell-role="th">UMP</th>
+<th data-quarto-table-cell-role="th">DESCRIPTIO</th>
+<th data-quarto-table-cell-role="th">REGION</th>
+<th data-quarto-table-cell-role="th">COUNTY</th>
+<th data-quarto-table-cell-role="th">URL</th>
+<th data-quarto-table-cell-role="th">SOURCE</th>
+<th data-quarto-table-cell-role="th">UPDATE_</th>
+<th data-quarto-table-cell-role="th">OFFICE</th>
+<th data-quarto-table-cell-role="th">ACRES</th>
+<th data-quarto-table-cell-role="th">LANDS_UID</th>
+<th data-quarto-table-cell-role="th">GREENCERT</th>
+<th data-quarto-table-cell-role="th">SHAPE_AREA</th>
+<th data-quarto-table-cell-role="th">SHAPE_LEN</th>
+<th data-quarto-table-cell-role="th">geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>FOR PRES DET PAR</td>
+<td>CFP</td>
+<td>HANCOCK FP DETACHED PARCEL</td>
+<td>WILD FOREST</td>
+<td>NaN</td>
+<td>DELAWARE COUNTY DETACHED PARCEL</td>
+<td>4</td>
+<td>DELAWARE</td>
+<td>http://www.dec.ny.gov/</td>
+<td>DELAWARE RPP</td>
+<td>5/12</td>
+<td>STAMFORD</td>
+<td>738.620192</td>
+<td>103</td>
+<td>N</td>
+<td>2.990365e+06</td>
+<td>7927.662385</td>
+<td>POLYGON ((486093.245 4635308.586, 486787.235 4...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>FOR PRES DET PAR</td>
+<td>CFP</td>
+<td>HANCOCK FP DETACHED PARCEL</td>
+<td>WILD FOREST</td>
+<td>NaN</td>
+<td>DELAWARE COUNTY DETACHED PARCEL</td>
+<td>4</td>
+<td>DELAWARE</td>
+<td>http://www.dec.ny.gov/</td>
+<td>DELAWARE RPP</td>
+<td>5/12</td>
+<td>STAMFORD</td>
+<td>282.553140</td>
+<td>1218</td>
+<td>N</td>
+<td>1.143940e+06</td>
+<td>4776.375600</td>
+<td>POLYGON ((491931.514 4637416.256, 491305.424 4...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
+<td>FOR PRES DET PAR</td>
+<td>CFP</td>
+<td>HANCOCK FP DETACHED PARCEL</td>
+<td>WILD FOREST</td>
+<td>NaN</td>
+<td>DELAWARE COUNTY DETACHED PARCEL</td>
+<td>4</td>
+<td>DELAWARE</td>
+<td>http://www.dec.ny.gov/</td>
+<td>DELAWARE RPP</td>
+<td>5/12</td>
+<td>STAMFORD</td>
+<td>234.291262</td>
+<td>1780</td>
+<td>N</td>
+<td>9.485476e+05</td>
+<td>5783.070364</td>
+<td>POLYGON ((486000.287 4635834.453, 485007.550 4...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>4</td>
+<td>FOR PRES DET PAR</td>
+<td>CFP</td>
+<td>GREENE COUNTY FP DETACHED PARCEL</td>
+<td>WILD FOREST</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>4</td>
+<td>GREENE</td>
+<td>http://www.dec.ny.gov/</td>
+<td>GREENE RPP</td>
+<td>5/12</td>
+<td>STAMFORD</td>
+<td>450.106464</td>
+<td>2060</td>
+<td>N</td>
+<td>1.822293e+06</td>
+<td>7021.644833</td>
+<td>POLYGON ((541716.775 4675243.268, 541217.579 4...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>6</td>
+<td>FOREST PRESERVE</td>
+<td>AFP</td>
+<td>SARANAC LAKES WILD FOREST</td>
+<td>WILD FOREST</td>
+<td>SARANAC LAKES</td>
+<td>NaN</td>
+<td>5</td>
+<td>ESSEX</td>
+<td>http://www.dec.ny.gov/lands/22593.html</td>
+<td>DECRP, ESSEX RPP</td>
+<td>12/96</td>
+<td>RAY BROOK</td>
+<td>69.702387</td>
+<td>1517</td>
+<td>N</td>
+<td>2.821959e+05</td>
+<td>2663.909932</td>
+<td>POLYGON ((583896.043 4909643.187, 583891.200 4...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>As you can see in the “CLASS” column, each of the first five rows corresponds to a different forest.</p>
+<p>For the rest of this tutorial, consider a scenario where you’d like to use this data to plan a weekend camping trip. Instead of relying on crowd-sourced reviews online, you decide to create your own map. This way, you can tailor the trip to your specific interests.</p>
+</section>
+<section id="prerequisites" class="level1">
+<h1>Prerequisites</h1>
+<p>To view the first five rows of the data, we used the <code>head()</code> method. You may recall that this is also what we use to preview a Pandas DataFrame. In fact, every command that you can use with a DataFrame will work with the data!</p>
+<p>This is because the data was loaded into a (GeoPandas) <strong>GeoDataFrame</strong> object that has all of the capabilities of a (Pandas) DataFrame.</p>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-04-20T20:47:50.302645Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-04-20T20:47:50.300836Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-04-20T20:47:50.309601Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-04-20T20:47:50.308136Z&quot;}" data-papermill="{&quot;duration&quot;:0.018021,&quot;end_time&quot;:&quot;2023-04-20T20:47:50.312661&quot;,&quot;exception&quot;:false,&quot;start_time&quot;:&quot;2023-04-20T20:47:50.294640&quot;,&quot;status&quot;:&quot;completed&quot;}" data-tags="[]" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span>(full_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>geopandas.geodataframe.GeoDataFrame</code></pre>
+</div>
+</div>
+<p>For instance, if we don’t plan to use all of the columns, we can select a subset of them. (<em>To review other methods for selecting data, check out <a href="https://www.kaggle.com/residentmario/indexing-selecting-assigning/">this tutorial</a> from the Pandas micro-course</em>.)</p>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-04-20T20:47:50.334184Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-04-20T20:47:50.332979Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-04-20T20:47:50.343660Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-04-20T20:47:50.342612Z&quot;}" data-papermill="{&quot;duration&quot;:0.019022,&quot;end_time&quot;:&quot;2023-04-20T20:47:50.345839&quot;,&quot;exception&quot;:false,&quot;start_time&quot;:&quot;2023-04-20T20:47:50.326817&quot;,&quot;status&quot;:&quot;completed&quot;}" data-tags="[]" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> full_data.loc[:, [<span class="st">"CLASS"</span>, <span class="st">"COUNTY"</span>, <span class="st">"geometry"</span>]].copy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We use the <code>value_counts()</code> method to see a list of different land types, along with how many times they appear in the dataset. (<em>To review this (and related methods), check out <a href="https://www.kaggle.com/residentmario/summary-functions-and-maps">this tutorial</a> from the Pandas micro-course.</em>)</p>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-04-20T20:47:50.365746Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-04-20T20:47:50.364730Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-04-20T20:47:50.378330Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-04-20T20:47:50.376800Z&quot;}" data-papermill="{&quot;duration&quot;:0.021621,&quot;end_time&quot;:&quot;2023-04-20T20:47:50.380672&quot;,&quot;exception&quot;:false,&quot;start_time&quot;:&quot;2023-04-20T20:47:50.359051&quot;,&quot;status&quot;:&quot;completed&quot;}" data-tags="[]" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># How many lands of each type are there?</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>data.CLASS.value_counts()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>WILD FOREST                   965
+INTENSIVE USE                 108
+PRIMITIVE                      60
+WILDERNESS                     52
+ADMINISTRATIVE                 17
+UNCLASSIFIED                    7
+HISTORIC                        5
+PRIMITIVE BICYCLE CORRIDOR      4
+CANOE AREA                      1
+Name: CLASS, dtype: int64</code></pre>
+</div>
+</div>
+<p>You can also use <code>loc</code> (and <code>iloc</code>) and <code>isin</code> to select subsets of the data. (<em>To review this, check out <a href="https://www.kaggle.com/residentmario/indexing-selecting-assigning/">this tutorial</a> from the Pandas micro-course.</em>)</p>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-04-20T20:47:50.402116Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-04-20T20:47:50.401767Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-04-20T20:47:50.423714Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-04-20T20:47:50.422696Z&quot;}" data-papermill="{&quot;duration&quot;:0.030332,&quot;end_time&quot;:&quot;2023-04-20T20:47:50.425643&quot;,&quot;exception&quot;:false,&quot;start_time&quot;:&quot;2023-04-20T20:47:50.395311&quot;,&quot;status&quot;:&quot;completed&quot;}" data-tags="[]" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select lands that fall under the "WILD FOREST" or "WILDERNESS" category</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>wild_lands <span class="op">=</span> data.loc[data.CLASS.isin([<span class="st">'WILD FOREST'</span>, <span class="st">'WILDERNESS'</span>])].copy()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>wild_lands.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">CLASS</th>
+<th data-quarto-table-cell-role="th">COUNTY</th>
+<th data-quarto-table-cell-role="th">geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>WILD FOREST</td>
+<td>DELAWARE</td>
+<td>POLYGON ((486093.245 4635308.586, 486787.235 4...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>WILD FOREST</td>
+<td>DELAWARE</td>
+<td>POLYGON ((491931.514 4637416.256, 491305.424 4...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>WILD FOREST</td>
+<td>DELAWARE</td>
+<td>POLYGON ((486000.287 4635834.453, 485007.550 4...</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>WILD FOREST</td>
+<td>GREENE</td>
+<td>POLYGON ((541716.775 4675243.268, 541217.579 4...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>WILD FOREST</td>
+<td>ESSEX</td>
+<td>POLYGON ((583896.043 4909643.187, 583891.200 4...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>If you’re not familiar with the commands above, you are encouraged to bookmark this page for reference, so you can look up the commands as needed. (<em>Alternatively, you can take the <a href="https://www.kaggle.com/learn/pandas">Pandas micro-course</a>.</em>) We’ll use these commands throughout this micro-course to understand and filter data before creating maps.</p>
+</section>
+<section id="create-your-first-map" class="level1">
+<h1>Create your first map!</h1>
+<p>We can quickly visualize the data with the <code>plot()</code> method.</p>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-04-20T20:47:50.447891Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-04-20T20:47:50.447224Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-04-20T20:47:50.974023Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-04-20T20:47:50.972937Z&quot;}" data-papermill="{&quot;duration&quot;:0.535571,&quot;end_time&quot;:&quot;2023-04-20T20:47:50.976283&quot;,&quot;exception&quot;:false,&quot;start_time&quot;:&quot;2023-04-20T20:47:50.440712&quot;,&quot;status&quot;:&quot;completed&quot;}" data-tags="[]" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>wild_lands.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>&lt;AxesSubplot:&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="1_your-first-map_files/figure-html/cell-8-output-2.png" width="217" height="425"></p>
+</div>
+</div>
+<p>Every GeoDataFrame contains a special “geometry” column. It contains all of the geometric objects that are displayed when we call the <code>plot()</code> method.</p>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-04-20T20:47:51.002743Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-04-20T20:47:51.002347Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-04-20T20:47:51.010733Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-04-20T20:47:51.009684Z&quot;}" data-papermill="{&quot;duration&quot;:0.018073,&quot;end_time&quot;:&quot;2023-04-20T20:47:51.012888&quot;,&quot;exception&quot;:false,&quot;start_time&quot;:&quot;2023-04-20T20:47:50.994815&quot;,&quot;status&quot;:&quot;completed&quot;}" data-tags="[]" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the first five entries in the "geometry" column</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>wild_lands.geometry.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>0    POLYGON ((486093.245 4635308.586, 486787.235 4...
+1    POLYGON ((491931.514 4637416.256, 491305.424 4...
+2    POLYGON ((486000.287 4635834.453, 485007.550 4...
+3    POLYGON ((541716.775 4675243.268, 541217.579 4...
+4    POLYGON ((583896.043 4909643.187, 583891.200 4...
+Name: geometry, dtype: geometry</code></pre>
+</div>
+</div>
+<p>While this column can contain a variety of different datatypes, each entry will typically be a <strong>Point</strong>, <strong>LineString</strong>, or <strong>Polygon</strong>.</p>
+<p><img src="https://storage.googleapis.com/kaggle-media/learn/images/N1llefr.png" class="img-fluid"></p>
+<p>The “geometry” column in our dataset contains 2983 different Polygon objects, each corresponding to a different shape in the plot above.</p>
+<p>In the code cell below, we create three more GeoDataFrames, containing campsite locations (<strong>Point</strong>), foot trails (<strong>LineString</strong>), and county boundaries (<strong>Polygon</strong>).</p>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-04-20T20:47:51.038732Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-04-20T20:47:51.038133Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-04-20T20:47:52.809911Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-04-20T20:47:52.808621Z&quot;}" data-papermill="{&quot;duration&quot;:1.781993,&quot;end_time&quot;:&quot;2023-04-20T20:47:52.812448&quot;,&quot;exception&quot;:false,&quot;start_time&quot;:&quot;2023-04-20T20:47:51.030455&quot;,&quot;status&quot;:&quot;completed&quot;}" data-tags="[]" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Campsites in New York state (Point)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>POI_data <span class="op">=</span> gpd.read_file(<span class="st">"../../../spatial_analysis/data/DEC_pointsinterest/DEC_pointsinterest/Decptsofinterest.shp"</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>campsites <span class="op">=</span> POI_data.loc[POI_data.ASSET<span class="op">==</span><span class="st">'PRIMITIVE CAMPSITE'</span>].copy()</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Foot trails in New York state (LineString)</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>roads_trails <span class="op">=</span> gpd.read_file(<span class="st">"../../../spatial_analysis/data/DEC_roadstrails/DEC_roadstrails/Decroadstrails.shp"</span>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>trails <span class="op">=</span> roads_trails.loc[roads_trails.ASSET<span class="op">==</span><span class="st">'FOOT TRAIL'</span>].copy()</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># County boundaries in New York state (Polygon)</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>counties <span class="op">=</span> gpd.read_file(<span class="st">"../../../spatial_analysis/data/NY_county_boundaries/NY_county_boundaries/NY_county_boundaries.shp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next, we create a map from all four GeoDataFrames.</p>
+<p>The <code>plot()</code> method takes as (optional) input several parameters that can be used to customize the appearance. Most importantly, setting a value for <code>ax</code> ensures that all of the information is plotted on the same map.</p>
+<div class="cell" data-execution="{&quot;iopub.execute_input&quot;:&quot;2023-04-20T20:47:52.836954Z&quot;,&quot;iopub.status.busy&quot;:&quot;2023-04-20T20:47:52.836619Z&quot;,&quot;iopub.status.idle&quot;:&quot;2023-04-20T20:47:54.158148Z&quot;,&quot;shell.execute_reply&quot;:&quot;2023-04-20T20:47:54.157002Z&quot;}" data-papermill="{&quot;duration&quot;:1.330946,&quot;end_time&quot;:&quot;2023-04-20T20:47:54.160524&quot;,&quot;exception&quot;:false,&quot;start_time&quot;:&quot;2023-04-20T20:47:52.829578&quot;,&quot;status&quot;:&quot;completed&quot;}" data-tags="[]" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a base map with county boundaries</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> counties.plot(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">10</span>), color<span class="op">=</span><span class="st">'none'</span>, edgecolor<span class="op">=</span><span class="st">'gainsboro'</span>, zorder<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add wild lands, campsites, and foot trails to the base map</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>wild_lands.plot(color<span class="op">=</span><span class="st">'lightgreen'</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>campsites.plot(color<span class="op">=</span><span class="st">'maroon'</span>, markersize<span class="op">=</span><span class="dv">2</span>, ax<span class="op">=</span>ax)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>trails.plot(color<span class="op">=</span><span class="st">'black'</span>, markersize<span class="op">=</span><span class="dv">1</span>, ax<span class="op">=</span>ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>&lt;AxesSubplot:&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="1_your-first-map_files/figure-html/cell-11-output-2.png" width="794" height="623"></p>
+</div>
+</div>
+<p>It looks like the northeastern part of the state would be a great option for a camping trip!</p>
+</section>
+<section id="your-turn" class="level1">
+<h1>Your turn</h1>
+<p>This feels complex at first, but you’ve already learned enough to do important analysis. See for yourself as you <strong><a href="https://www.kaggle.com/kernels/fork/5832167">identify remote areas</a></strong> of the Philippines where a non-profit can expand its operations.</p>
+<hr>
+<p><em>Have questions or comments? Visit the <a href="https://www.kaggle.com/learn/geospatial-analysis/discussion">course discussion forum</a> to chat with other learners.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

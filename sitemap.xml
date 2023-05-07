@@ -2,22 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://sieunyy.github.io/blog/about.html</loc>
-    <lastmod>2023-04-18T11:42:08.934Z</lastmod>
+    <lastmod>2023-05-07T12:36:55.725Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/index.html</loc>
-    <lastmod>2023-04-18T11:42:10.238Z</lastmod>
+    <lastmod>2023-05-07T12:36:56.986Z</lastmod>
+  </url>
+  <url>
+    <loc>https://sieunyy.github.io/blog/posts/exercise1/1_your-first-map.html</loc>
+    <lastmod>2023-05-07T12:36:59.401Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/increase_loop_speed/week_1c_increase_loop_speed.html</loc>
-    <lastmod>2023-04-18T11:42:14.111Z</lastmod>
+    <lastmod>2023-05-07T12:37:02.061Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/numpy/week_1a_numpy.html</loc>
-    <lastmod>2023-04-18T11:42:20.226Z</lastmod>
+    <lastmod>2023-05-07T12:37:07.568Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/pandas/week_1b_pandas.html</loc>
-    <lastmod>2023-04-18T11:42:40.726Z</lastmod>
+    <lastmod>2023-05-07T12:37:23.602Z</lastmod>
   </url>
 </urlset>
