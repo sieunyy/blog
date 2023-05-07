@@ -102,7 +102,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,7 +175,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#for-loop-속도-개선하기" id="toc-for-loop-속도-개선하기" class="nav-link active" data-scroll-target="#for-loop-속도-개선하기">“For loop 속도 개선하기”</a>
+  <ul class="collapse">
+  <li><a href="#read-in-the-data" id="toc-read-in-the-data" class="nav-link" data-scroll-target="#read-in-the-data">Read in the data</a></li>
+  <li><a href="#haversine-definition" id="toc-haversine-definition" class="nav-link" data-scroll-target="#haversine-definition">Haversine definition</a></li>
+  <li><a href="#task" id="toc-task" class="nav-link" data-scroll-target="#task">Task</a></li>
+  <li><a href="#looping-haversine" id="toc-looping-haversine" class="nav-link" data-scroll-target="#looping-haversine">Looping Haversine</a></li>
+  <li><a href="#iterrows-haversine" id="toc-iterrows-haversine" class="nav-link" data-scroll-target="#iterrows-haversine">Iterrows Haversine</a></li>
+  <li><a href="#apply-haversine-on-rows" id="toc-apply-haversine-on-rows" class="nav-link" data-scroll-target="#apply-haversine-on-rows">Apply Haversine on rows</a>
+  <ul class="collapse">
+  <li><a href="#timing-apply" id="toc-timing-apply" class="nav-link" data-scroll-target="#timing-apply">Timing “apply”</a></li>
+  </ul></li>
+  <li><a href="#vectorized-implementation-of-haversine-applied-on-pandas-series" id="toc-vectorized-implementation-of-haversine-applied-on-pandas-series" class="nav-link" data-scroll-target="#vectorized-implementation-of-haversine-applied-on-pandas-series">Vectorized implementation of Haversine applied on Pandas series</a></li>
+  <li><a href="#vectorized-implementation-of-haversine-applied-on-numpy-arrays" id="toc-vectorized-implementation-of-haversine-applied-on-numpy-arrays" class="nav-link" data-scroll-target="#vectorized-implementation-of-haversine-applied-on-numpy-arrays">Vectorized implementation of Haversine applied on NumPy arrays</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a>
+  <ul class="collapse">
+  <li><a href="#실습" id="toc-실습" class="nav-link" data-scroll-target="#실습">실습</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -440,7 +465,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Haversine 반복 함수 실행하기</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'distance'</span>] <span class="op">=</span> haversine_looping(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>605 ms ± 28.9 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)</code></pre>
+<pre><code>381 ms ± 14.4 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="9">
@@ -505,7 +530,7 @@ Name: distance, dtype: float64</code></pre>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    haversine_series.append(haversine(<span class="fl">40.671</span>, <span class="op">-</span><span class="fl">73.985</span>, row[<span class="st">'latitude'</span>], row[<span class="st">'longitude'</span>]))</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'distance'</span>] <span class="op">=</span> haversine_series</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>169 ms ± 4.88 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)</code></pre>
+<pre><code>107 ms ± 2.9 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)</code></pre>
 </div>
 </div>
 <p>itertuples와 iterrows는 모두 Pandas 데이터프레임의 행을 순회(iterate)하는 메서드입니다. 그러나 itertuples는 iterrows보다 더욱 빠른 속도를 보이므로, 대체로 itertuples를 사용하는 것이 좋습니다.</p>
@@ -518,7 +543,7 @@ Name: distance, dtype: float64</code></pre>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'distance'</span>] <span class="op">=</span> haversine_series</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>41.8 ms ± 901 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)</code></pre>
+<pre><code>23.5 ms ± 1.34 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="14">
@@ -594,7 +619,7 @@ Pandas(Index=2, A=3, B='c')</code></pre>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>df.<span class="bu">apply</span>(<span class="kw">lambda</span> row: haversine(<span class="fl">40.671</span>, <span class="op">-</span><span class="fl">73.985</span>,<span class="op">\</span></span>
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>                               row[<span class="st">'latitude'</span>], row[<span class="st">'longitude'</span>]), axis<span class="op">=</span><span class="dv">1</span>) <span class="co"># 0 = 열, 1 = 행</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>91 ms ± 3.43 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)</code></pre>
+<pre><code>48.9 ms ± 3.33 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)</code></pre>
 </div>
 </div>
 </section>
@@ -612,7 +637,7 @@ Pandas(Index=2, A=3, B='c')</code></pre>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'distance'</span>] <span class="op">=</span> haversine(<span class="fl">40.671</span>, <span class="op">-</span><span class="fl">73.985</span>,<span class="op">\</span></span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                                   df[<span class="st">'latitude'</span>], df[<span class="st">'longitude'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>2.58 ms ± 85.9 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
+<pre><code>1.69 ms ± 181 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)</code></pre>
 </div>
 </div>
 <p>함수 벡터화를 통해 apply() 메서드 대비 50배 이상 개선시켰고 iterrows() 대비 100배 이상 개선시켰다. 입력 유형 변경하는 것 외에 아무것도 하지 않아도 됐다!</p>
@@ -631,7 +656,7 @@ Pandas(Index=2, A=3, B='c')</code></pre>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>timeit df[<span class="st">'distance'</span>] <span class="op">=</span> haversine(<span class="fl">40.671</span>, <span class="op">-</span><span class="fl">73.985</span>,<span class="op">\</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>                         df[<span class="st">'latitude'</span>].values, df[<span class="st">'longitude'</span>].values)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>308 µs ± 5.51 µs per loop (mean ± std. dev. of 7 runs, 1000 loops each)</code></pre>
+<pre><code>195 µs ± 5.84 µs per loop (mean ± std. dev. of 7 runs, 10000 loops each)</code></pre>
 </div>
 </div>
 <div class="cell" data-editable="true" data-jupyter="{&quot;outputs_hidden&quot;:false}" data-execution_count="20">
@@ -640,7 +665,7 @@ Pandas(Index=2, A=3, B='c')</code></pre>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>np_lat <span class="op">=</span> df[<span class="st">'latitude'</span>].values</span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>np_lon <span class="op">=</span> df[<span class="st">'longitude'</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>12.1 µs ± 772 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)</code></pre>
+<pre><code>7.17 µs ± 128 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)</code></pre>
 </div>
 </div>
 </section>

@@ -3,6 +3,7 @@ title: "For loop 속도 개선하기"
 author: "Sieun Shim"
 date: "2023-04-11"
 categories: [code]
+toc: true
 image: "loop.png"
 jupyter: python3
 ---

@@ -3,6 +3,7 @@ title: "Exercise1: Your First Map"
 author: "Sieun Shim"
 date: "2023-04-27"
 categories: [code, geopandas]
+toc: true
 image: "exercise1.jpg"
 jupyter: python3
 ---

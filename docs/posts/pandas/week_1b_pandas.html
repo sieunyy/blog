@@ -102,7 +102,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,7 +175,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#pandas-기본" id="toc-pandas-기본" class="nav-link active" data-scroll-target="#pandas-기본">“Pandas 기본”</a></li>
+  <li><a href="#설정" id="toc-설정" class="nav-link" data-scroll-target="#설정">설정</a></li>
+  <li><a href="#series-객체" id="toc-series-객체" class="nav-link" data-scroll-target="#series-객체"><code>Series</code> 객체</a>
+  <ul class="collapse">
+  <li><a href="#series-만들기" id="toc-series-만들기" class="nav-link" data-scroll-target="#series-만들기"><code>Series</code> 만들기</a></li>
+  <li><a href="#d-ndarray와-비슷합니다" id="toc-d-ndarray와-비슷합니다" class="nav-link" data-scroll-target="#d-ndarray와-비슷합니다">1D <code>ndarray</code>와 비슷합니다</a></li>
+  <li><a href="#인덱스-레이블" id="toc-인덱스-레이블" class="nav-link" data-scroll-target="#인덱스-레이블">인덱스 레이블</a></li>
+  <li><a href="#dict에서-초기화" id="toc-dict에서-초기화" class="nav-link" data-scroll-target="#dict에서-초기화"><code>dict</code>에서 초기화</a></li>
+  <li><a href="#자동-정렬" id="toc-자동-정렬" class="nav-link" data-scroll-target="#자동-정렬">자동 정렬</a></li>
+  <li><a href="#스칼라로-초기화" id="toc-스칼라로-초기화" class="nav-link" data-scroll-target="#스칼라로-초기화">스칼라로 초기화</a></li>
+  <li><a href="#series-이름" id="toc-series-이름" class="nav-link" data-scroll-target="#series-이름"><code>Series</code> 이름</a></li>
+  <li><a href="#series-그래프-출력" id="toc-series-그래프-출력" class="nav-link" data-scroll-target="#series-그래프-출력"><code>Series</code> 그래프 출력</a></li>
+  </ul></li>
+  <li><a href="#시간-다루기" id="toc-시간-다루기" class="nav-link" data-scroll-target="#시간-다루기">시간 다루기</a>
+  <ul class="collapse">
+  <li><a href="#시간-범위" id="toc-시간-범위" class="nav-link" data-scroll-target="#시간-범위">시간 범위</a></li>
+  <li><a href="#리샘플링" id="toc-리샘플링" class="nav-link" data-scroll-target="#리샘플링">리샘플링</a></li>
+  <li><a href="#업샘플링과-보간" id="toc-업샘플링과-보간" class="nav-link" data-scroll-target="#업샘플링과-보간">업샘플링과 보간</a></li>
+  <li><a href="#시간대" id="toc-시간대" class="nav-link" data-scroll-target="#시간대">시간대</a></li>
+  <li><a href="#기간" id="toc-기간" class="nav-link" data-scroll-target="#기간">기간</a></li>
+  </ul></li>
+  <li><a href="#dataframe-객체" id="toc-dataframe-객체" class="nav-link" data-scroll-target="#dataframe-객체"><code>DataFrame</code> 객체</a>
+  <ul class="collapse">
+  <li><a href="#dataframe-만들기" id="toc-dataframe-만들기" class="nav-link" data-scroll-target="#dataframe-만들기"><code>DataFrame</code> 만들기</a></li>
+  <li><a href="#멀티-인덱싱" id="toc-멀티-인덱싱" class="nav-link" data-scroll-target="#멀티-인덱싱">멀티 인덱싱</a></li>
+  <li><a href="#레벨-낮추기" id="toc-레벨-낮추기" class="nav-link" data-scroll-target="#레벨-낮추기">레벨 낮추기</a></li>
+  <li><a href="#전치" id="toc-전치" class="nav-link" data-scroll-target="#전치">전치</a></li>
+  <li><a href="#레벨-스택과-언스택" id="toc-레벨-스택과-언스택" class="nav-link" data-scroll-target="#레벨-스택과-언스택">레벨 스택과 언스택</a></li>
+  <li><a href="#대부분의-메서드는-수정된-복사본을-반환합니다" id="toc-대부분의-메서드는-수정된-복사본을-반환합니다" class="nav-link" data-scroll-target="#대부분의-메서드는-수정된-복사본을-반환합니다">대부분의 메서드는 수정된 복사본을 반환합니다</a>
+  <ul class="collapse">
+  <li><a href="#pivot" id="toc-pivot" class="nav-link" data-scroll-target="#pivot">Pivot</a></li>
+  </ul></li>
+  <li><a href="#행-참조하기" id="toc-행-참조하기" class="nav-link" data-scroll-target="#행-참조하기">행 참조하기</a></li>
+  <li><a href="#열-추가-삭제" id="toc-열-추가-삭제" class="nav-link" data-scroll-target="#열-추가-삭제">열 추가, 삭제</a></li>
+  <li><a href="#새로운-열-할당하기" id="toc-새로운-열-할당하기" class="nav-link" data-scroll-target="#새로운-열-할당하기">새로운 열 할당하기</a></li>
+  <li><a href="#표현식-평가" id="toc-표현식-평가" class="nav-link" data-scroll-target="#표현식-평가">표현식 평가</a></li>
+  <li><a href="#dataframe-쿼리하기" id="toc-dataframe-쿼리하기" class="nav-link" data-scroll-target="#dataframe-쿼리하기"><code>DataFrame</code> 쿼리하기</a></li>
+  <li><a href="#dataframe-정렬" id="toc-dataframe-정렬" class="nav-link" data-scroll-target="#dataframe-정렬"><code>DataFrame</code> 정렬</a></li>
+  <li><a href="#dataframe-그래프-그리기" id="toc-dataframe-그래프-그리기" class="nav-link" data-scroll-target="#dataframe-그래프-그리기"><code>DataFrame</code> 그래프 그리기</a></li>
+  <li><a href="#dataframe-연산" id="toc-dataframe-연산" class="nav-link" data-scroll-target="#dataframe-연산"><code>DataFrame</code> 연산</a></li>
+  <li><a href="#자동-정렬-1" id="toc-자동-정렬-1" class="nav-link" data-scroll-target="#자동-정렬-1">자동 정렬</a></li>
+  <li><a href="#누락된-데이터-다루기" id="toc-누락된-데이터-다루기" class="nav-link" data-scroll-target="#누락된-데이터-다루기">누락된 데이터 다루기</a></li>
+  <li><a href="#groupby로-집계하기" id="toc-groupby로-집계하기" class="nav-link" data-scroll-target="#groupby로-집계하기"><code>groupby</code>로 집계하기</a></li>
+  <li><a href="#피봇-테이블" id="toc-피봇-테이블" class="nav-link" data-scroll-target="#피봇-테이블">피봇 테이블</a></li>
+  <li><a href="#함수" id="toc-함수" class="nav-link" data-scroll-target="#함수">함수</a></li>
+  </ul></li>
+  <li><a href="#저장-로딩" id="toc-저장-로딩" class="nav-link" data-scroll-target="#저장-로딩">저장 &amp; 로딩</a>
+  <ul class="collapse">
+  <li><a href="#저장" id="toc-저장" class="nav-link" data-scroll-target="#저장">저장</a></li>
+  <li><a href="#로딩" id="toc-로딩" class="nav-link" data-scroll-target="#로딩">로딩</a></li>
+  </ul></li>
+  <li><a href="#dataframe-합치기" id="toc-dataframe-합치기" class="nav-link" data-scroll-target="#dataframe-합치기"><code>DataFrame</code> 합치기</a>
+  <ul class="collapse">
+  <li><a href="#sql-조인" id="toc-sql-조인" class="nav-link" data-scroll-target="#sql-조인">SQL 조인</a></li>
+  <li><a href="#연결" id="toc-연결" class="nav-link" data-scroll-target="#연결">연결</a></li>
+  </ul></li>
+  <li><a href="#범주" id="toc-범주" class="nav-link" data-scroll-target="#범주">범주</a></li>
+  <li><a href="#그-다음엔" id="toc-그-다음엔" class="nav-link" data-scroll-target="#그-다음엔">그 다음엔?</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 

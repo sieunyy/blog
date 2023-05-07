@@ -3,6 +3,7 @@ title: "Numpy 기본"
 author: "Sieun Shim"
 date: "2023-03-21"
 categories: [code]
+toc: true
 image: "numpy.png"
 jupyter: python3
 ---

@@ -3,6 +3,7 @@ title: "Pandas 기본"
 author: "Sieun Shim"
 date: "2023-04-06"
 categories: [code]
+toc: true
 image: "pandas.png"
 jupyter: python3
 ---
