@@ -9,7 +9,11 @@ jupyter: python3
 ---
 
 
+> [Kaggle Geospatial Analysis Course](https://www.kaggle.com/learn/geospatial-analysis)
+
 # Lesson1: Your First Map
+
+## Introduction
 
 In this micro-course, you'll learn about different methods to wrangle and visualize **geospatial data**, or data with a geographic location.
 
@@ -30,7 +34,7 @@ In this first tutorial, we'll quickly cover the pre-requisites that you'll need 
 
 We'll also get started with visualizing our first geospatial dataset!
 
-# Reading data
+## Reading data
 
 The first step is to read in some geospatial data!  To do this, we'll use the [GeoPandas](http://geopandas.org/) library.
 
@@ -63,7 +67,7 @@ As you can see in the "CLASS" column, each of the first five rows corresponds to
 
 For the rest of this tutorial, consider a scenario where you'd like to use this data to plan a weekend camping trip.  Instead of relying on crowd-sourced reviews online, you decide to create your own map.  This way, you can tailor the trip to your specific interests. 
 
-# Prerequisites
+## Prerequisites
 
 To view the first five rows of the data, we used the `head()` method.  You may recall that this is also what we use to preview a Pandas DataFrame.  In fact, every command that you can use with a DataFrame will work with the data!  
 
@@ -108,7 +112,7 @@ wild_lands.head()
 
 If you're not familiar with the commands above, you are encouraged to bookmark this page for reference, so you can look up the commands as needed.  (_Alternatively, you can take the [Pandas micro-course](https://www.kaggle.com/learn/pandas)._)  We'll use these commands throughout this micro-course to understand and filter data before creating maps.
 
-# Create your first map!
+## Create your first map!
 
 We can quickly visualize the data with the `plot()` method.
 
@@ -173,7 +177,7 @@ trails.plot(color='black', markersize=1, ax=ax)
 
 It looks like the northeastern part of the state would be a great option for a camping trip!
 
-# Your turn
+## Your turn
 
 This feels complex at first, but you've already learned enough to do important analysis. See for yourself as you **[identify remote areas](https://www.kaggle.com/kernels/fork/5832167)** of the Philippines where a non-profit can expand its operations.
 
@@ -187,6 +191,8 @@ This feels complex at first, but you've already learned enough to do important a
 
 
 # Lesson2: Coordinate Reference Systems
+
+## Introduction
 
 The maps you create in this course portray the surface of the earth in two dimensions.  But, as you know, the world is actually a three-dimensional globe. So we have to use a method called a **map projection** to render it as a flat surface.  
 
@@ -211,7 +217,7 @@ import geopandas as gpd
 import pandas as pd
 ```
 
-# Setting the CRS
+## Setting the CRS
 
 When we create a GeoDataFrame from a shapefile, the CRS is already imported for us. 
 
@@ -258,7 +264,7 @@ In the code cell above, to create a GeoDataFrame from a CSV file, we needed to u
 - To convert it to a GeoDataFrame, we use `gpd.GeoDataFrame()`.  
 - The `gpd.points_from_xy()` function creates `Point` objects from the latitude and longitude columns.
 
-# Re-projecting
+## Re-projecting
 
 Re-projecting refers to the process of changing the CRS.  This is done in GeoPandas with the `to_crs()` method.
 
@@ -302,7 +308,7 @@ In case the EPSG code is not available in GeoPandas, we can change the CRS with 
 regions.to_crs("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs").head()
 ```
 
-# Attributes of geometric objects
+## Attributes of geometric objects
 
 As you learned in the first tutorial, for an arbitrary GeoDataFrame, the type in the "geometry" column depends on what we are trying to show: for instance, we might use:
 - a Point for the epicenter of an earthquake, 
@@ -339,7 +345,7 @@ In the code cell above, since the CRS of the `regions` GeoDataFrame is set to EP
 
 But this yields the area of Ghana as approximately 239585 square kilometers, which is not too far off from [the correct answer](https://www.google.com/search?q=area+of+ghana).
 
-# Your turn
+## Your turn
 
 Use what you've learned to **[track bird migration to South America](https://www.kaggle.com/kernels/fork/5832146)**.
 
@@ -353,6 +359,8 @@ Use what you've learned to **[track bird migration to South America](https://www
 
 
 # Lesson3: Interactive Maps
+
+## Introduction
 
 In this tutorial, you'll learn how to create interactive maps with the **folium** package.  Along the way, you'll apply your new skills to visualize Boston crime data.
 
@@ -376,7 +384,7 @@ from folium import Choropleth, Circle, Marker
 from folium.plugins import HeatMap, MarkerCluster
 ```
 
-# Your first interactive map
+## Your first interactive map
 
 We begin by creating a relatively simple map with `folium.Map()`.
 
@@ -416,7 +424,7 @@ Several arguments customize the appearance of the map:
 
 Take the time now to explore by zooming in and out, or by dragging the map in different directions.
 
-# The data
+## The data
 
 Now, we'll add some crime data to the map! 
 
@@ -445,7 +453,7 @@ crimes = crimes[crimes.YEAR>=2018]
 crimes.head()
 ```
 
-# Plotting points
+## Plotting points
 
 To reduce the amount of data we need to fit on the map, we'll (temporarily) confine our attention to daytime robberies.
 
@@ -457,7 +465,7 @@ daytime_robberies = crimes[((crimes.OFFENSE_CODE_GROUP == 'Robbery') & \
                             (crimes.HOUR.isin(range(9,18))))]
 ```
 
-## folium.Marker
+### folium.Marker
 
 We add markers to the map with `folium.Marker()`.  Each marker below corresponds to a different robbery.
 
@@ -476,7 +484,7 @@ for idx, row in daytime_robberies.iterrows():
 m_2
 ```
 
-## folium.plugins.MarkerCluster
+### folium.plugins.MarkerCluster
 
 If we have a lot of markers to add, `folium.plugins.MarkerCluster()` can help to declutter the map.  Each marker is added to a `MarkerCluster` object.
 
@@ -498,7 +506,7 @@ m_3.add_child(mc)
 m_3
 ```
 
-# Bubble maps
+## Bubble maps
 
 A **bubble map** uses circles instead of markers.  By varying the size and color of each circle, we can also show the relationship between location and two other variables.
 
@@ -535,7 +543,7 @@ Note that `folium.Circle()` takes several arguments:
 - `color` sets the color of each circle.
  - The `color_producer()` function is used to visualize the effect of the hour on robbery location.
 
-# Heatmaps
+## Heatmaps
 
 To create a heatmap, we use [`folium.plugins.HeatMap()`](https://python-visualization.github.io/folium/plugins.html#folium.plugins.HeatMap).  This shows the density of crime in different areas of the city, where red areas have relatively more criminal incidents.
 
@@ -559,7 +567,7 @@ As you can see in the code cell above, `folium.plugins.HeatMap()` takes a couple
 - `data` is a DataFrame containing the locations that we'd like to plot.  
 - `radius` controls the smoothness of the heatmap.  Higher values make the heatmap look smoother (i.e., with fewer gaps).
 
-# Choropleth maps
+## Choropleth maps
 
 To understand how crime varies by police district, we'll create a choropleth map.
 
@@ -618,7 +626,7 @@ Note that `folium.Choropleth()` takes several arguments:
 - `fill_color` sets the color scale. 
 - `legend_name` labels the legend in the top right corner of the map.
 
-# Your turn
+## Your turn
 
 **[Design your own maps](https://www.kaggle.com/kernels/fork/5832145)** to determine which areas of Japan need extra earthquake reinforcement.
 
@@ -632,6 +640,8 @@ Note that `folium.Choropleth()` takes several arguments:
 
 
 # Lesson4: Manipulating Geospatial Data
+
+## Introduction
 
 In this tutorial, you'll learn about two common manipulations for geospatial data: **geocoding** and **table joins**.
 
@@ -651,7 +661,7 @@ import warnings
 warnings.filterwarnings('ignore')
 ```
 
-# Geocoding
+## Geocoding
 
 **Geocoding** is the process of converting the name of a place or an address to a location on a map.  If you have ever looked up a geographic location based on a landmark description with [Google Maps](https://www.google.com/maps), [Bing Maps](https://www.bing.com/maps), or [Baidu Maps](https://map.baidu.com/), for instance, then you have used a geocoder!
 
@@ -749,11 +759,11 @@ for idx, row in universities.iterrows():
 m
 ```
 
-# Table joins
+## Table joins
 
 Now, we'll switch topics and think about how to combine data from different sources.  
 
-### Attribute join
+#### Attribute join
 
 [You already know](https://www.kaggle.com/residentmario/renaming-and-combining) how to use `pd.DataFrame.join()` to combine information from multiple DataFrames with a shared index.  We refer to this way of joining data (by simpling matching values in the index) as an **attribute join**.
 
@@ -798,7 +808,7 @@ europe = europe_boundaries.merge(europe_stats, on="name")
 europe.head()
 ```
 
-### Spatial join
+#### Spatial join
 
 Another type of join is a **spatial join**.  With a spatial join, we combine GeoDataFrames based on the spatial relationship between the objects in the "geometry" columns.  For instance, we already have a GeoDataFrame `universities` containing geocoded addresses of European universities.  
 
@@ -823,7 +833,7 @@ The spatial join above looks at the "geometry" columns in both GeoDataFrames.  I
 
 The `gpd.sjoin()` method is customizable for different types of joins, through the `how` and `op` arguments.  For instance, you can do the equivalent of a SQL left (or right) join by setting `how='left'` (or `how='right'`).  We won't go into the details in this course, but you can learn more in [the documentation](https://geopandas.org/en/stable/docs/reference/api/geopandas.sjoin.html).
 
-# Your turn
+## Your turn
 
 **[Use geocoding and table joins](https://www.kaggle.com/kernels/fork/5832170)** to identify suitable locations for the next Starbucks Reserve Roastery.
 
@@ -837,6 +847,8 @@ The `gpd.sjoin()` method is customizable for different types of joins, through t
 
 
 # Lesson5: Proximity Analysis
+
+## Introduction
 
 In this tutorial, you'll explore several techniques for **proximity analysis**.  In particular, you'll learn how to do such things as:
 - measure the distance between points on a map, and
@@ -876,7 +888,7 @@ stations = gpd.read_file("../../../spatial_analysis/data/PhillyHealth_Air_Monito
 stations.head()
 ```
 
-# Measuring distance
+## Measuring distance
 
 To measure distances between points from two different GeoDataFrames, we first have to make sure that they use the same coordinate reference system (CRS).  Thankfully, this is the case here, where both use EPSG 2272.
 
@@ -923,7 +935,7 @@ print('Closest monitoring station ({} feet):'.format(distances.min()))
 print(stations.iloc[distances.idxmin()][["ADDRESS", "LATITUDE", "LONGITUDE"]])
 ```
 
-# Creating a buffer
+## Creating a buffer
 
 If we want to understand all points on a map that are some radius away from a point, the simplest way is to create a buffer.
 
@@ -992,7 +1004,7 @@ But not all releases occured within two miles of an air monitoring station!
 my_union.contains(releases.iloc[358].geometry)
 ```
 
-# Your turn
+## Your turn
 
 In the **[final exercise](https://www.kaggle.com/kernels/fork/5832147)**, you'll investigate hospital coverage in New York City.
 
