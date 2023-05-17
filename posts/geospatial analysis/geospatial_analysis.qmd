@@ -1,0 +1,1005 @@
+---
+title: "Geospatial Analysis"
+author: "Sieun Shim"
+date: "2023-04-27"
+categories: [code, geopandas]
+toc: true
+image: "geopandas.jpg"
+jupyter: python3
+---
+
+
+# Lesson1: Your First Map
+
+In this micro-course, you'll learn about different methods to wrangle and visualize **geospatial data**, or data with a geographic location.
+
+<center>
+<img src="https://storage.googleapis.com/kaggle-media/learn/images/v6ZUGgI.png"><br/>
+</center>
+
+Along the way, you'll offer solutions to several real-world problems like:
+- Where should a global non-profit expand its reach in remote areas of the Philippines?
+- How do purple martins, a threatened bird species, travel between North and South America?  Are the birds travelling to conservation areas?
+- Which areas of Japan could potentially benefit from extra earthquake reinforcement?
+- Which Starbucks stores in California are strong candidates for the next [Starbucks Reserve Roastery](https://www.forbes.com/sites/garystern/2019/01/22/starbucks-reserve-roastery-its-spacious-and-trendy-but-why-is-starbucks-slowing-down-expansion/#6cb80d4a1bc6) location?
+- Does New York City have sufficient hospitals to respond to motor vehicle collisions?  Which areas of the city have gaps in coverage?
+
+You'll also visualize crime in the city of Boston, examine health facilities in Ghana, explore top universities in Europe, and track releases of toxic chemicals in the United States.
+
+In this first tutorial, we'll quickly cover the pre-requisites that you'll need to complete this micro-course.  And, if you'd like to review more deeply, we recommend the **[Pandas micro-course](https://www.kaggle.com/learn/pandas)**.  
+
+We'll also get started with visualizing our first geospatial dataset!
+
+# Reading data
+
+The first step is to read in some geospatial data!  To do this, we'll use the [GeoPandas](http://geopandas.org/) library.
+
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:48.829994Z', iopub.status.busy: '2023-04-20T20:47:48.829516Z', iopub.status.idle: '2023-04-20T20:47:49.413053Z', shell.execute_reply: '2023-04-20T20:47:49.411484Z'}
+#| papermill: {duration: 0.591461, end_time: '2023-04-20T20:47:49.415595', exception: false, start_time: '2023-04-20T20:47:48.824134', status: completed}
+#| tags: []
+import geopandas as gpd
+```
+
+There are many, many different geospatial file formats, such as [shapefile](https://en.wikipedia.org/wiki/Shapefile), [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON), [KML](https://en.wikipedia.org/wiki/Keyhole_Markup_Language), and [GPKG](https://en.wikipedia.org/wiki/GeoPackage).  We won't discuss their differences in this micro-course, but it's important to mention that:
+- shapefile is the most common file type that you'll encounter, and 
+- all of these file types can be quickly loaded with the `gpd.read_file()` function.
+
+The next code cell loads a shapefile containing information about forests, wilderness areas, and other lands under the care of the [Department of Environmental Conservation](https://www.dec.ny.gov/index.html) in the state of New York.  
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:49.437447Z', iopub.status.busy: '2023-04-20T20:47:49.437015Z', iopub.status.idle: '2023-04-20T20:47:50.279297Z', shell.execute_reply: '2023-04-20T20:47:50.278516Z'}
+#| papermill: {duration: 0.850647, end_time: '2023-04-20T20:47:50.281133', exception: false, start_time: '2023-04-20T20:47:49.430486', status: completed}
+#| tags: []
+# Read in the data
+full_data = gpd.read_file("../../../spatial_analysis/data/DEC_lands/DEC_lands/DEC_lands.shp")
+
+# View the first five rows of the data
+full_data.head()
+```
+
+As you can see in the "CLASS" column, each of the first five rows corresponds to a different forest.  
+
+For the rest of this tutorial, consider a scenario where you'd like to use this data to plan a weekend camping trip.  Instead of relying on crowd-sourced reviews online, you decide to create your own map.  This way, you can tailor the trip to your specific interests. 
+
+# Prerequisites
+
+To view the first five rows of the data, we used the `head()` method.  You may recall that this is also what we use to preview a Pandas DataFrame.  In fact, every command that you can use with a DataFrame will work with the data!  
+
+This is because the data was loaded into a (GeoPandas) **GeoDataFrame** object that has all of the capabilities of a (Pandas) DataFrame.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:50.302645Z', iopub.status.busy: '2023-04-20T20:47:50.300836Z', iopub.status.idle: '2023-04-20T20:47:50.309601Z', shell.execute_reply: '2023-04-20T20:47:50.308136Z'}
+#| papermill: {duration: 0.018021, end_time: '2023-04-20T20:47:50.312661', exception: false, start_time: '2023-04-20T20:47:50.294640', status: completed}
+#| tags: []
+type(full_data)
+```
+
+For instance, if we don't plan to use all of the columns, we can select a subset of them.  (_To review other methods for selecting data, check out [this tutorial](https://www.kaggle.com/residentmario/indexing-selecting-assigning/) from the Pandas micro-course_.)
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:50.334184Z', iopub.status.busy: '2023-04-20T20:47:50.332979Z', iopub.status.idle: '2023-04-20T20:47:50.343660Z', shell.execute_reply: '2023-04-20T20:47:50.342612Z'}
+#| papermill: {duration: 0.019022, end_time: '2023-04-20T20:47:50.345839', exception: false, start_time: '2023-04-20T20:47:50.326817', status: completed}
+#| tags: []
+data = full_data.loc[:, ["CLASS", "COUNTY", "geometry"]].copy()
+```
+
+We use the `value_counts()` method to see a list of different land types, along with how many times they appear in the dataset. (_To review this (and related methods), check out [this tutorial](https://www.kaggle.com/residentmario/summary-functions-and-maps) from the Pandas micro-course._)
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:50.365746Z', iopub.status.busy: '2023-04-20T20:47:50.364730Z', iopub.status.idle: '2023-04-20T20:47:50.378330Z', shell.execute_reply: '2023-04-20T20:47:50.376800Z'}
+#| papermill: {duration: 0.021621, end_time: '2023-04-20T20:47:50.380672', exception: false, start_time: '2023-04-20T20:47:50.359051', status: completed}
+#| tags: []
+# How many lands of each type are there?
+data.CLASS.value_counts()
+```
+
+You can also use `loc` (and `iloc`) and `isin` to select subsets of the data.  (_To review this, check out [this tutorial](https://www.kaggle.com/residentmario/indexing-selecting-assigning/) from the Pandas micro-course._)
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:50.402116Z', iopub.status.busy: '2023-04-20T20:47:50.401767Z', iopub.status.idle: '2023-04-20T20:47:50.423714Z', shell.execute_reply: '2023-04-20T20:47:50.422696Z'}
+#| papermill: {duration: 0.030332, end_time: '2023-04-20T20:47:50.425643', exception: false, start_time: '2023-04-20T20:47:50.395311', status: completed}
+#| tags: []
+# Select lands that fall under the "WILD FOREST" or "WILDERNESS" category
+wild_lands = data.loc[data.CLASS.isin(['WILD FOREST', 'WILDERNESS'])].copy()
+wild_lands.head()
+```
+
+If you're not familiar with the commands above, you are encouraged to bookmark this page for reference, so you can look up the commands as needed.  (_Alternatively, you can take the [Pandas micro-course](https://www.kaggle.com/learn/pandas)._)  We'll use these commands throughout this micro-course to understand and filter data before creating maps.
+
+# Create your first map!
+
+We can quickly visualize the data with the `plot()` method.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:50.447891Z', iopub.status.busy: '2023-04-20T20:47:50.447224Z', iopub.status.idle: '2023-04-20T20:47:50.974023Z', shell.execute_reply: '2023-04-20T20:47:50.972937Z'}
+#| papermill: {duration: 0.535571, end_time: '2023-04-20T20:47:50.976283', exception: false, start_time: '2023-04-20T20:47:50.440712', status: completed}
+#| tags: []
+wild_lands.plot()
+```
+
+Every GeoDataFrame contains a special "geometry" column.  It contains all of the geometric objects that are displayed when we call the `plot()` method.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:51.002743Z', iopub.status.busy: '2023-04-20T20:47:51.002347Z', iopub.status.idle: '2023-04-20T20:47:51.010733Z', shell.execute_reply: '2023-04-20T20:47:51.009684Z'}
+#| papermill: {duration: 0.018073, end_time: '2023-04-20T20:47:51.012888', exception: false, start_time: '2023-04-20T20:47:50.994815', status: completed}
+#| tags: []
+# View the first five entries in the "geometry" column
+wild_lands.geometry.head()
+```
+
+While this column can contain a variety of different datatypes, each entry will typically be a **Point**, **LineString**, or **Polygon**.
+
+![](https://storage.googleapis.com/kaggle-media/learn/images/N1llefr.png)
+
+The "geometry" column in our dataset contains 2983 different Polygon objects, each corresponding to a different shape in the plot above.
+
+In the code cell below, we create three more GeoDataFrames, containing campsite locations (**Point**), foot trails (**LineString**), and county boundaries (**Polygon**).
+
+```{python}
+#| _kg_hide-input: false
+#| execution: {iopub.execute_input: '2023-04-20T20:47:51.038732Z', iopub.status.busy: '2023-04-20T20:47:51.038133Z', iopub.status.idle: '2023-04-20T20:47:52.809911Z', shell.execute_reply: '2023-04-20T20:47:52.808621Z'}
+#| papermill: {duration: 1.781993, end_time: '2023-04-20T20:47:52.812448', exception: false, start_time: '2023-04-20T20:47:51.030455', status: completed}
+#| tags: []
+# Campsites in New York state (Point)
+POI_data = gpd.read_file("../../../spatial_analysis/data/DEC_pointsinterest/DEC_pointsinterest/Decptsofinterest.shp")
+campsites = POI_data.loc[POI_data.ASSET=='PRIMITIVE CAMPSITE'].copy()
+
+# Foot trails in New York state (LineString)
+roads_trails = gpd.read_file("../../../spatial_analysis/data/DEC_roadstrails/DEC_roadstrails/Decroadstrails.shp")
+trails = roads_trails.loc[roads_trails.ASSET=='FOOT TRAIL'].copy()
+
+# County boundaries in New York state (Polygon)
+counties = gpd.read_file("../../../spatial_analysis/data/NY_county_boundaries/NY_county_boundaries/NY_county_boundaries.shp")
+```
+
+Next, we create a map from all four GeoDataFrames.  
+
+The `plot()` method takes as (optional) input several parameters that can be used to customize the appearance.  Most importantly, setting a value for `ax` ensures that all of the information is plotted on the same map.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:52.836954Z', iopub.status.busy: '2023-04-20T20:47:52.836619Z', iopub.status.idle: '2023-04-20T20:47:54.158148Z', shell.execute_reply: '2023-04-20T20:47:54.157002Z'}
+#| papermill: {duration: 1.330946, end_time: '2023-04-20T20:47:54.160524', exception: false, start_time: '2023-04-20T20:47:52.829578', status: completed}
+#| tags: []
+# Define a base map with county boundaries
+ax = counties.plot(figsize=(10,10), color='none', edgecolor='gainsboro', zorder=3)
+
+# Add wild lands, campsites, and foot trails to the base map
+wild_lands.plot(color='lightgreen', ax=ax)
+campsites.plot(color='maroon', markersize=2, ax=ax)
+trails.plot(color='black', markersize=1, ax=ax)
+```
+
+It looks like the northeastern part of the state would be a great option for a camping trip!
+
+# Your turn
+
+This feels complex at first, but you've already learned enough to do important analysis. See for yourself as you **[identify remote areas](https://www.kaggle.com/kernels/fork/5832167)** of the Philippines where a non-profit can expand its operations.
+
+---
+
+
+
+
+*Have questions or comments? Visit the [course discussion forum](https://www.kaggle.com/learn/geospatial-analysis/discussion) to chat with other learners.*
+
+
+
+# Lesson2: Coordinate Reference Systems
+
+The maps you create in this course portray the surface of the earth in two dimensions.  But, as you know, the world is actually a three-dimensional globe. So we have to use a method called a **map projection** to render it as a flat surface.  
+
+Map projections can't be 100% accurate.  Each projection distorts the surface of the Earth in some way, while retaining some useful property.  For instance,
+- the *equal-area* projections (like "Lambert Cylindrical Equal Area", or "Africa Albers Equal Area Conic") preserve area.  This is a good choice, if you'd like to calculate the area of a country or city, for example.
+- the *equidistant* projections (like "Azimuthal Equidistant projection") preserve distance.  This would be a good choice for calculating flight distance.
+
+<center>
+<img src="https://storage.googleapis.com/kaggle-media/learn/images/noBRRNR.png" width="700">
+<b>List of map projections</b> (<a href="https://bit.ly/2kOHTBs">Source</a>)<br/><br/>
+</center>
+
+We use a **coordinate reference system (CRS)** to show how the projected points correspond to real locations on Earth.  In this tutorial, you'll learn more about coordinate reference systems, along with how to use them in GeoPandas.
+
+
+```{python}
+#| _kg_hide-input: true
+#| execution: {iopub.execute_input: '2023-04-20T20:47:38.319166Z', iopub.status.busy: '2023-04-20T20:47:38.317707Z', iopub.status.idle: '2023-04-20T20:47:38.940015Z', shell.execute_reply: '2023-04-20T20:47:38.938794Z'}
+#| papermill: {duration: 0.63214, end_time: '2023-04-20T20:47:38.944213', exception: false, start_time: '2023-04-20T20:47:38.312073', status: completed}
+#| tags: []
+import geopandas as gpd
+import pandas as pd
+```
+
+# Setting the CRS
+
+When we create a GeoDataFrame from a shapefile, the CRS is already imported for us. 
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:38.964284Z', iopub.status.busy: '2023-04-20T20:47:38.963872Z', iopub.status.idle: '2023-04-20T20:47:39.360338Z', shell.execute_reply: '2023-04-20T20:47:39.359148Z'}
+#| papermill: {duration: 0.40515, end_time: '2023-04-20T20:47:39.363164', exception: false, start_time: '2023-04-20T20:47:38.958014', status: completed}
+#| tags: []
+# Load a GeoDataFrame containing regions in Ghana
+regions = gpd.read_file("../../../spatial_analysis/data/ghana/ghana/Regions/Map_of_Regions_in_Ghana.shp")
+print(regions.crs)
+```
+
+```{python}
+regions.head()
+```
+
+How do you interpret that?
+
+Coordinate reference systems are referenced by [European Petroleum Survey Group (EPSG)](http://www.epsg.org/) codes.
+
+This GeoDataFrame uses [EPSG 32630](https://epsg.io/32630), which is more commonly called the "Mercator" projection. This projection preserves angles (making it useful for sea navigation) and slightly distorts area. 
+
+However, when creating a GeoDataFrame from a CSV file, we have to set the CRS.  [EPSG 4326](https://epsg.io/4326) corresponds to coordinates in latitude and longitude.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:39.383968Z', iopub.status.busy: '2023-04-20T20:47:39.382969Z', iopub.status.idle: '2023-04-20T20:47:39.491786Z', shell.execute_reply: '2023-04-20T20:47:39.490056Z'}
+#| papermill: {duration: 0.117952, end_time: '2023-04-20T20:47:39.495061', exception: false, start_time: '2023-04-20T20:47:39.377109', status: completed}
+#| tags: []
+# Create a DataFrame with health facilities in Ghana
+facilities_df = pd.read_csv("../../../spatial_analysis/data/ghana/ghana/health_facilities.csv")
+
+# Convert the DataFrame to a GeoDataFrame
+facilities = gpd.GeoDataFrame(facilities_df, geometry=gpd.points_from_xy(facilities_df.Longitude, facilities_df.Latitude))
+
+# Set the coordinate reference system (CRS) to EPSG 4326
+facilities.crs = {'init': 'epsg:4326'}
+
+# View the first five rows of the GeoDataFrame
+facilities.head()
+```
+
+In the code cell above, to create a GeoDataFrame from a CSV file, we needed to use both Pandas and GeoPandas:
+- We begin by creating a DataFrame containing columns with latitude and longitude coordinates.
+- To convert it to a GeoDataFrame, we use `gpd.GeoDataFrame()`.  
+- The `gpd.points_from_xy()` function creates `Point` objects from the latitude and longitude columns.
+
+# Re-projecting
+
+Re-projecting refers to the process of changing the CRS.  This is done in GeoPandas with the `to_crs()` method.
+
+When plotting multiple GeoDataFrames, it's important that they all use the same CRS.  In the code cell below, we change the CRS of the `facilities` GeoDataFrame to match the CRS of `regions` before plotting it.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:39.526132Z', iopub.status.busy: '2023-04-20T20:47:39.525459Z', iopub.status.idle: '2023-04-20T20:47:40.678169Z', shell.execute_reply: '2023-04-20T20:47:40.677062Z'}
+#| papermill: {duration: 1.1632, end_time: '2023-04-20T20:47:40.682430', exception: false, start_time: '2023-04-20T20:47:39.519230', status: completed}
+#| tags: []
+# Create a map
+ax = regions.plot(figsize=(8,8), color='whitesmoke', linestyle=':', edgecolor='black')
+facilities.to_crs(epsg=32630).plot(markersize=1, ax=ax)
+```
+
+```{python}
+# Create a map
+ax = regions.plot(figsize=(8,8), color='whitesmoke', linestyle=':', edgecolor='black')
+facilities.plot(markersize=1, ax=ax)
+```
+
+The `to_crs()` method modifies only the "geometry" column: all other columns are left as-is.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:40.710316Z', iopub.status.busy: '2023-04-20T20:47:40.709918Z', iopub.status.idle: '2023-04-20T20:47:40.782377Z', shell.execute_reply: '2023-04-20T20:47:40.781440Z'}
+#| papermill: {duration: 0.083046, end_time: '2023-04-20T20:47:40.785171', exception: false, start_time: '2023-04-20T20:47:40.702125', status: completed}
+#| tags: []
+# The "Latitude" and "Longitude" columns are unchanged
+facilities.to_crs(epsg=32630).head()
+```
+
+In case the EPSG code is not available in GeoPandas, we can change the CRS with what's known as the "proj4 string" of the CRS.  For instance, the proj4 string to convert to latitude/longitude coordinates is as follows:
+```
++proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs
+```
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:40.816967Z', iopub.status.busy: '2023-04-20T20:47:40.815982Z', iopub.status.idle: '2023-04-20T20:47:41.349848Z', shell.execute_reply: '2023-04-20T20:47:41.348392Z'}
+#| papermill: {duration: 0.544787, end_time: '2023-04-20T20:47:41.352699', exception: false, start_time: '2023-04-20T20:47:40.807912', status: completed}
+#| tags: []
+# Change the CRS to EPSG 4326
+regions.to_crs("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs").head()
+```
+
+# Attributes of geometric objects
+
+As you learned in the first tutorial, for an arbitrary GeoDataFrame, the type in the "geometry" column depends on what we are trying to show: for instance, we might use:
+- a Point for the epicenter of an earthquake, 
+- a LineString for a street, or 
+- a Polygon to show country boundaries.
+
+All three types of geometric objects have built-in attributes that you can use to quickly analyze the dataset.  For instance, you can get the x- and y-coordinates of a Point from the `x` and `y` attributes, respectively.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:41.384810Z', iopub.status.busy: '2023-04-20T20:47:41.384388Z', iopub.status.idle: '2023-04-20T20:47:41.393141Z', shell.execute_reply: '2023-04-20T20:47:41.392013Z'}
+#| papermill: {duration: 0.020246, end_time: '2023-04-20T20:47:41.395991', exception: false, start_time: '2023-04-20T20:47:41.375745', status: completed}
+#| tags: []
+# Get the x-coordinate of each point
+facilities.geometry.head().x
+```
+
+And, you can get the length of a LineString from the `length` attribute.  
+
+Or, you can get the area of a Polygon from the `area` attribute.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:41.427752Z', iopub.status.busy: '2023-04-20T20:47:41.427350Z', iopub.status.idle: '2023-04-20T20:47:42.026080Z', shell.execute_reply: '2023-04-20T20:47:42.024871Z'}
+#| papermill: {duration: 0.611249, end_time: '2023-04-20T20:47:42.029122', exception: false, start_time: '2023-04-20T20:47:41.417873', status: completed}
+#| tags: []
+# Calculate the area (in square meters) of each polygon in the GeoDataFrame 
+regions.loc[:, "AREA"] = regions.geometry.area / 10**6
+
+print("Area of Ghana: {} square kilometers".format(regions.AREA.sum()))
+print("CRS:", regions.crs)
+regions.head()
+```
+
+In the code cell above, since the CRS of the `regions` GeoDataFrame is set to EPSG 32630 (a "Mercator" projection), the area calculation is slightly less accurate than if we had used an equal-area projection like "Africa Albers Equal Area Conic".
+
+But this yields the area of Ghana as approximately 239585 square kilometers, which is not too far off from [the correct answer](https://www.google.com/search?q=area+of+ghana).
+
+# Your turn
+
+Use what you've learned to **[track bird migration to South America](https://www.kaggle.com/kernels/fork/5832146)**.
+
+---
+
+
+
+
+*Have questions or comments? Visit the [course discussion forum](https://www.kaggle.com/learn/geospatial-analysis/discussion) to chat with other learners.*
+
+
+
+# Lesson3: Interactive Maps
+
+In this tutorial, you'll learn how to create interactive maps with the **folium** package.  Along the way, you'll apply your new skills to visualize Boston crime data.
+
+
+```{python}
+#| _kg_hide-input: true
+#| execution: {iopub.execute_input: '2023-04-20T20:47:36.272257Z', iopub.status.busy: '2023-04-20T20:47:36.271693Z', iopub.status.idle: '2023-04-20T20:47:36.945605Z', shell.execute_reply: '2023-04-20T20:47:36.944119Z'}
+#| papermill: {duration: 0.684402, end_time: '2023-04-20T20:47:36.948901', exception: false, start_time: '2023-04-20T20:47:36.264499', status: completed}
+#| tags: []
+import pandas as pd
+import geopandas as gpd
+import math
+```
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:36.963243Z', iopub.status.busy: '2023-04-20T20:47:36.962465Z', iopub.status.idle: '2023-04-20T20:47:37.497093Z', shell.execute_reply: '2023-04-20T20:47:37.495915Z'}
+#| papermill: {duration: 0.545152, end_time: '2023-04-20T20:47:37.499942', exception: false, start_time: '2023-04-20T20:47:36.954790', status: completed}
+#| tags: []
+import folium
+from folium import Choropleth, Circle, Marker
+from folium.plugins import HeatMap, MarkerCluster
+```
+
+# Your first interactive map
+
+We begin by creating a relatively simple map with `folium.Map()`.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:37.525217Z', iopub.status.busy: '2023-04-20T20:47:37.524770Z', iopub.status.idle: '2023-04-20T20:47:37.550747Z', shell.execute_reply: '2023-04-20T20:47:37.549681Z'}
+#| papermill: {duration: 0.03574, end_time: '2023-04-20T20:47:37.553381', exception: false, start_time: '2023-04-20T20:47:37.517641', status: completed}
+#| tags: []
+# Create a map
+m_1 = folium.Map(location=[42.32,-71.0589], tiles='openstreetmap', zoom_start=10)
+
+# Display the map
+m_1
+```
+
+folium 패키지에서 제공하는 tiles 종류는 다음과 같습니다:
+
+- OpenStreetMap
+- Mapbox Bright (Limited levels of zoom for free tiles)
+- Mapbox Control Room (Limited levels of zoom for free tiles)
+- Stamen (Terrain, Toner, and Watercolor)
+- Cloudmade (Must pass API key)
+- Mapbox (Must pass API key)
+- CartoDB (position and dark_matter)
+
+```{python}
+# Create a map object with OpenStreetMap tiles
+m = folium.Map(location=[36.3504, 127.3845], tiles='OpenStreetMap', zoom_start=14)
+
+# Display the map
+m
+```
+
+Several arguments customize the appearance of the map:
+- `location` sets the initial center of the map. We use the latitude (42.32&deg; N) and longitude (-71.0589&deg; E) of the city of Boston.  
+- `tiles` changes the styling of the map; in this case, we choose the [OpenStreetMap](https://www.openstreetmap.org/#map=10/42.32/-71.0589) style.  If you're curious, you can find the other options listed [here](https://github.com/python-visualization/folium/tree/master/folium/templates/tiles).
+- `zoom_start` sets the initial level of zoom of the map, where higher values zoom in closer to the map.
+
+Take the time now to explore by zooming in and out, or by dragging the map in different directions.
+
+# The data
+
+Now, we'll add some crime data to the map! 
+
+We won't focus on the data loading step. Instead, you can imagine you are at a point where you already have the data in a pandas DataFrame `crimes`.  The first five rows of the data are shown below.
+
+```{python}
+#| _kg_hide-input: true
+#| execution: {iopub.execute_input: '2023-04-20T20:47:37.578279Z', iopub.status.busy: '2023-04-20T20:47:37.577410Z', iopub.status.idle: '2023-04-20T20:47:40.023802Z', shell.execute_reply: '2023-04-20T20:47:40.022458Z'}
+#| papermill: {duration: 2.456594, end_time: '2023-04-20T20:47:40.027055', exception: false, start_time: '2023-04-20T20:47:37.570461', status: completed}
+#| tags: []
+# Load the data
+crimes = pd.read_csv("../../../spatial_analysis/data/crimes-in-boston/crimes-in-boston/crime.csv", encoding='latin-1')
+
+# Drop rows with missing locations
+crimes.dropna(subset=['Lat', 'Long', 'DISTRICT'], inplace=True)
+
+# Focus on major crimes in 2018
+crimes = crimes[crimes.OFFENSE_CODE_GROUP.isin([
+    'Larceny', 'Auto Theft', 'Robbery', 'Larceny From Motor Vehicle', 'Residential Burglary',
+    'Simple Assault', 'Harassment', 'Ballistics', 'Aggravated Assault', 'Other Burglary', 
+    'Arson', 'Commercial Burglary', 'HOME INVASION', 'Homicide', 'Criminal Harassment', 
+    'Manslaughter'])]
+crimes = crimes[crimes.YEAR>=2018]
+
+# Print the first five rows of the table
+crimes.head()
+```
+
+# Plotting points
+
+To reduce the amount of data we need to fit on the map, we'll (temporarily) confine our attention to daytime robberies.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:40.055507Z', iopub.status.busy: '2023-04-20T20:47:40.055020Z', iopub.status.idle: '2023-04-20T20:47:40.067935Z', shell.execute_reply: '2023-04-20T20:47:40.066576Z'}
+#| papermill: {duration: 0.024481, end_time: '2023-04-20T20:47:40.070958', exception: false, start_time: '2023-04-20T20:47:40.046477', status: completed}
+#| tags: []
+daytime_robberies = crimes[((crimes.OFFENSE_CODE_GROUP == 'Robbery') & \
+                            (crimes.HOUR.isin(range(9,18))))]
+```
+
+## folium.Marker
+
+We add markers to the map with `folium.Marker()`.  Each marker below corresponds to a different robbery.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:40.098859Z', iopub.status.busy: '2023-04-20T20:47:40.097550Z', iopub.status.idle: '2023-04-20T20:47:40.264099Z', shell.execute_reply: '2023-04-20T20:47:40.262874Z'}
+#| papermill: {duration: 0.177122, end_time: '2023-04-20T20:47:40.266829', exception: false, start_time: '2023-04-20T20:47:40.089707', status: completed}
+#| tags: []
+# Create a map
+m_2 = folium.Map(location=[42.32,-71.0589], tiles='cartodbpositron', zoom_start=13)
+
+# Add points to the map
+for idx, row in daytime_robberies.iterrows():
+    Marker([row['Lat'], row['Long']]).add_to(m_2)
+
+# Display the map
+m_2
+```
+
+## folium.plugins.MarkerCluster
+
+If we have a lot of markers to add, `folium.plugins.MarkerCluster()` can help to declutter the map.  Each marker is added to a `MarkerCluster` object.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:40.303502Z', iopub.status.busy: '2023-04-20T20:47:40.303022Z', iopub.status.idle: '2023-04-20T20:47:40.475518Z', shell.execute_reply: '2023-04-20T20:47:40.474108Z'}
+#| papermill: {duration: 0.187509, end_time: '2023-04-20T20:47:40.480209', exception: false, start_time: '2023-04-20T20:47:40.292700', status: completed}
+#| tags: []
+# Create the map
+m_3 = folium.Map(location=[42.32,-71.0589], tiles='cartodbpositron', zoom_start=13)
+
+# Add points to the map
+mc = MarkerCluster()
+for idx, row in daytime_robberies.iterrows():
+    if not math.isnan(row['Long']) and not math.isnan(row['Lat']):
+        mc.add_child(Marker([row['Lat'], row['Long']]))
+m_3.add_child(mc)
+
+# Display the map
+m_3
+```
+
+# Bubble maps
+
+A **bubble map** uses circles instead of markers.  By varying the size and color of each circle, we can also show the relationship between location and two other variables.
+
+We create a bubble map by using `folium.Circle()` to iteratively add circles.  In the code cell below, robberies that occurred in hours 9-12 are plotted in green, whereas robberies from hours 13-17 are plotted in red.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:40.533799Z', iopub.status.busy: '2023-04-20T20:47:40.533275Z', iopub.status.idle: '2023-04-20T20:47:40.840145Z', shell.execute_reply: '2023-04-20T20:47:40.838766Z'}
+#| papermill: {duration: 0.325168, end_time: '2023-04-20T20:47:40.846674', exception: false, start_time: '2023-04-20T20:47:40.521506', status: completed}
+#| tags: []
+# Create a base map
+m_4 = folium.Map(location=[42.32,-71.0589], tiles='cartodbpositron', zoom_start=13)
+
+def color_producer(val):
+    if val <= 12:
+        return 'forestgreen'
+    else:
+        return 'darkred'
+
+# Add a bubble map to the base map
+for i in range(0,len(daytime_robberies)):
+    Circle(
+        location=[daytime_robberies.iloc[i]['Lat'], daytime_robberies.iloc[i]['Long']],
+        radius=20,
+        color=color_producer(daytime_robberies.iloc[i]['HOUR'])).add_to(m_4)
+
+# Display the map
+m_4
+```
+
+Note that `folium.Circle()` takes several arguments:
+- `location` is a list containing the center of the circle, in latitude and longitude.
+- `radius` sets the radius of the circle.  
+ - Note that in a traditional bubble map, the radius of each circle is allowed to vary.  We can implement this by defining a function similar to the `color_producer()` function that is used to vary the color of each circle.
+- `color` sets the color of each circle.
+ - The `color_producer()` function is used to visualize the effect of the hour on robbery location.
+
+# Heatmaps
+
+To create a heatmap, we use [`folium.plugins.HeatMap()`](https://python-visualization.github.io/folium/plugins.html#folium.plugins.HeatMap).  This shows the density of crime in different areas of the city, where red areas have relatively more criminal incidents.
+
+As we'd expect for a big city, most of the crime happens near the center.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:40.952242Z', iopub.status.busy: '2023-04-20T20:47:40.951851Z', iopub.status.idle: '2023-04-20T20:47:41.173921Z', shell.execute_reply: '2023-04-20T20:47:41.172819Z'}
+#| papermill: {duration: 0.244706, end_time: '2023-04-20T20:47:41.182175', exception: false, start_time: '2023-04-20T20:47:40.937469', status: completed}
+#| tags: []
+# Create a base map
+m_5 = folium.Map(location=[42.32,-71.0589], tiles='cartodbpositron', zoom_start=12)
+
+# Add a heatmap to the base map
+HeatMap(data=crimes[['Lat', 'Long']], radius=15).add_to(m_5)
+
+# Display the map
+m_5
+```
+
+As you can see in the code cell above, `folium.plugins.HeatMap()` takes a couple of arguments:
+- `data` is a DataFrame containing the locations that we'd like to plot.  
+- `radius` controls the smoothness of the heatmap.  Higher values make the heatmap look smoother (i.e., with fewer gaps).
+
+# Choropleth maps
+
+To understand how crime varies by police district, we'll create a choropleth map.
+
+As a first step, we create a GeoDataFrame where each district is assigned a different row, and the "geometry" column contains the geographical boundaries.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:41.295561Z', iopub.status.busy: '2023-04-20T20:47:41.295100Z', iopub.status.idle: '2023-04-20T20:47:41.709865Z', shell.execute_reply: '2023-04-20T20:47:41.708515Z'}
+#| papermill: {duration: 0.439454, end_time: '2023-04-20T20:47:41.712720', exception: false, start_time: '2023-04-20T20:47:41.273266', status: completed}
+#| tags: []
+# GeoDataFrame with geographical boundaries of Boston police districts
+districts_full = gpd.read_file('../../../spatial_analysis/data/Police_Districts/Police_Districts/Police_Districts.shp')
+districts = districts_full[["DISTRICT", "geometry"]].set_index("DISTRICT")
+districts.head()
+```
+
+We also create a Pandas Series called `plot_dict` that shows the number of crimes in each district.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:41.786641Z', iopub.status.busy: '2023-04-20T20:47:41.786186Z', iopub.status.idle: '2023-04-20T20:47:41.796715Z', shell.execute_reply: '2023-04-20T20:47:41.795379Z'}
+#| papermill: {duration: 0.032643, end_time: '2023-04-20T20:47:41.799061', exception: false, start_time: '2023-04-20T20:47:41.766418', status: completed}
+#| tags: []
+# Number of crimes in each police district
+plot_dict = crimes.DISTRICT.value_counts()
+plot_dict.head()
+```
+
+It's very important that `plot_dict` has the same index as `districts` - this is how the code knows how to match the geographical boundaries with appropriate colors.
+
+Using the `folium.Choropleth()` class, we can create a choropleth map.  If the map below does not render for you, try viewing the page in a [different web browser](https://github.com/python-visualization/folium/issues/812).
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:41.873708Z', iopub.status.busy: '2023-04-20T20:47:41.873260Z', iopub.status.idle: '2023-04-20T20:47:42.310723Z', shell.execute_reply: '2023-04-20T20:47:42.308847Z'}
+#| papermill: {duration: 0.483299, end_time: '2023-04-20T20:47:42.336220', exception: false, start_time: '2023-04-20T20:47:41.852921', status: completed}
+#| tags: []
+# Create a base map
+m_6 = folium.Map(location=[42.32,-71.0589], tiles='cartodbpositron', zoom_start=12)
+
+# Add a choropleth map to the base map
+Choropleth(geo_data=districts.__geo_interface__, 
+           data=plot_dict, 
+           key_on="feature.id", 
+           fill_color='YlGnBu', 
+           legend_name='Major criminal incidents (Jan-Aug 2018)'
+          ).add_to(m_6)
+
+# Display the map
+m_6
+```
+
+Note that `folium.Choropleth()` takes several arguments:
+- `geo_data` is a GeoJSON FeatureCollection containing the boundaries of each geographical area.
+ - In the code above, we convert the `districts` GeoDataFrame to a [GeoJSON FeatureCollection](https://en.wikipedia.org/wiki/GeoJSON) with the `__geo_interface__` attribute.
+- `data` is a Pandas Series containing the values that will be used to color-code each geographical area.  
+- `key_on` will always be set to `feature.id`.  
+ - This refers to the fact that the GeoDataFrame used for `geo_data` and the Pandas Series provided in `data` have the same index.  To understand the details, we'd have to look more closely at the structure of a GeoJSON Feature Collection (where the value corresponding to the "features" key is a list, wherein each entry is a dictionary containing an "id" key).
+- `fill_color` sets the color scale. 
+- `legend_name` labels the legend in the top right corner of the map.
+
+# Your turn
+
+**[Design your own maps](https://www.kaggle.com/kernels/fork/5832145)** to determine which areas of Japan need extra earthquake reinforcement.
+
+---
+
+
+
+
+*Have questions or comments? Visit the [course discussion forum](https://www.kaggle.com/learn/geospatial-analysis/discussion) to chat with other learners.*
+
+
+
+# Lesson4: Manipulating Geospatial Data
+
+In this tutorial, you'll learn about two common manipulations for geospatial data: **geocoding** and **table joins**.
+
+
+```{python}
+#| _kg_hide-input: true
+#| _kg_hide-output: true
+#| execution: {iopub.execute_input: '2023-04-20T21:31:26.886606Z', iopub.status.busy: '2023-04-20T21:31:26.885465Z', iopub.status.idle: '2023-04-20T21:31:27.706665Z', shell.execute_reply: '2023-04-20T21:31:27.705419Z'}
+#| papermill: {duration: 0.831286, end_time: '2023-04-20T21:31:27.709824', exception: false, start_time: '2023-04-20T21:31:26.878538', status: completed}
+#| tags: []
+import pandas as pd
+import geopandas as gpd
+import numpy as np
+import folium
+from folium import Marker
+import warnings 
+warnings.filterwarnings('ignore')
+```
+
+# Geocoding
+
+**Geocoding** is the process of converting the name of a place or an address to a location on a map.  If you have ever looked up a geographic location based on a landmark description with [Google Maps](https://www.google.com/maps), [Bing Maps](https://www.bing.com/maps), or [Baidu Maps](https://map.baidu.com/), for instance, then you have used a geocoder!
+
+![](https://storage.googleapis.com/kaggle-media/learn/images/1IrgZQq.png)
+
+We'll use geopy to do all of our geocoding.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T21:31:27.733081Z', iopub.status.busy: '2023-04-20T21:31:27.732220Z', iopub.status.idle: '2023-04-20T21:31:27.845178Z', shell.execute_reply: '2023-04-20T21:31:27.844089Z'}
+#| papermill: {duration: 0.122311, end_time: '2023-04-20T21:31:27.847917', exception: false, start_time: '2023-04-20T21:31:27.725606', status: completed}
+#| tags: []
+from geopy.geocoders import Nominatim
+```
+
+In the code cell above, [`Nominatim`](https://nominatim.openstreetmap.org/) refers to the geocoding software that will be used to generate locations. 
+
+We begin by instantiating the geocoder.  Then, we need only apply the name or address as a Python string. (In this case, we supply `"Pyramid of Khufu"`, also known as the Great Pyramid of Giza.)
+
+If the geocoding is successful, it returns a `geopy.location.Location` object with two important attributes:
+- the "point" attribute contains the (latitude, longitude) location, and
+- the "address" attribute contains the full address.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T21:31:27.871109Z', iopub.status.busy: '2023-04-20T21:31:27.870054Z', iopub.status.idle: '2023-04-20T21:31:27.952350Z', shell.execute_reply: '2023-04-20T21:31:27.950899Z'}
+#| papermill: {duration: 0.091257, end_time: '2023-04-20T21:31:27.954817', exception: false, start_time: '2023-04-20T21:31:27.863560', status: completed}
+#| tags: []
+geolocator = Nominatim(user_agent="kaggle_learn")
+location = geolocator.geocode("Pyramid of Khufu")
+
+print(location.point)
+print(location.address)
+```
+
+The value for the "point" attribute is a `geopy.point.Point` object, and we can get the latitude and longitude from the `latitude` and `longitude` attributes, respectively.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T21:31:27.978707Z', iopub.status.busy: '2023-04-20T21:31:27.978258Z', iopub.status.idle: '2023-04-20T21:31:27.985182Z', shell.execute_reply: '2023-04-20T21:31:27.983140Z'}
+#| papermill: {duration: 0.017866, end_time: '2023-04-20T21:31:27.988779', exception: false, start_time: '2023-04-20T21:31:27.970913', status: completed}
+#| tags: []
+point = location.point
+print("Latitude:", point.latitude)
+print("Longitude:", point.longitude)
+```
+
+It's often the case that we'll need to geocode many different addresses.  For instance, say we want to obtain the locations of 100 top universities in Europe.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T21:31:28.015079Z', iopub.status.busy: '2023-04-20T21:31:28.014561Z', iopub.status.idle: '2023-04-20T21:31:28.065837Z', shell.execute_reply: '2023-04-20T21:31:28.064460Z'}
+#| papermill: {duration: 0.062346, end_time: '2023-04-20T21:31:28.069085', exception: false, start_time: '2023-04-20T21:31:28.006739', status: completed}
+#| tags: []
+universities = pd.read_csv("../../../spatial_analysis/data/top_universities.csv")
+universities.head()
+```
+
+Then we can use a lambda function to apply the geocoder to every row in the DataFrame.  (We use a try/except statement to account for the case that the geocoding is unsuccessful.)
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T21:31:28.097161Z', iopub.status.busy: '2023-04-20T21:31:28.096741Z', iopub.status.idle: '2023-04-20T21:32:19.157739Z', shell.execute_reply: '2023-04-20T21:32:19.156579Z'}
+#| papermill: {duration: 51.076549, end_time: '2023-04-20T21:32:19.166279', exception: false, start_time: '2023-04-20T21:31:28.089730', status: completed}
+#| tags: []
+def my_geocoder(row):
+    try:
+        point = geolocator.geocode(row).point
+        return pd.Series({'Latitude': point.latitude, 'Longitude': point.longitude})
+    except:
+        return None
+
+universities[['Latitude', 'Longitude']] = universities.apply(lambda x: my_geocoder(x['Name']), axis=1)
+
+print("{}% of addresses were geocoded!".format(
+    (1 - sum(np.isnan(universities["Latitude"])) / len(universities)) * 100))
+
+# Drop universities that were not successfully geocoded
+universities = universities.loc[~np.isnan(universities["Latitude"])]
+universities = gpd.GeoDataFrame(
+    universities, geometry=gpd.points_from_xy(universities.Longitude, universities.Latitude))
+universities.crs = {'init': 'epsg:4326'}
+universities.head()
+```
+
+Next, we visualize all of the locations that were returned by the geocoder.  Notice that a few of the locations are certainly inaccurate, as they're not in Europe!
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T21:32:19.192076Z', iopub.status.busy: '2023-04-20T21:32:19.191269Z', iopub.status.idle: '2023-04-20T21:32:19.358827Z', shell.execute_reply: '2023-04-20T21:32:19.357605Z'}
+#| papermill: {duration: 0.178785, end_time: '2023-04-20T21:32:19.362704', exception: false, start_time: '2023-04-20T21:32:19.183919', status: completed}
+#| tags: []
+# Create a map
+m = folium.Map(location=[54, 15], tiles='openstreetmap', zoom_start=2)
+
+# Add points to the map
+for idx, row in universities.iterrows():
+    Marker([row['Latitude'], row['Longitude']], popup=row['Name']).add_to(m)
+
+# Display the map
+m
+```
+
+# Table joins
+
+Now, we'll switch topics and think about how to combine data from different sources.  
+
+### Attribute join
+
+[You already know](https://www.kaggle.com/residentmario/renaming-and-combining) how to use `pd.DataFrame.join()` to combine information from multiple DataFrames with a shared index.  We refer to this way of joining data (by simpling matching values in the index) as an **attribute join**.
+
+When performing an attribute join with a GeoDataFrame, it's best to use the `gpd.GeoDataFrame.merge()`.  To illustrate this, we'll work with a GeoDataFrame `europe_boundaries` containing the boundaries for every country in Europe.  The first five rows of this GeoDataFrame are printed below.
+
+```{python}
+#| _kg_hide-input: true
+#| execution: {iopub.execute_input: '2023-04-20T21:32:19.400176Z', iopub.status.busy: '2023-04-20T21:32:19.399765Z', iopub.status.idle: '2023-04-20T21:32:19.536711Z', shell.execute_reply: '2023-04-20T21:32:19.535355Z'}
+#| papermill: {duration: 0.149947, end_time: '2023-04-20T21:32:19.539579', exception: false, start_time: '2023-04-20T21:32:19.389632', status: completed}
+#| tags: []
+world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+europe = world.loc[world.continent == 'Europe'].reset_index(drop=True)
+
+europe_stats = europe[["name", "pop_est", "gdp_md_est"]]
+europe_boundaries = europe[["name", "geometry"]]
+```
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T21:32:19.559646Z', iopub.status.busy: '2023-04-20T21:32:19.559103Z', iopub.status.idle: '2023-04-20T21:32:19.580868Z', shell.execute_reply: '2023-04-20T21:32:19.579568Z'}
+#| papermill: {duration: 0.034856, end_time: '2023-04-20T21:32:19.583570', exception: false, start_time: '2023-04-20T21:32:19.548714', status: completed}
+#| tags: []
+europe_boundaries.head()
+```
+
+We'll join it with a DataFrame `europe_stats` containing the estimated population and gross domestic product (GDP) for each country.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T21:32:19.621604Z', iopub.status.busy: '2023-04-20T21:32:19.620561Z', iopub.status.idle: '2023-04-20T21:32:19.632640Z', shell.execute_reply: '2023-04-20T21:32:19.631463Z'}
+#| papermill: {duration: 0.024947, end_time: '2023-04-20T21:32:19.635186', exception: false, start_time: '2023-04-20T21:32:19.610239', status: completed}
+#| tags: []
+europe_stats.head()
+```
+
+We do the attribute join in the code cell below.  The `on` argument is set to the column name that is used to match rows in `europe_boundaries` to rows in `europe_stats`.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T21:32:19.674268Z', iopub.status.busy: '2023-04-20T21:32:19.673880Z', iopub.status.idle: '2023-04-20T21:32:19.708035Z', shell.execute_reply: '2023-04-20T21:32:19.706796Z'}
+#| papermill: {duration: 0.047241, end_time: '2023-04-20T21:32:19.710282', exception: false, start_time: '2023-04-20T21:32:19.663041', status: completed}
+#| tags: []
+# Use an attribute join to merge data about countries in Europe
+europe = europe_boundaries.merge(europe_stats, on="name")
+europe.head()
+```
+
+### Spatial join
+
+Another type of join is a **spatial join**.  With a spatial join, we combine GeoDataFrames based on the spatial relationship between the objects in the "geometry" columns.  For instance, we already have a GeoDataFrame `universities` containing geocoded addresses of European universities.  
+
+Then we can use a spatial join to match each university to its corresponding country.  We do this with `gpd.sjoin()`.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T21:32:19.751494Z', iopub.status.busy: '2023-04-20T21:32:19.751096Z', iopub.status.idle: '2023-04-20T21:32:19.794410Z', shell.execute_reply: '2023-04-20T21:32:19.793090Z'}
+#| papermill: {duration: 0.05705, end_time: '2023-04-20T21:32:19.796935', exception: false, start_time: '2023-04-20T21:32:19.739885', status: completed}
+#| tags: []
+# Use spatial join to match universities to countries in Europe
+european_universities = gpd.sjoin(universities, europe)
+
+# Investigate the result
+print("We located {} universities.".format(len(universities)))
+print("Only {} of the universities were located in Europe (in {} different countries).".format(
+    len(european_universities), len(european_universities.name.unique())))
+
+european_universities.head()
+```
+
+The spatial join above looks at the "geometry" columns in both GeoDataFrames.  If a Point object from the `universities` GeoDataFrame intersects a Polygon object from the `europe` DataFrame, the corresponding rows are combined and added as a single row of the `european_universities` DataFrame.  Otherwise, countries without a matching university (and universities without a matching country) are omitted from the results.
+
+The `gpd.sjoin()` method is customizable for different types of joins, through the `how` and `op` arguments.  For instance, you can do the equivalent of a SQL left (or right) join by setting `how='left'` (or `how='right'`).  We won't go into the details in this course, but you can learn more in [the documentation](https://geopandas.org/en/stable/docs/reference/api/geopandas.sjoin.html).
+
+# Your turn
+
+**[Use geocoding and table joins](https://www.kaggle.com/kernels/fork/5832170)** to identify suitable locations for the next Starbucks Reserve Roastery.
+
+---
+
+
+
+
+*Have questions or comments? Visit the [course discussion forum](https://www.kaggle.com/learn/geospatial-analysis/discussion) to chat with other learners.*
+
+
+
+# Lesson5: Proximity Analysis
+
+In this tutorial, you'll explore several techniques for **proximity analysis**.  In particular, you'll learn how to do such things as:
+- measure the distance between points on a map, and
+- select all points within some radius of a feature.
+
+
+```{python}
+#| _kg_hide-input: true
+#| execution: {iopub.execute_input: '2023-04-20T20:47:40.721347Z', iopub.status.busy: '2023-04-20T20:47:40.720873Z', iopub.status.idle: '2023-04-20T20:47:41.976893Z', shell.execute_reply: '2023-04-20T20:47:41.975387Z'}
+#| papermill: {duration: 1.266922, end_time: '2023-04-20T20:47:41.980319', exception: false, start_time: '2023-04-20T20:47:40.713397', status: completed}
+#| tags: []
+import folium
+from folium import Marker, GeoJson
+from folium.plugins import HeatMap
+
+import pandas as pd
+import geopandas as gpd
+```
+
+You'll work with a dataset from the US Environmental Protection Agency (EPA) that tracks releases of toxic chemicals in Philadelphia, Pennsylvania, USA.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:42.005512Z', iopub.status.busy: '2023-04-20T20:47:42.005050Z', iopub.status.idle: '2023-04-20T20:47:42.672428Z', shell.execute_reply: '2023-04-20T20:47:42.671115Z'}
+#| papermill: {duration: 0.677444, end_time: '2023-04-20T20:47:42.675113', exception: false, start_time: '2023-04-20T20:47:41.997669', status: completed}
+#| tags: []
+releases = gpd.read_file("../../../spatial_analysis/data/toxic_release_pennsylvania/toxic_release_pennsylvania/toxic_release_pennsylvania.shp") 
+releases.head()
+```
+
+You'll also work with a dataset that contains readings from air quality monitoring stations in the same city.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:42.700606Z', iopub.status.busy: '2023-04-20T20:47:42.700099Z', iopub.status.idle: '2023-04-20T20:47:42.913084Z', shell.execute_reply: '2023-04-20T20:47:42.911915Z'}
+#| papermill: {duration: 0.223621, end_time: '2023-04-20T20:47:42.916257', exception: false, start_time: '2023-04-20T20:47:42.692636', status: completed}
+#| tags: []
+stations = gpd.read_file("../../../spatial_analysis/data/PhillyHealth_Air_Monitoring_Stations/PhillyHealth_Air_Monitoring_Stations/PhillyHealth_Air_Monitoring_Stations.shp")
+stations.head()
+```
+
+# Measuring distance
+
+To measure distances between points from two different GeoDataFrames, we first have to make sure that they use the same coordinate reference system (CRS).  Thankfully, this is the case here, where both use EPSG 2272.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:42.943618Z', iopub.status.busy: '2023-04-20T20:47:42.943038Z', iopub.status.idle: '2023-04-20T20:47:42.950130Z', shell.execute_reply: '2023-04-20T20:47:42.948678Z'}
+#| papermill: {duration: 0.018147, end_time: '2023-04-20T20:47:42.953226', exception: false, start_time: '2023-04-20T20:47:42.935079', status: completed}
+#| tags: []
+print(stations.crs)
+print(releases.crs)
+```
+
+We also check the CRS to see which units it uses (meters, feet, or something else).  In this case, EPSG 2272 has units of feet.  (_If you like, you can check this [here](https://epsg.io/2272)._)
+
+It's relatively straightforward to compute distances in GeoPandas.  The code cell below calculates the distance (in feet) between a relatively recent release incident in `recent_release` and every station in the `stations` GeoDataFrame.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:42.981004Z', iopub.status.busy: '2023-04-20T20:47:42.980461Z', iopub.status.idle: '2023-04-20T20:47:42.994438Z', shell.execute_reply: '2023-04-20T20:47:42.993247Z'}
+#| papermill: {duration: 0.024761, end_time: '2023-04-20T20:47:42.997138', exception: false, start_time: '2023-04-20T20:47:42.972377', status: completed}
+#| tags: []
+# Select one release incident in particular
+recent_release = releases.iloc[360]
+
+# Measure distance from release to each station
+distances = stations.geometry.distance(recent_release.geometry)
+distances
+```
+
+Using the calculated distances, we can obtain statistics like the mean distance to each station.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:43.026509Z', iopub.status.busy: '2023-04-20T20:47:43.026022Z', iopub.status.idle: '2023-04-20T20:47:43.033108Z', shell.execute_reply: '2023-04-20T20:47:43.031840Z'}
+#| papermill: {duration: 0.017576, end_time: '2023-04-20T20:47:43.035374', exception: false, start_time: '2023-04-20T20:47:43.017798', status: completed}
+#| tags: []
+print('Mean distance to monitoring stations: {} feet'.format(distances.mean()))
+```
+
+Or, we can get the closest monitoring station.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:43.064481Z', iopub.status.busy: '2023-04-20T20:47:43.063968Z', iopub.status.idle: '2023-04-20T20:47:43.077028Z', shell.execute_reply: '2023-04-20T20:47:43.075877Z'}
+#| papermill: {duration: 0.024928, end_time: '2023-04-20T20:47:43.080134', exception: false, start_time: '2023-04-20T20:47:43.055206', status: completed}
+#| tags: []
+print('Closest monitoring station ({} feet):'.format(distances.min()))
+print(stations.iloc[distances.idxmin()][["ADDRESS", "LATITUDE", "LONGITUDE"]])
+```
+
+# Creating a buffer
+
+If we want to understand all points on a map that are some radius away from a point, the simplest way is to create a buffer.
+
+The code cell below creates a GeoSeries `two_mile_buffer` containing 12 different Polygon objects.  Each polygon is a buffer of 2 miles (or, 2\*5280 feet) around a different air monitoring station.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:43.109779Z', iopub.status.busy: '2023-04-20T20:47:43.109298Z', iopub.status.idle: '2023-04-20T20:47:43.126783Z', shell.execute_reply: '2023-04-20T20:47:43.125548Z'}
+#| papermill: {duration: 0.029314, end_time: '2023-04-20T20:47:43.129615', exception: false, start_time: '2023-04-20T20:47:43.100301', status: completed}
+#| tags: []
+two_mile_buffer = stations.geometry.buffer(2*5280)
+two_mile_buffer.head()
+```
+
+We use `folium.GeoJson()` to plot each polygon on a map.  Note that since folium requires coordinates in latitude and longitude, we have to convert the CRS to EPSG 4326 before plotting.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:43.161032Z', iopub.status.busy: '2023-04-20T20:47:43.160486Z', iopub.status.idle: '2023-04-20T20:47:43.491459Z', shell.execute_reply: '2023-04-20T20:47:43.490236Z'}
+#| papermill: {duration: 0.345021, end_time: '2023-04-20T20:47:43.496401', exception: false, start_time: '2023-04-20T20:47:43.151380', status: completed}
+#| tags: []
+# Create map with release incidents and monitoring stations
+m = folium.Map(location=[39.9526,-75.1652], zoom_start=11)
+HeatMap(data=releases[['LATITUDE', 'LONGITUDE']], radius=15).add_to(m)
+for idx, row in stations.iterrows():
+    Marker([row['LATITUDE'], row['LONGITUDE']]).add_to(m)
+    
+# Plot each polygon on the map
+GeoJson(two_mile_buffer.to_crs(epsg=4326)).add_to(m)
+
+# Show the map
+m
+```
+
+Now, to test if a toxic release occurred within 2 miles of **any** monitoring station, we could run 12 different tests for each polygon (to check individually if it contains the point).
+
+But a more efficient way is to first collapse all of the polygons into a **MultiPolygon** object.  We do this with the `unary_union` attribute.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:43.537654Z', iopub.status.busy: '2023-04-20T20:47:43.537153Z', iopub.status.idle: '2023-04-20T20:47:43.556949Z', shell.execute_reply: '2023-04-20T20:47:43.555571Z'}
+#| papermill: {duration: 0.034965, end_time: '2023-04-20T20:47:43.560769', exception: false, start_time: '2023-04-20T20:47:43.525804', status: completed}
+#| tags: []
+# Turn group of polygons into single multipolygon
+my_union = two_mile_buffer.geometry.unary_union
+print('Type:', type(my_union))
+
+# Show the MultiPolygon object
+my_union
+```
+
+We use the `contains()` method to check if the multipolygon contains a point.  We'll use the release incident from earlier in the tutorial, which we know is roughly 3781 feet to the closest monitoring station.
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:43.603117Z', iopub.status.busy: '2023-04-20T20:47:43.602641Z', iopub.status.idle: '2023-04-20T20:47:43.611861Z', shell.execute_reply: '2023-04-20T20:47:43.610506Z'}
+#| papermill: {duration: 0.024615, end_time: '2023-04-20T20:47:43.615060', exception: false, start_time: '2023-04-20T20:47:43.590445', status: completed}
+#| tags: []
+# The closest station is less than two miles away
+my_union.contains(releases.iloc[360].geometry)
+```
+
+But not all releases occured within two miles of an air monitoring station!
+
+```{python}
+#| execution: {iopub.execute_input: '2023-04-20T20:47:43.659279Z', iopub.status.busy: '2023-04-20T20:47:43.658228Z', iopub.status.idle: '2023-04-20T20:47:43.668351Z', shell.execute_reply: '2023-04-20T20:47:43.666869Z'}
+#| papermill: {duration: 0.024873, end_time: '2023-04-20T20:47:43.671035', exception: false, start_time: '2023-04-20T20:47:43.646162', status: completed}
+#| tags: []
+# The closest station is more than two miles away
+my_union.contains(releases.iloc[358].geometry)
+```
+
+# Your turn
+
+In the **[final exercise](https://www.kaggle.com/kernels/fork/5832147)**, you'll investigate hospital coverage in New York City.
+
+---
+
+
+
+
+*Have questions or comments? Visit the [course discussion forum](https://www.kaggle.com/learn/geospatial-analysis/discussion) to chat with other learners.*
+
