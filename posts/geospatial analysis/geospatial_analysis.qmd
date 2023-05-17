@@ -763,7 +763,7 @@ m
 
 Now, we'll switch topics and think about how to combine data from different sources.  
 
-#### Attribute join
+### Attribute join
 
 [You already know](https://www.kaggle.com/residentmario/renaming-and-combining) how to use `pd.DataFrame.join()` to combine information from multiple DataFrames with a shared index.  We refer to this way of joining data (by simpling matching values in the index) as an **attribute join**.
 
@@ -808,7 +808,7 @@ europe = europe_boundaries.merge(europe_stats, on="name")
 europe.head()
 ```
 
-#### Spatial join
+### Spatial join
 
 Another type of join is a **spatial join**.  With a spatial join, we combine GeoDataFrames based on the spatial relationship between the objects in the "geometry" columns.  For instance, we already have a GeoDataFrame `universities` containing geocoded addresses of European universities.  
 
