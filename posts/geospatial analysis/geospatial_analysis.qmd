@@ -8,7 +8,6 @@ image: "geopandas.jpg"
 jupyter: python3
 ---
 
-
 > [Kaggle Geospatial Analysis Course](https://www.kaggle.com/learn/geospatial-analysis)
 
 # Lesson1: Your First Map
