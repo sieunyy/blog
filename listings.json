@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/exercise2/exercise2-coordinate-reference-systems.html",
       "/posts/exercise1/exercise1-your-first-map.html",
       "/posts/geospatial analysis/geospatial_analysis.html",
       "/posts/seaborn_and_matplotlib/seaborn_and_matplotlib.html",
