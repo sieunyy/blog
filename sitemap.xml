@@ -2,38 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://sieunyy.github.io/blog/about.html</loc>
-    <lastmod>2023-05-19T14:53:51.931Z</lastmod>
+    <lastmod>2023-05-19T15:06:07.329Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/index.html</loc>
-    <lastmod>2023-05-19T14:53:54.434Z</lastmod>
+    <lastmod>2023-05-19T15:06:09.612Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/exercise1/exercise1-your-first-map.html</loc>
-    <lastmod>2023-05-19T14:53:58.334Z</lastmod>
+    <lastmod>2023-05-19T15:06:12.418Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/exercise2/exercise2-coordinate-reference-systems.html</loc>
-    <lastmod>2023-05-19T14:54:02.975Z</lastmod>
+    <lastmod>2023-05-19T15:06:15.569Z</lastmod>
+  </url>
+  <url>
+    <loc>https://sieunyy.github.io/blog/posts/exercise3/exercise3-interactive-maps.html</loc>
+    <lastmod>2023-05-19T15:06:43.145Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/geospatial analysis/geospatial_analysis.html</loc>
-    <lastmod>2023-05-19T14:54:15.255Z</lastmod>
+    <lastmod>2023-05-19T15:06:56.127Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/increase_loop_speed/week_1c_increase_loop_speed.html</loc>
-    <lastmod>2023-05-19T14:54:18.936Z</lastmod>
+    <lastmod>2023-05-19T15:07:00.185Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/numpy/week_1a_numpy.html</loc>
-    <lastmod>2023-05-19T14:54:25.852Z</lastmod>
+    <lastmod>2023-05-19T15:07:06.675Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/pandas/week_1b_pandas.html</loc>
-    <lastmod>2023-05-19T14:54:42.885Z</lastmod>
+    <lastmod>2023-05-19T15:07:33.596Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/seaborn_and_matplotlib/seaborn_and_matplotlib.html</loc>
-    <lastmod>2023-05-19T14:54:44.735Z</lastmod>
+    <lastmod>2023-05-19T15:07:39.936Z</lastmod>
   </url>
 </urlset>
