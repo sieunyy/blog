@@ -7,7 +7,7 @@ toc: true
 jupyter: python3
 ---
 
-> Kaggle Geospatial Analysis exercise1
+> Kaggle Geospatial Analysis Exercise1
 
 **This notebook is an exercise in the [Geospatial Analysis](https://www.kaggle.com/learn/geospatial-analysis) course.  You can reference the tutorial at [this link](https://www.kaggle.com/alexisbcook/your-first-map).**
 
@@ -40,7 +40,7 @@ Use the next cell to load the shapefile located at `loans_filepath` to create a 
 ```{python}
 loans_filepath = "../../../spatial_analysis/data/kiva_loans/kiva_loans/kiva_loans.shp"
 
-# Your code here: Load the data
+# Load the data
 world_loans = gpd.read_file(loans_filepath)
 
 # Uncomment to view the first five rows of the data
@@ -61,7 +61,6 @@ world.head()
 Use the `world` and `world_loans` GeoDataFrames to visualize Kiva loan locations across the world.
 
 ```{python}
-# Your code here
 ax = world.plot(figsize = (10, 10), color = 'whitesmoke', linestyle = ':', edgecolor = 'black')
 world_loans.plot(markersize = 2, ax = ax)
 ```
@@ -71,7 +70,6 @@ world_loans.plot(markersize = 2, ax = ax)
 Next, you'll focus on loans that are based in the Philippines.  Use the next code cell to create a GeoDataFrame `PHL_loans` which contains all rows from `world_loans` with loans that are based in the Philippines.
 
 ```{python}
-# Your code here
 PHL_loans = world_loans.loc[world_loans['country'] == 'Philippines'].copy()
 PHL_loans.head()
 ```
@@ -90,7 +88,6 @@ PHL.head()
 Use the `PHL` and `PHL_loans` GeoDataFrames to visualize loans in the Philippines.
 
 ```{python}
-# Your code here
 ax = PHL.plot(figsize = (10, 10), color = 'whitesmoke', linestyle = ':', edgecolor = 'black')
 PHL_loans.plot(markersize = 2, ax = ax)
 ```
@@ -99,7 +96,7 @@ Can you identify any islands where it might be useful to recruit new Field Partn
 
 You might find [this map](https://bit.ly/2U2G7x7) useful to answer the question.
 
-<img src="https://bit.ly/2U2G7x7" width=500>
+<img src="https://upload.wikimedia.org/wikipedia/commons/f/f6/Labelled_map_of_the_Philippines_-_Provinces_and_Regions.png" width="500">
 
 # Keep going
 

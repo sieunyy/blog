@@ -199,7 +199,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <blockquote class="blockquote">
-<p>Kaggle Geospatial Analysis exercise1</p>
+<p>Kaggle Geospatial Analysis Exercise1</p>
 </blockquote>
 <p><strong>This notebook is an exercise in the <a href="https://www.kaggle.com/learn/geospatial-analysis">Geospatial Analysis</a> course. You can reference the tutorial at <a href="https://www.kaggle.com/alexisbcook/your-first-map">this link</a>.</strong></p>
 <hr>
@@ -221,7 +221,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>loans_filepath <span class="op">=</span> <span class="st">"../../../spatial_analysis/data/kiva_loans/kiva_loans/kiva_loans.shp"</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here: Load the data</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>world_loans <span class="op">=</span> gpd.read_file(loans_filepath)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment to view the first five rows of the data</span></span>
@@ -379,9 +379,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Use the <code>world</code> and <code>world_loans</code> GeoDataFrames to visualize Kiva loan locations across the world.</p>
 <div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> world.plot(figsize <span class="op">=</span> (<span class="dv">10</span>, <span class="dv">10</span>), color <span class="op">=</span> <span class="st">'whitesmoke'</span>, linestyle <span class="op">=</span> <span class="st">':'</span>, edgecolor <span class="op">=</span> <span class="st">'black'</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>world_loans.plot(markersize <span class="op">=</span> <span class="dv">2</span>, ax <span class="op">=</span> ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> world.plot(figsize <span class="op">=</span> (<span class="dv">10</span>, <span class="dv">10</span>), color <span class="op">=</span> <span class="st">'whitesmoke'</span>, linestyle <span class="op">=</span> <span class="st">':'</span>, edgecolor <span class="op">=</span> <span class="st">'black'</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>world_loans.plot(markersize <span class="op">=</span> <span class="dv">2</span>, ax <span class="op">=</span> ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>&lt;AxesSubplot:&gt;</code></pre>
 </div>
@@ -394,9 +393,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="select-loans-based-in-the-philippines.">3) Select loans based in the Philippines.</h3>
 <p>Next, you’ll focus on loans that are based in the Philippines. Use the next code cell to create a GeoDataFrame <code>PHL_loans</code> which contains all rows from <code>world_loans</code> with loans that are based in the Philippines.</p>
 <div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>PHL_loans <span class="op">=</span> world_loans.loc[world_loans[<span class="st">'country'</span>] <span class="op">==</span> <span class="st">'Philippines'</span>].copy()</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>PHL_loans.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>PHL_loans <span class="op">=</span> world_loans.loc[world_loans[<span class="st">'country'</span>] <span class="op">==</span> <span class="st">'Philippines'</span>].copy()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>PHL_loans.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
@@ -532,9 +530,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Use the <code>PHL</code> and <code>PHL_loans</code> GeoDataFrames to visualize loans in the Philippines.</p>
 <div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Your code here</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> PHL.plot(figsize <span class="op">=</span> (<span class="dv">10</span>, <span class="dv">10</span>), color <span class="op">=</span> <span class="st">'whitesmoke'</span>, linestyle <span class="op">=</span> <span class="st">':'</span>, edgecolor <span class="op">=</span> <span class="st">'black'</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>PHL_loans.plot(markersize <span class="op">=</span> <span class="dv">2</span>, ax <span class="op">=</span> ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> PHL.plot(figsize <span class="op">=</span> (<span class="dv">10</span>, <span class="dv">10</span>), color <span class="op">=</span> <span class="st">'whitesmoke'</span>, linestyle <span class="op">=</span> <span class="st">':'</span>, edgecolor <span class="op">=</span> <span class="st">'black'</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>PHL_loans.plot(markersize <span class="op">=</span> <span class="dv">2</span>, ax <span class="op">=</span> ax)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>&lt;AxesSubplot:&gt;</code></pre>
 </div>
@@ -544,7 +541,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Can you identify any islands where it might be useful to recruit new Field Partners? Do any islands currently look outside of Kiva’s reach?</p>
 <p>You might find <a href="https://bit.ly/2U2G7x7">this map</a> useful to answer the question.</p>
-<p><img src="https://bit.ly/2U2G7x7" width="500"></p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/f/f6/Labelled_map_of_the_Philippines_-_Provinces_and_Regions.png" width="500"></p>
 </section>
 </section>
 <section id="keep-going" class="level1">
