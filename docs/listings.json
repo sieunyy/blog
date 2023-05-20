@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/exercise5/exercise5-proximity-analysis.html",
       "/posts/exercise4/exercise4-manipulating-geospatial-data.html",
       "/posts/exercise3/exercise3-interactive-maps.html",
       "/posts/exercise2/exercise2-coordinate-reference-systems.html",
