@@ -4,6 +4,7 @@ author: "Sieun Shim"
 date: "2023-05-25"
 categories: [code]
 toc: true
+image: "uber.png"
 jupyter: python3
 ---
 
