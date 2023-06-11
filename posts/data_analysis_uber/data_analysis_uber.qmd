@@ -1,0 +1,354 @@
+---
+title: "Uber Analysis"
+author: "Sieun Shim"
+date: "2023-05-25"
+categories: [code]
+toc: true
+jupyter: python3
+---
+
+> uber data
+
+```{python}
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from h3 import h3
+from collections import Counter
+import pydeck as pdk
+```
+
+```{python}
+H3_HEX_DATA = "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf.h3cells.json"
+
+df = pd.read_json(H3_HEX_DATA)
+```
+
+```{python}
+df
+```
+
+```{python}
+# 중심 좌표 계산 함수
+def calculate_center(hexagon):
+    hex_center = h3.h3_to_geo(h3.h3_to_parent(hexagon, 0))
+
+# boundary 좌표 계산 함수
+def calculate_boundary(hexagon):
+    hex_boundary = h3.h3_to_geo_boundary(hexagon)
+    return hex_boundary
+
+# 중심 좌표 계산 및 결과 열 추가
+df['center_coordinates'] = df['hex'].apply(lambda x: calculate_center(x))
+
+# boundary 좌표 계산 및 결과 열 추가
+df['boundary_coordinates'] = df['hex'].apply(lambda x: calculate_boundary(x))
+
+# 결과 출력
+print(df)
+```
+
+```{python}
+# Define a layer to display on a map
+layer = pdk.Layer(
+    "H3HexagonLayer",
+    df,
+    pickable=True,
+    stroked=True,
+    filled=True,
+    extruded=False,
+    get_hexagon="hex",
+    get_fill_color="[255 - count, 255, count]",
+    get_line_color=[255, 255, 255],
+    line_width_min_pixels=2,
+)
+
+# Set the viewport location
+view_state = pdk.ViewState(latitude=37.7749295, longitude=-122.4194155, zoom=14, bearing=0, pitch=30)
+
+
+# Render
+r = pdk.Deck(layers=[layer], initial_view_state=view_state, tooltip={"text": "Count: {count}"})
+r.show()
+```
+
+```{python}
+# 데이터 로드
+df = pd.read_csv('https://github.com/fivethirtyeight/uber-tlc-foil-response/raw/master/uber-trip-data/uber-raw-data-apr14.csv')
+
+# 데이터셋 확인
+print(df.head())
+```
+
+- Date/Time: 여행이 시작된 날짜와 시간 정보. 예를 들어, 4/1/2014 0:11:00는 2014년 4월 1일 오전 0시 11분에 시작된 여행을 의미합니다.
+- Lat: 출발지의 위도 정보. 위도는 지구의 남북 위치를 나타내는 수치입니다.
+- Lon: 출발지의 경도 정보. 경도는 지구의 동서 위치를 나타내는 수치입니다.
+- Base: Uber의 서비스를 제공하는 특정 "베이스 코드"가 포함되어 있습니다. 이 코드는 보통 특정 Uber 서비스 센터 또는 운영 지역을 나타냅니다.
+
+```{python}
+df.describe()
+```
+
+
+## 1. 데이터의 기본적인 indexing 및 slicing
+
+```{python}
+# 처음 5개의 행을 출력
+print(df.head())
+```
+
+```{python}
+# 'Lat' 열의 값만 출력
+print(df['Lat'])
+```
+
+```{python}
+# 10행부터 20행까지 출력
+print(df.iloc[10:21])
+```
+
+```{python}
+# Base 개수 확인
+df.Base.value_counts()
+```
+
+## 2. 결측치에 대한 처리
+
+```{python}
+# 결측치 개수 확인
+print(df.isnull().sum())
+```
+
+## 3. 기초적인 통계 추출 및 분석
+
+
+```{python}
+# 데이터 요약
+print(df.describe())
+
+# 'Lat' 열의 평균
+print(df['Lat'].mean())
+
+# 'Lon' 열의 중앙값
+print(df['Lon'].median())
+
+# 'Base' 열에서 각 값의 빈도수 출력
+print(df['Base'].value_counts())
+```
+
+## 4. 데이터에 대한 질문을 던져보고 해답을 찾기
+
+
+### 4.1 월별/요일별 Uber 이용량 비교
+- 가장 Uber 이용량이 많은 요일은 언제일까요?
+
+```{python}
+df['Date/Time'] = pd.to_datetime(df['Date/Time'])
+df['weekday'] = df['Date/Time'].dt.day_name()
+weekday_counts = df['weekday'].value_counts()
+weekday_counts
+```
+
+```{python}
+max_count_weekday = weekday_counts.idxmax()
+max_count_weekday
+```
+
+```{python}
+# 월별 이용량 비교
+df['Date/Time'] = pd.to_datetime(df['Date/Time'])
+df['month'] = df['Date/Time'].dt.month
+monthly_data = df.groupby('month').size().reset_index(name = 'count')
+print(monthly_data)
+```
+
+Monday is represented as 0 and Sunday is represented as 6
+
+```{python}
+# 'Date/Time' 열이 날짜/시간 형식이 아닌 경우 datetime 형식으로 변환
+df['Date/Time'] = pd.to_datetime(df['Date/Time'])
+
+# 요일을 추출하여 새로운 열로 추가
+df['day_of_week'] = df['Date/Time'].dt.dayofweek
+
+# 요일별로 그룹화하고 개수를 세어 데이터프레임 생성
+weekly_data = df.groupby('day_of_week').size().reset_index(name = 'count')
+
+print(weekly_data)
+```
+
+```{python}
+# 요일 매핑
+days = {0: 'Monday', 1: 'Tuesday', 2: 'Wednesday', 3: 'Thursday', 4: 'Friday', 5: 'Saturday', 6: 'Sunday'}
+df['day_of_week'] = df['day_of_week'].map(days)
+
+# 요일 순서 정의
+day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+df['day_of_week'] = pd.Categorical(df['day_of_week'], categories = day_order, ordered = True)
+
+# 요일별로 그룹화하고 개수를 세어 데이터프레임 생성
+weekly_data = df.groupby('day_of_week').size().reset_index(name = 'count')
+
+# 'count' 열을 기준으로 내림차순으로 데이터프레임 정렬
+sorted_data = weekly_data.sort_values(by = 'count', ascending = False)
+
+print(sorted_data)
+```
+
+시각화
+
+```{python}
+import seaborn as sns
+
+# 그림과 축 생성
+plt.figure(figsize = (10, 6))
+
+# seaborn을 사용하여 막대 그래프 생성
+sns.barplot(x = 'day_of_week', y = 'count', data = weekly_data, palette='Set2')
+
+# 제목 추가
+plt.title('Usage by Day of the Week')
+
+# 그래프 출력
+plt.show()
+```
+
+### 4.2 시간대별 이용량 비교
+
+- 가장 이용량이 많은 시간대는 언제일까요? 
+
+```{python}
+df['hour'] = df['Date/Time'].dt.hour
+hourly_data = df.groupby('hour').size().reset_index(name = 'count').reset_index(drop=True)
+sorted_hourly_data = hourly_data.sort_values(by = 'count', ascending = False).reset_index(drop=True)
+print(sorted_hourly_data)
+```
+
+```{python}
+# 그림과 축 생성
+plt.figure(figsize = (10, 6))
+
+# seaborn을 사용하여 막대 그래프 생성, 막대 색상은 연한 파란색으로 설정
+sns.barplot(x = 'hour', y = 'count', data = hourly_data, color = 'lightblue')
+
+# 제목과 축 레이블 추가
+plt.title('Usage by Hour of the Day')
+plt.xlabel('Hour')
+plt.ylabel('Count')
+
+# 그래프 출력
+plt.show()
+```
+
+### 4.3 Uber 수요에 대한 공간적인 시각화
+
+- 가장 수요가 많은 지역은 어디일까요?
+- 시간대/지역별로 수요의 변화를 나타내보고, 시사점을 도출해 봅시다
+
+```{python}
+# 위도와 경도를 사용하여 h3 셀 생성
+df['h3'] = df.apply(lambda row: h3.geo_to_h3(row['Lat'], row['Lon'], 6), axis = 1)  # 여기서 6은 해상도를 나타냅니다. 필요에 따라 조절 가능합니다.
+```
+
+```{python}
+df
+```
+
+```{python}
+df.h3.value_counts()
+```
+
+```{python}
+# 각 셀에 포함된 데이터 개수 계산
+h3_counts = Counter(df['h3'])
+h3_counts
+```
+
+```{python}
+df.groupby('h3').size().reset_index(name = 'count')  # 위 코드와 동일
+```
+
+```{python}
+# 데이터 프레임을 생성하고, 위도와 경도를 h3 셀 중심점으로 업데이트
+df_h3_counts = pd.DataFrame.from_dict(h3_counts, orient = 'index').reset_index()
+df_h3_counts.columns = ['h3', 'count']
+df_h3_counts['lat'] = df_h3_counts['h3'].apply(lambda x: h3.h3_to_geo(x)[0])
+df_h3_counts['lon'] = df_h3_counts['h3'].apply(lambda x: h3.h3_to_geo(x)[1])
+```
+
+```{python}
+df_h3_counts
+```
+
+```{python}
+df_h3_counts['count'].describe()
+```
+
+```{python}
+# Define a layer to display on a map
+layer = pdk.Layer(
+    "H3HexagonLayer",
+    df_h3_counts,
+    pickable=True,
+    stroked=True,
+    filled=True,
+    extruded=False,
+    get_hexagon="h3",
+    get_fill_color="color",
+    get_line_color=[255, 255, 255],
+    line_width_min_pixels=2,
+)
+
+# Set the viewport location
+view_state = pdk.ViewState(latitude=df_h3_counts['lat'].mean(), longitude=df_h3_counts['lon'].mean(), zoom=8, bearing=0, pitch=30)
+
+
+# Render
+r = pdk.Deck(layers=[layer], initial_view_state=view_state, tooltip={"text": "Count: {count}"})
+r.show()
+```
+
+```{python}
+df_h3_counts['log_color'] = np.log(df_h3_counts['count'])/np.log(df_h3_counts['count']).max()
+df_h3_counts['color'] = df_h3_counts['count']/df_h3_counts['count'].max()
+```
+
+```{python}
+# Define a layer to display on a map
+layer = pdk.Layer(
+    "H3HexagonLayer",
+    df_h3_counts,
+    pickable=True,
+    stroked=True,
+    filled=True,
+    extruded=False,
+    get_hexagon="h3",
+    # get_fill_color="[255 - count, 255, count]",
+    get_fill_color="[255, (1-log_color)*255, 0, 150]",
+    get_line_color=[255, 255, 255],
+    line_width_min_pixels=2,
+)
+
+# Set the viewport location
+view_state = pdk.ViewState(latitude=df_h3_counts['lat'].mean(), longitude=df_h3_counts['lon'].mean(), zoom=8, bearing=0, pitch=30)
+
+
+# Render
+r = pdk.Deck(layers=[layer], initial_view_state=view_state, tooltip={"text": "Count: {count}"})
+r.show()
+```
+
+```{python}
+# Apply a logarithmic transformation to the 'count' column
+df_h3_counts['log_count'] = np.log10(df_h3_counts['count'])  # using log1p to also manage the cases when count is 0
+
+# Create the histogram with seaborn
+plt.figure(figsize = (10, 6))
+sns.histplot(df_h3_counts, x = 'log_count', bins = 50, kde = True, color = 'grey')
+plt.title('Logarithmically Scaled Histogram of Counts')
+plt.xlabel('Demand (log-scale)')
+plt.show()
+```
+
+

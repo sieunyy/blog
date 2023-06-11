@@ -2,50 +2,54 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://sieunyy.github.io/blog/about.html</loc>
-    <lastmod>2023-05-25T07:44:57.891Z</lastmod>
+    <lastmod>2023-06-11T16:51:21.954Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/index.html</loc>
-    <lastmod>2023-05-25T07:45:00.159Z</lastmod>
+    <lastmod>2023-06-11T16:51:25.381Z</lastmod>
+  </url>
+  <url>
+    <loc>https://sieunyy.github.io/blog/posts/data_analysis_uber/data_analysis_uber.html</loc>
+    <lastmod>2023-06-11T16:51:30.084Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/exercise1/exercise1-your-first-map.html</loc>
-    <lastmod>2023-05-25T07:45:03.568Z</lastmod>
+    <lastmod>2023-06-11T16:51:32.134Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/exercise2/exercise2-coordinate-reference-systems.html</loc>
-    <lastmod>2023-05-25T07:45:06.042Z</lastmod>
+    <lastmod>2023-06-11T16:51:35.390Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/exercise3/exercise3-interactive-maps.html</loc>
-    <lastmod>2023-05-25T07:45:28.858Z</lastmod>
+    <lastmod>2023-06-11T16:52:07.961Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/exercise4/exercise4-manipulating-geospatial-data.html</loc>
-    <lastmod>2023-05-25T07:45:33.657Z</lastmod>
+    <lastmod>2023-06-11T16:52:16.032Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/exercise5/exercise5-proximity-analysis.html</loc>
-    <lastmod>2023-05-25T07:45:40.373Z</lastmod>
+    <lastmod>2023-06-11T16:52:28.916Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/geospatial analysis/geospatial_analysis.html</loc>
-    <lastmod>2023-05-25T07:45:48.551Z</lastmod>
+    <lastmod>2023-06-11T16:52:41.911Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/increase_loop_speed/week_1c_increase_loop_speed.html</loc>
-    <lastmod>2023-05-25T07:45:50.874Z</lastmod>
+    <lastmod>2023-06-11T16:52:45.977Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/numpy/week_1a_numpy.html</loc>
-    <lastmod>2023-05-25T07:45:56.616Z</lastmod>
+    <lastmod>2023-06-11T16:52:53.842Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/pandas/week_1b_pandas.html</loc>
-    <lastmod>2023-05-25T07:46:14.771Z</lastmod>
+    <lastmod>2023-06-11T16:53:16.840Z</lastmod>
   </url>
   <url>
     <loc>https://sieunyy.github.io/blog/posts/seaborn_and_matplotlib/seaborn_and_matplotlib.html</loc>
-    <lastmod>2023-05-25T07:46:16.893Z</lastmod>
+    <lastmod>2023-06-11T16:53:20.153Z</lastmod>
   </url>
 </urlset>
